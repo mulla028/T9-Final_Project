@@ -1,0 +1,96 @@
+/* @font-face {
+    font-family: 'Mystical Woods Smooth Script';
+    src: url('MysticalWoodsSmoothScript.eot');
+    src: local('Mystical Woods Smooth Script'), local('MysticalWoodsSmoothScript'),
+        url('MysticalWoodsSmoothScript.eot?#iefix') format('embedded-opentype'),
+        url('MysticalWoodsSmoothScript.woff2') format('woff2'),
+        url('MysticalWoodsSmoothScript.woff') format('woff'),
+        url('MysticalWoodsSmoothScript.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Rough Caps';
+    src: url('MysticalWoodsRoughCaps.eot');
+    src: local('Mystical Woods Rough Caps'), local('MysticalWoodsRoughCaps'),
+        url('MysticalWoodsRoughCaps.eot?#iefix') format('embedded-opentype'),
+        url('MysticalWoodsRoughCaps.woff2') format('woff2'),
+        url('MysticalWoodsRoughCaps.woff') format('woff'),
+        url('MysticalWoodsRoughCaps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Smooth Caps';
+    src: url('MysticalWoodsSmoothCaps.eot');
+    src: local('Mystical Woods Smooth Caps'), local('MysticalWoodsSmoothCaps'),
+        url('MysticalWoodsSmoothCaps.eot?#iefix') format('embedded-opentype'),
+        url('MysticalWoodsSmoothCaps.woff2') format('woff2'),
+        url('MysticalWoodsSmoothCaps.woff') format('woff'),
+        url('MysticalWoodsSmoothCaps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Rough Script';
+    src: url('MysticalWoodsRoughScript.eot');
+    src: local('Mystical Woods Rough Script'), local('MysticalWoodsRoughScript'),
+        url('MysticalWoodsRoughScript.eot?#iefix') format('embedded-opentype'),
+        url('MysticalWoodsRoughScript.woff2') format('woff2'),
+        url('MysticalWoodsRoughScript.woff') format('woff'),
+        url('MysticalWoodsRoughScript.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+ */
+
+ @font-face {
+    font-family: 'Mystical Woods Smooth Script';
+    src: url('./MysticalWoodsSmoothScript.eot');
+    src: local('Mystical Woods Smooth Script'), local('MysticalWoodsSmoothScript'),
+         url('./MysticalWoodsSmoothScript.eot?#iefix') format('embedded-opentype'),
+         url('./MysticalWoodsSmoothScript.woff2') format('woff2'),
+         url('./MysticalWoodsSmoothScript.woff') format('woff'),
+         url('./MysticalWoodsSmoothScript.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Rough Caps';
+    src: url('./MysticalWoodsRoughCaps.eot');
+    src: local('Mystical Woods Rough Caps'), local('MysticalWoodsRoughCaps'),
+         url('./MysticalWoodsRoughCaps.eot?#iefix') format('embedded-opentype'),
+         url('./MysticalWoodsRoughCaps.woff2') format('woff2'),
+         url('./MysticalWoodsRoughCaps.woff') format('woff'),
+         url('./MysticalWoodsRoughCaps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Smooth Caps';
+    src: url('./MysticalWoodsSmoothCaps.eot');
+    src: local('Mystical Woods Smooth Caps'), local('MysticalWoodsSmoothCaps'),
+         url('./MysticalWoodsSmoothCaps.eot?#iefix') format('embedded-opentype'),
+         url('./MysticalWoodsSmoothCaps.woff2') format('woff2'),
+         url('./MysticalWoodsSmoothCaps.woff') format('woff'),
+         url('./MysticalWoodsSmoothCaps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Mystical Woods Rough Script';
+    src: url('./MysticalWoodsRoughScript.eot');
+    src: local('Mystical Woods Rough Script'), local('MysticalWoodsRoughScript'),
+         url('./MysticalWoodsRoughScript.eot?#iefix') format('embedded-opentype'),
+         url('./MysticalWoodsRoughScript.woff2') format('woff2'),
+         url('./MysticalWoodsRoughScript.woff') format('woff'),
+         url('./MysticalWoodsRoughScript.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
