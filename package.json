@@ -8,6 +8,10 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mulla028/T9-Final_Project"
+  },
   "dependencies": {
     "@react-oauth/google": "^0.12.1",
     "bootstrap": "^5.3.3",
