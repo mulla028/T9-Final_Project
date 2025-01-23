@@ -1,0 +1,72 @@
+[33mcommit 1127f89a6004c52a1158814c3de7d7addbb36049[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmy-sp-1-changes[m[33m, [m[1;31morigin/my-sp-1-changes[m[33m)[m
+Merge: 6e406c6 957073c
+Author: Timi Jacobs Uba <timij90@gmail.com>
+Date:   Mon Jan 20 22:04:49 2025 -0500
+
+    Merge branch 'issue-13' into sp-1
+
+[33mcommit 957073c8d398bc2ba00185f35810fd66af844cbd[m[33m ([m[1;31morigin/issue-13[m[33m)[m
+Author: Timi Jacobs Uba <timij90@gmail.com>
+Date:   Mon Jan 20 21:27:38 2025 -0500
+
+    frontend files
+
+[33mcommit ee6eb18aade8cf7cf7ebd1c2162075f584f2588b[m
+Author: Timi Jacobs Uba <timij90@gmail.com>
+Date:   Mon Jan 20 21:08:08 2025 -0500
+
+    backend files
+
+[33mcommit 6e406c69fdd78eccf4d6b7595afecbf63b82a7db[m[33m ([m[1;31morigin/sp-1[m[33m, [m[1;32msp-1[m[33m)[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Fri Jan 17 21:58:35 2025 -0500
+
+    Prettier Set up
+
+[33mcommit 27bb46daa13ff716d98153b4190811fb734f06e1[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Fri Jan 17 21:50:53 2025 -0500
+
+    repository's link added
+
+[33mcommit 45c81fc7934f63523a73a18343a28800262ed63f[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Fri Jan 17 21:39:35 2025 -0500
+
+    Initial set up of existing mock up
+
+[33mcommit 955ba6da2696559bca692b82d1b8594e4300a11d[m
+Author: Amir Mullagaliev <138519917+mulla028@users.noreply.github.com>
+Date:   Tue Jan 14 21:43:14 2025 -0500
+
+    Template Provided
+
+[33mcommit 56411193fd9cc0553773a0908cc067d5a8499d48[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Tue Jan 14 21:42:08 2025 -0500
+
+    Changelog sample added
+
+[33mcommit 2b18ad0568c37f64b546519f46e05f57ff379e27[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Sat Jan 11 11:49:58 2025 -0500
+
+    CHANGELOG.md created
+
+[33mcommit 632e2d57d1a5720b2260c24e13cb97c37d7cee38[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Wed Jan 8 21:05:39 2025 -0500
+
+    CHANGELOG.md deleted
+
+[33mcommit 2998d5c77f4bb2eb6f3e53b350a70dec00cf5199[m
+Author: mulla028 <amullagaliev@myseneca.ca>
+Date:   Wed Jan 8 15:35:16 2025 -0500
+
+    CHANGELOG.md created
+
+[33mcommit cddebd3f6dd330f564baaec8ec843449bcc4aa3c[m
+Author: Amir Mullagaliev <138519917+mulla028@users.noreply.github.com>
+Date:   Mon Jan 6 16:19:44 2025 -0500
+
+    Create README.md

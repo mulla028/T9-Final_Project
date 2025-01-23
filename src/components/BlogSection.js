@@ -6,24 +6,24 @@ const BlogSection = () => {
             image: 'https://cdn.airalo.com/images/d8417ef5-972e-4f31-8285-bfb26a18350e.jpg',
             title: '10 Tips for Sustainable Travel',
             description: 'Discover practical ways to minimize your environmental footprint while traveling.',
-            link: '#'
+            link: 'https://sustainabletravel.org/top-10-tips-for-sustainable-travel/'
         },
         {
             image: 'https://a0.muscache.com/im/pictures/c4189dbb-be6f-45fc-872d-46e66641f6b2.jpg?im_w=960',
             title: 'The Best Destinations for Long Stays',
             description: 'Explore destinations that encourage slow, meaningful travel and long stays.',
-            link: '#'
+            link: 'https://d2detours.com/our-top-10-destinations-for-long-stays/'
         },
         {
             image: 'https://culturetrekking.com/images/img_MmTGqsHD8UFByjsP3LxyRu/adobestock_294945819.jpeg?fit=outside&w=1600&dpr=1',
             title: 'How to Minimize Your Carbon Footprint While Traveling',
             description: 'Learn how to reduce your impact with eco-friendly transportation and accommodations.',
-            link: '#'
+            link: 'https://sustainabletravel.org/how-to-reduce-travel-carbon-footprint/'
         }
     ];
 
     return (
-        <div className="blog-section" style={{ padding: '60px 0' }}>
+        <div id="blog-section" className="blog-section" style={{ padding: '60px 0' }}> {/* Add ID */}
             <Container>
                 <h2 className="text-center mb-4">Tips & Guides for Slow Travel</h2>
                 <Row>
@@ -34,14 +34,27 @@ const BlogSection = () => {
                                 <Card.Body>
                                     <Card.Title>{post.title}</Card.Title>
                                     <Card.Text>{post.description}</Card.Text>
-                                    <Button variant="primary" href={post.link}>Read More</Button>
+                                    <Button
+                                        variant="primary"
+                                        href={post.link}
+                                        target="_blank" // Open in new tab
+                                        rel="noopener noreferrer" // For security
+                                    >
+                                        Read More
+                                    </Button>
                                 </Card.Body>
                             </Card>
                         </Col>
                     ))}
                 </Row>
                 <div className="text-center">
-                    <Button variant="outline-primary" href="/blog">Explore More Articles</Button>
+                    <Button
+                        variant="outline-primary"
+                        href="#blog-section"
+                        className="no-bold-link"
+                    >
+                        Explore More Articles
+                    </Button>
                 </div>
             </Container>
         </div>
