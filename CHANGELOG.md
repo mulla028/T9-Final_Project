@@ -1,8 +1,12 @@
-# Changelog 
-Every sprint's progress relflected here.
+TESTING PR
+
+# Changelog
+
+Every sprint's progress reflected here.
 
 ## Sprint 1
 
 ### Added
 
-- We have implemented this page bla bla bla. [#11](https://github.com/mulla028/T9-Final_Project/pull/11)
+- Added Login feature
+- Added Register feature
