@@ -72,6 +72,36 @@ export async function authenticateUser(email, password) {
     }
 }
 
+export async function sendPasswordResetEmail(email) {
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/passwordResetEmail`, {
+        method: "POST",
+        body: JSON.stringify(email),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    if (res.status === 200) {
+        return 200;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function setPassword(id, password) {
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/resetPassword`, {
+        method: "POST",
+        body: JSON.stringify({id, password}),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    if (res.status === 200) {
+        return 200;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export async function my_fetch(url, args) {
     const _args = {
         ...args,
