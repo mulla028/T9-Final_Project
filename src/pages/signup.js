@@ -47,14 +47,12 @@ export default function Login() {
   const onGoogleLoginSuccess = () => {
     setGoogleLoading(true);
     handleSocialLogin('google')
-      .finally(() => setGoogleLoading(false));
   };
 
   // Facebook Login
   const onFacebookLoginSuccess = () => {
     setFacebookLoading(true);
     handleSocialLogin('facebook')
-      .finally(() => setFacebookLoading(false));
   };
 
   // Apple Login
