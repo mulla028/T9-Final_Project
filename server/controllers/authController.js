@@ -17,8 +17,7 @@ exports.register = async (req, res) => {
         if (user) return res.status(400).json({ message: 'User already exists!' });
 
         user = new User({ username, email, password });
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        user.password = await bcrypt.hash(password, process.env.PASSWORD_SALT);
         await user.save();
 
         const payload = { user: { id: user.id, username: user.username } };
@@ -36,7 +35,7 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: 'User not existed. Register Now!' });
-
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 
