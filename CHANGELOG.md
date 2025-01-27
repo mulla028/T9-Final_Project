@@ -8,6 +8,4 @@ Every sprint's progress reflected here.
 
 ### Added
 
-- Added Login feature
-- Added Register feature
-- Adjust the homepage
+- Added the homepage [#27](https://github.com/mulla028/T9-Final_Project/pull/27)
