@@ -10,3 +10,4 @@ Every sprint's progress reflected here.
 
 - Added Login feature
 - Added Register feature
+- Adjust the homepage
