@@ -1,6 +1,7 @@
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
-
+import { useRouter } from 'next/router';
 const Header = () => {
+    const router = useRouter();
     return (
         <Navbar bg="light" expand="lg" fixed="top"> {/* Keeps the header fixed */}
             <Container fluid="md">
@@ -17,6 +18,7 @@ const Header = () => {
                         <Button variant="success" href="/signup" className="my-button">
                             Sign in
                         </Button>
+                        <Button variant="danger" onClick={() => router.push('/admin/login')} className="my-button">Dashboard</Button>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

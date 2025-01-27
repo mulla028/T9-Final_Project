@@ -5,6 +5,7 @@ const passport = require('./config/passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const auth = require('./routes/authRoutes');
+const admin = require('./routes/adminRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(passport.initialize());
 
 // Define Routes
 app.use('/api/auth', auth);
+app.use('/api/admin', admin);
 
 // Send email for forgetting password
 app.post('/api/passwordResetEmail', async (req, res) => {

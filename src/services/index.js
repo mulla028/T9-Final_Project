@@ -72,6 +72,23 @@ export async function authenticateUser(email, password) {
     }
 }
 
+export async function authenticateAdmin(email, password) {
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/login`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        setToken(data.token);
+        return data.token;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+
 export async function sendPasswordResetEmail(email) {
     const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/passwordResetEmail`, {
         method: "POST",
