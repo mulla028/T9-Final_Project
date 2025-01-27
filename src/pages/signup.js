@@ -9,6 +9,7 @@ import { authenticateUser } from "@/services";
 import { useRouter } from "next/router";
 import { useAuth } from '@/context/AuthContext';
 import RegisterModal from '../components/RegisterModal'; // Import the modal component
+import ForgotPasswordModal from '../components/ForgotPasswordModal'; // Import the modal component
 import styles from '../styles/login.module.css'; // Import custom CSS for styling
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -26,6 +27,7 @@ export default function Login() {
 
   const [warning, setWarning] = useState('');
   const [showRegister, setShowRegister] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [facebookLoading, setFacebookLoading] = useState(false)
@@ -33,10 +35,17 @@ export default function Login() {
   const { login } = useAuth();
 
   const handleClose = () => {
-    reset(); // Reset the form fields and touched fields
+    //reset(); // Reset the form fields and touched fields
     setShowRegister(false);
   };
+
+  const handleCloseForgotPassword = () => {
+    //reset(); // Reset the form fields and touched fields
+    setShowForgotPassword(false);
+  };
+  
   const handleShow = () => setShowRegister(true);
+  const handleShowForgotPassword = () => setShowForgotPassword(true);
 
   const handleSocialLogin = (provider) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}`;
@@ -176,12 +185,16 @@ export default function Login() {
                     </Container>
                   </div>
 
-                  <div className="text-center mt-3">
+                  <div className="text-center mt-1">
                     <Button variant="link" onClick={handleShow}>Don't have an account? Register</Button>
+                  </div>
+                  <div className="text-center">
+                    <Button variant="link" onClick={handleShowForgotPassword}>Forgot your password?</Button>
                   </div>
                 </div>
               </div>
               <RegisterModal show={showRegister} handleClose={handleClose} />
+              <ForgotPasswordModal show={showForgotPassword} handleClose={handleCloseForgotPassword} />
             </FacebookProvider>
           </GoogleOAuthProvider>
         </Col>
