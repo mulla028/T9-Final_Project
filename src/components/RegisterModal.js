@@ -203,19 +203,6 @@ export default function RegisterModal({ show, handleClose }) {
                                 >
                                     {facebookLoading ? '...' : <FaFacebook size={24} />}
                                 </Button>
-
-                                <AppleLogin
-                                    clientId={appleClientId}
-                                    redirectURI={appleRedirectURI}
-                                    render={(props) => (
-                                        <Button
-                                            className={styles['custom-apple-button']}
-                                            onClick={props.onClick}
-                                        >
-                                            <FaApple size={24} />
-                                        </Button>
-                                    )}
-                                />
                             </Container>
                         </div>
                     </Modal.Body>

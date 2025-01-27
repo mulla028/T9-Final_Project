@@ -56,14 +56,12 @@ export default function Login() {
   const onGoogleLoginSuccess = () => {
     setGoogleLoading(true);
     handleSocialLogin('google')
-      .finally(() => setGoogleLoading(false));
   };
 
   // Facebook Login
   const onFacebookLoginSuccess = () => {
     setFacebookLoading(true);
     handleSocialLogin('facebook')
-      .finally(() => setFacebookLoading(false));
   };
 
   // Apple Login
@@ -184,19 +182,6 @@ export default function Login() {
                       >
                         {facebookLoading ? '...' : <FaFacebook size={24} />}
                       </Button>
-
-                      <AppleLogin
-                        clientId={appleClientId}
-                        redirectURI={appleRedirectURI}
-                        render={(props) => (
-                          <Button
-                            className={styles['custom-apple-button']}
-                            onClick={props.onClick}
-                          >
-                            <FaApple size={24} />
-                          </Button>
-                        )}
-                      />
                     </Container>
                   </div>
 
