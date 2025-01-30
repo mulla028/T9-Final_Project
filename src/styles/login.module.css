@@ -82,7 +82,7 @@
 .custom-apple-button {
     border: none;
     padding: 10px; /* Uniform padding for buttons */
-    border-radius: 50%; /* Reduced border radius for a more square look */
+    border-radius: 50%; /* Reduced border radius for a more circular look */
     width: 60px; /* Set fixed width */
     height: 60px; /* Set fixed height */
     display: flex;
