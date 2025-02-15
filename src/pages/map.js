@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from '@react-google-maps/api';
 import axios from 'axios';
-import Header from '../components/Header'; 
+import Header from '../components/Header';
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -30,77 +30,81 @@ const MapPage = () => {
             setLoading(false);
             return;
         }
-    
-        setShowInfoWindow(false); 
-    
+
+        setShowInfoWindow(false);
+
         if (place_id) {
             console.log("🔹 Fetching place details for:", place_id);
-            fetchPlaceDetails(place_id);
+            setTimeout(() => fetchPlaceDetails(place_id), 300); // ✅ Ensure query params are fully available
         } else {
             console.log("🔹 Fetching place_id for:", destination);
-            axios
-                .get(`https://maps.googleapis.com/maps/api/geocode/json`, {
-                    params: { address: destination, key: GOOGLE_MAPS_API_KEY },
-                })
-                .then((response) => {
-                    if (response.data.status !== "OK" || response.data.results.length === 0) {
-                        setError(`Geocode API Error: ${response.data.status}`);
-                        return;
-                    }
-    
-                    const location = response.data.results[0];
-                    const { lat, lng } = location.geometry.location;
-                    const placeId = location.place_id;
-    
-                    console.log("✅ Location found:", { lat, lng, placeId });
-    
-                    if (!placeId) {
-                        setError("No place_id found for this location.");
-                        return;
-                    }
-    
-                    setCoordinates({ lat, lng });
-                    fetchPlaceDetails(placeId);
-                })
-                .catch((error) => {
-                    console.error("Error fetching location:", error);
-                    setError("Error fetching location.");
-                })
-                .finally(() => setLoading(false));
+            setTimeout(() => {
+                axios
+                    .get(`https://maps.googleapis.com/maps/api/geocode/json`, {
+                        params: { address: destination, key: GOOGLE_MAPS_API_KEY },
+                    })
+                    .then((response) => {
+                        if (response.data.status !== "OK" || response.data.results.length === 0) {
+                            setError(`Geocode API Error: ${response.data.status}`);
+                            return;
+                        }
+
+                        const location = response.data.results[0];
+                        const { lat, lng } = location.geometry.location;
+                        const placeId = location.place_id;
+
+                        console.log("✅ Location found:", { lat, lng, placeId });
+
+                        if (!placeId) {
+                            setError("No place_id found for this location.");
+                            return;
+                        }
+
+                        setCoordinates({ lat, lng });
+                        fetchPlaceDetails(placeId);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching location:", error);
+                        setError("Error fetching location.");
+                    })
+                    .finally(() => setLoading(false));
+            }, 300); // ✅ Small delay ensures query params update before fetch
         }
-    }, [destination, place_id]);      
-    
+    }, [destination, place_id]); // ✅ Ensure it runs when `place_id` updates     
+
     const fetchPlaceDetails = (placeId) => {
         if (!placeId) {
             setError("Invalid place ID.");
             return;
         }
-    
+
         console.log("Fetching details for place_id:", placeId);
-    
+
         axios
             .get(`/api/place?place_id=${placeId}`)
             .then((response) => {
                 console.log("Place Details:", response.data);
-    
+
                 if (!response.data || !response.data.geometry || !response.data.geometry.location) {
                     setError("Invalid location data.");
                     return;
                 }
-    
+
                 const { lat, lng } = response.data.geometry.location;
-    
+
                 setPlaceDetails(response.data);
-                setShowInfoWindow(true); 
-                setMarkers([{ lat, lng }]);
                 setCoordinates({ lat, lng });
+                setMarkers([{ lat, lng }]);
+
+                // ✅ Ensure InfoWindow appears after coordinates update
+                setTimeout(() => setShowInfoWindow(true), 200);
             })
             .catch((error) => {
                 console.error("Error fetching place details:", error);
                 setError("Error fetching place details.");
             });
-    }; 
-    
+    };
+
     const handlePlaceSelect = () => {
         if (autoCompleteRef.current) {
             const place = autoCompleteRef.current.getPlace();
@@ -123,7 +127,6 @@ const MapPage = () => {
 
             <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries}>
                 <div style={{ display: "flex", height: "100vh", width: "100%", paddingTop: "70px" }}>
-
                     {/* Sidebar with Search Box & Location Info */}
                     <div
                         style={{
@@ -131,8 +134,8 @@ const MapPage = () => {
                             background: "white",
                             padding: "15px",
                             overflowY: "auto",
-                            wordWrap: "break-word", 
-                            whiteSpace: "normal",   
+                            wordWrap: "break-word",
+                            whiteSpace: "normal",
                             boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                             zIndex: 10,
                             position: "relative",
@@ -192,7 +195,7 @@ const MapPage = () => {
 
                         {placeDetails && (
                             <>
-                                {placeDetails.photos && placeDetails.photos.length > 0 && (
+                            {placeDetails.photos && placeDetails.photos.length > 0 && (
                                     <img
                                         src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${placeDetails.photos[0].photo_reference}&key=${GOOGLE_MAPS_API_KEY}`}
                                         alt={placeDetails.name}
@@ -207,18 +210,9 @@ const MapPage = () => {
                                 )}
                                 <h2>{placeDetails?.name}</h2>
                                 <p><strong>Address:</strong> {placeDetails?.formatted_address}</p>
-                                <p><strong>Phone Number:</strong> {placeDetails?.formatted_phone_number ||"N/A"}</p>
+                                <p><strong>Phone Number:</strong> {placeDetails?.formatted_phone_number || "N/A"}</p>
                                 <p><strong>Overview:</strong> {placeDetails?.overview || "No description available"}</p>
-                                <p><strong>Rating:</strong>  {placeDetails?.rating} ⭐</p>
-                                <p>
-                                    <strong>Website:&nbsp;</strong> 
-                                    {placeDetails?.website ? (
-                                        <a href={placeDetails.website} target="_blank" rel="noopener noreferrer"
-                                        style={{ display: "inline" }}>
-                                            {placeDetails.website}
-                                        </a>
-                                    ) : "N/A"}
-                                </p>
+                                <p><strong>Rating:</strong> {placeDetails?.rating} ⭐</p>
                             </>
                         )}
                     </div>
