@@ -3,7 +3,7 @@ import { FacebookProvider } from 'react-facebook';
 import AppleLogin from 'react-apple-login';
 import { Form, Button, Row, Col, Alert, Container } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaFacebook, FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { authenticateUser } from "@/services";
 import { useRouter } from "next/router";
@@ -33,6 +33,7 @@ export default function Login() {
   const [facebookLoading, setFacebookLoading] = useState(false)
   const router = useRouter();
   const { login } = useAuth();
+  const [isAdminLogin, setIsAdminLogin] = useState()
 
   const handleClose = () => {
     //reset(); // Reset the form fields and touched fields
@@ -69,16 +70,52 @@ export default function Login() {
     handleSocialLogin(response.authorization.code, 'apple');
   };
 
+  useEffect(() => {
+    const role = router.query.role
+    if (role === 'admin') {
+      setIsAdminLogin(true)
+    } else {
+      setIsAdminLogin(false)
+    }
+    console.log(role)
+  }, [router.query.role])
+
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    try {
-      const token = await authenticateUser(data.email, data.password);
-      login(token);
-      router.push("/");
+    if (isAdminLogin) {
+      try {
+        const response = await fetch("http://localhost:8080/api/Admin/login/admin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        });
 
-    } catch (error) {
-      console.error('Error during login:', error);
-      setWarning(error.message);
+        const result = await response.json();
+
+        if (response.ok && result.role === "admin") {
+          localStorage.setItem("token", result.token);
+          router.push("/admin");
+        } else {
+          setWarning(result.message || "You are not an admin");
+        }
+      } catch (error) {
+        setWarning("Error connecting to the server");
+        console.error("Admin login error:", error);
+      }
+    } else {
+      try {
+        const token = await authenticateUser(data.email, data.password);
+        login(token);
+        router.push("/");
+      } catch (error) {
+        console.error("Login error:", error);
+        setWarning(error.message);
+      }
     }
   };
 
@@ -186,10 +223,11 @@ export default function Login() {
                   </div>
 
                   <div className="text-center mt-1">
-                    <Button variant="link" onClick={handleShow}>Don't have an account? Register</Button>
+                    {!isAdminLogin && ( <Button variant="link" onClick={handleShow}>Don't have an account? Register</Button> )}
                   </div>
                   <div className="text-center">
-                    <Button variant="link" onClick={handleShowForgotPassword}>Forgot your password?</Button>
+              <ForgotPasswordModal show={showForgotPassword} handleClose={handleCloseForgotPassword} /> 
+                  {!isAdminLogin && ( <Button variant="link" onClick={handleShowForgotPassword}>Forgot your password?</Button>  )}
                   </div>
                 </div>
               </div>

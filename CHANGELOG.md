@@ -1,14 +1,17 @@
-TESTING PR
+# Changelog  
 
-# Changelog
+## Sprint 2 (Sp-2)  
 
-Every sprint's progress reflected here.
+### New Features  
+- **Admin Dashboard for Service Statistics** ([#44](https://github.com/mulla028/T9-Final_Project/pull/44))  
+  - Added a new **Admin Dashboard** that allows admins to view important service statistics:  
+    - Total number of visitors  
+    - Total registered users  
+    - Total trips booked  (will be added in the next sprints)
+  - Only admins can access the dashboard  
+  - Unauthorized users are blocked from accessing the page  
 
-## Sprint 1
-
-### Added
-
-- Added the homepage [#27](https://github.com/mulla028/T9-Final_Project/pull/27)
-- Registration Page [#29](https://github.com/mulla028/T9-Final_Project/pull/29)
-- Forgot Password logic and UI/UX using `nodemailer` Added [#28](https://github.com/mulla028/T9-Final_Project/pull/28)
-- Login Page logic and UI implemented using OAuth [#23](https://github.com/mulla028/T9-Final_Project/pull/23)
+### Testing  
+- Verified that only admin users can access the dashboard  
+- Confirmed that direct URL access is restricted for unauthorized users  
+- Simulated and tested the statistics display to ensure accuracy  
