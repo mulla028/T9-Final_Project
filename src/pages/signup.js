@@ -44,7 +44,7 @@ export default function Login() {
     //reset(); // Reset the form fields and touched fields
     setShowForgotPassword(false);
   };
-
+  
   const handleShow = () => setShowRegister(true);
   const handleShowForgotPassword = () => setShowForgotPassword(true);
 
@@ -119,6 +119,7 @@ export default function Login() {
     }
   };
 
+  // Toggle the visibility of the password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -231,6 +232,7 @@ export default function Login() {
                 </div>
               </div>
               <RegisterModal show={showRegister} handleClose={handleClose} />
+              <ForgotPasswordModal show={showForgotPassword} handleClose={handleCloseForgotPassword} />
             </FacebookProvider>
           </GoogleOAuthProvider>
         </Col>
