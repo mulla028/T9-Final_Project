@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 @font-face {
   font-family: 'Mystical Woods Rough Script';
   src: url('../../public/assets/fonts/mystical-woods/MysticalWoodsRoughScript.eot');
@@ -11,21 +15,15 @@
 }
 
 body {
-  font-family: 'Poppins', 'Lucida Sans Regular', sans-serif;
+  font-family: 'Montserrat', 'Lucida Sans Regular', sans-serif;
   background-color: white;
   margin: 0;
   padding: 0;
 }
 
 .hero-section {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   overflow: hidden;
-  text-align: center;
-  padding: 0;
 }
 
 .hero-section .overlay {
@@ -34,7 +32,8 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
 
 .hero-section .hero-content {
@@ -44,35 +43,43 @@ body {
 }
 
 .hero-section .hero-title {
-  font-size: 4rem;
-  font-weight: lighter;
+  font-size: 3.5rem;
   font-style: italic;
-  font-family: 'Mystical Woods Rough Script', 'Playfair Display', serif;
+  font-family: 'Mystical Woods Rough Script', 'Playfair', serif;
   margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-section .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   max-width: 700px;
-  margin: 0 auto 30px;
+  margin: 0 auto;
 }
 
 .hero-section .search-input {
-  /* border-radius: 25px; */
-  padding: 15px;
+  border-radius: 30px;
+  padding: 20px;
   border: none;
 }
 
-/* .hero-section .search-button {
-  border-radius: 25px;
-} */
+.hero-section .search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
 
-.hero-buttons .btn {
-  margin: 10px;
+.hero-section .search-button {
+  border-radius: 30px;
+  padding: 12px 30px;
+  border: 'none',
 }
 
 h1, h2 {
   margin: 20px 0;
+}
+
+h2 {
+  font-size: 2.8rem;
+  font-weight: 500;
 }
 
 .container {
@@ -81,7 +88,25 @@ h1, h2 {
 
 .my-button {
   margin: 10px;
-  /* border-radius: 25px; */
+  padding: 10px 14px;
+  border-radius: 30px;
+  font-weight: bold;
+}
+
+.explore-button {
+  background: linear-gradient(90deg, #28a745, #218838);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  color: white;
+  padding: 8px 14px;
+  border-radius: 30px;
+  border: none;
+}
+
+.read-more-button {
+  color: white;
+  padding: 8px 14px;
+  border-radius: 30px;
+  border: none;
 }
 
 /* .navbar {
@@ -93,14 +118,19 @@ h1, h2 {
 }
 
 .navbar .navbar-brand {
-  font-family: 'poppins', serif;
-  font-weight: bold;
-  font-size: xx-large;
+  font-family: 'Lora', serif;
+  font-weight: 700;
+  font-size: 2.5rem;
 }
 
 .nav-link {
   font-weight: 500;
   margin-right: 10px;
+}
+
+.why-slow-travel {
+  position: relative;
+  overflow: hidden;
 }
 
 .why-slow-travel h3, .how-it-works h4 {
@@ -112,42 +142,85 @@ h1, h2 {
   color: #666;
 }
 
+.why-slow-travel .text-center h3 {
+  transition: color 0.3s ease;
+}
+
+.why-slow-travel .text-center:hover h3 {
+  color: #28a745;
+}
+
 .why-slow-travel .col-md-4, .how-it-works .col-md-3 {
   margin-bottom: 20px;
 }
 
-.featured-destinations .destination-carousel {
+.hidden {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 0.6s ease-out;
+}
+
+.animate-section {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease-out;
+}
+
+.animate-section h2 {
+  transition-delay: 0.2s;
+}
+
+.animate-section .text-center svg {
+  animation: bounceIn 1.5s ease;
+}
+
+.featured-destinations .destination-carousel,
+.booking-search .destination-carousel {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
-.featured-destinations .carousel-wrapper {
-  overflow: scroll /* Hide overflow to prevent showing cards outside the container */
+.featured-destinations .carousel-wrapper,
+.booking-search .carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
 }
 
-.featured-destinations .carousel-row {
-  display: flex;
-  transition: transform 0.5s ease-in-out; /* Smooth easing effect */
+.featured-destinations .carousel-row,
+.booking-search .carousel-row {
+  display: flex; 
+  flex-wrap: nowrap; 
+  gap: 20px; /* Optional: Adds space between cards */
+  transition: transform 0.5s ease-in-out;
 }
 
-.featured-destinations .destination-card {
+.carousel-row .destination-card {
+  flex: 0 0 25%; 
+}
+
+.featured-destinations .destination-card,
+.booking-search .destination-card {
   border: none;
+  margin-bottom: 30px;
   transition: transform 0.3s ease-in-out;
 }
 
-.featured-destinations .destination-card:hover {
+/* .featured-destinations .destination-card:hover {
   transform: translateY(-10px);
-}
+} */
 
-.featured-destinations .destination-card img {
+.featured-destinations .destination-card img,
+.search-results .destination-card img {
   height: 270px;
   object-fit: cover;
   border-radius: 10px;
 }
 
-.featured-destinations .carousel-control {
+.featured-destinations .carousel-control,
+.booking-search .carousel-control {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -165,17 +238,20 @@ h1, h2 {
   transition: background 0.3s ease-in-out;
 }
 
-.featured-destinations .carousel-control:hover {
+.featured-destinations .carousel-control:hover,
+.booking-search .carousel-control:hover {
   background: #28a745; /* Green background on hover */
   color: #fff;
 }
 
-.featured-destinations .carousel-control.prev {
-  left: -50px;
+.featured-destinations .carousel-control.prev,
+.booking-search .carousel-control.prev {
+  left: 0px;
 }
 
-.featured-destinations .carousel-control.next {
-  right: -50px;
+.featured-destinations .carousel-control.next,
+.booking-search .carousel-control.next {
+  right: 0px;
 }
 
 .featured-destinations .carousel-control svg {
@@ -219,9 +295,9 @@ h1, h2 {
   border-style: dashed;
 }
 
-.blog-section .card:hover {
+/* .blog-section .card:hover {
   transform: translateY(-10px);
-}
+} */
 
 .blog-section .card img {
   height: 200px;
@@ -270,8 +346,7 @@ footer form {
 .banner-section {
   position: relative;
   width: 100%;
-  height: 400px;
-  overflow: hidden;
+  height: 500px;
 }
 
 .banner-image {
@@ -286,7 +361,7 @@ footer form {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -300,18 +375,107 @@ footer form {
 }
 
 /* Search Section */
-.booking-search .search-form input,
-.booking-search .search-form select {
-  border-radius: 8px;
-  padding: 12px;
-  margin-right: 10px;
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-top: -50px;
+  position: relative;
+  align-items: center;
 }
 
-.booking-search .search-form button {
+/* Floating Search Bar */
+.search-form {
+  background: white;
+  padding: 1px auto;
+  border-radius: 50px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  z-index: 10;
+}
+
+/* Align input fields in a row */
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  width: 90%;
+  margin-right: 20px;
+}
+
+/* Each search field */
+.search-col {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+/* Search Group (Icon + Input) */
+.search-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #9ea3a8;
+  border-radius: 40px;
+  padding: 12px 15px;
+  width: 100%;
+}
+
+/* Icons inside the fields */
+.search-icon {
+  font-size: 1.2rem;
+  color: #1d2d50;
+  margin-right: 8px;
+}
+
+/* Input Fields */
+.search-form input,
+.search-form select {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  color: #9ea3a8;
+  background: transparent;
+}
+
+.search-form input:focus,
+.search-form select:focus {
+  box-shadow: none;
+}
+
+/* Custom styling for the DatePicker */
+.date-picker {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #9ea3a8;
   border-radius: 8px;
+  padding: 6px 15px;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Search Button */
+.banner-section .search-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
   padding: 12px 25px;
-  font-size: 16px;
   font-weight: bold;
+  background: #28a745;
+  color: white;
+  border: none;
+  width: 100%;
+  height: 60px;
+}
+
+.search-button:hover {
+  background: #027d47;
 }
 
 .booking-search h2 {
@@ -321,42 +485,23 @@ footer form {
 }
 
 /* Filters Section */
-.filters-section {
-  padding: 30px;
-  background: #f9f9f9;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.filters-section h5 {
-  margin-bottom: 20px;
-  font-size: 1.25rem;
-}
-
-.filter-item {
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-}
-
-.custom-range {
-  width: 150px;
-}
-
-.filters-section .form-check {
-  margin-left: 20px;
+.filter-accordion .accordion-item {
+  border: none;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Featured Places Cards */
-.booking-search .card {
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.featured-places img {
+  height: 400px; /* Set a fixed height for all carousel images */
+  margin: auto;
+  padding: 10px;
+  object-fit: cover;
 }
 
 .booking-search .card img {
   height: 200px;
   object-fit: cover;
-  border-radius: 15px 15px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 
 .booking-search .card-title {
@@ -391,6 +536,14 @@ footer form {
   }
 }
 
+.search-results-title {
+  font-family: 'Times New Roman', serif;
+  font-size: 42px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 40px;
+}
 
 /* search results page */
 .search-results h3 {
@@ -899,3 +1052,27 @@ footer form {
   transform: translateY(-5px);
 }
 
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+      transform: scale(0.8);
+      opacity: 0;
+  }
+  60% {
+      transform: scale(1.1);
+      opacity: 1;
+  }
+  100% {
+      transform: scale(1);
+  }
+}
