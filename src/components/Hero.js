@@ -1,40 +1,71 @@
-import { useState, useRef } from 'react';
-import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useState, useRef, useEffect } from 'react';
+import { Container, Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@react-google-maps/api';
-import { FaMapMarkerAlt, FaList, FaUsers } from 'react-icons/fa';
 import { fetchPlaces } from '@/services/index';
 
-const Hero = ({ setSearchResults }) => { // Receive setSearchResults as a prop
+const Hero = ({ setSearchResults }) => {
     const [searchInput, setSearchInput] = useState("");
     const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+    const [autocompleteSelected, setAutocompleteSelected] = useState(false);
     const autoCompleteRef = useRef(null);
+    const inputRef = useRef(null);
     const [travelStyle, setTravelStyle] = useState('Cultural Immersion');
-    const [groupSize, setGroupSize] = useState(1);
 
+    // Handle place selection from Autocomplete
     const handlePlaceSelect = () => {
         if (autoCompleteRef.current) {
             const place = autoCompleteRef.current.getPlace();
             if (place && place.place_id) {
                 setSearchInput(place.formatted_address);
                 setSelectedPlaceId(place.place_id);
+                setAutocompleteSelected(true); // Mark as selected
             }
         }
     };
 
+    // Handle search logic
     const handleSearch = async () => {
-        if (!searchInput.trim()) return;
+        if (!searchInput.trim()) {
+            alert("Please enter a destination before searching.");
+            return;
+        }
 
         try {
-            const place = autoCompleteRef.current?.getPlace();
-            const placeId = place?.place_id || selectedPlaceId;
-
-            // Fetch search results and update index.js state
             const data = await fetchPlaces(searchInput, travelStyle);
-            setSearchResults(data); // Update state in index.js
+            setSearchResults(data);
         } catch (error) {
             console.error("Error fetching places:", error);
         }
     };
+
+    // Handle Enter Key Behavior
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default form behavior
+
+            // If autocomplete is open, select the option first
+            if (!autocompleteSelected) {
+                handlePlaceSelect();
+            } else {
+                handleSearch(); // If already selected, trigger search
+            }
+        }
+    };
+
+    // Global event listener for Enter key outside input box
+    useEffect(() => {
+        const handleGlobalKeyDown = (e) => {
+            if (e.key === 'Enter' && document.activeElement !== inputRef.current) {
+                e.preventDefault(); // Prevent default behavior
+                handleSearch();
+            }
+        };
+
+        document.addEventListener('keydown', handleGlobalKeyDown);
+        return () => {
+            document.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, [searchInput, travelStyle]);
 
     return (
         <div
@@ -60,57 +91,70 @@ const Hero = ({ setSearchResults }) => { // Receive setSearchResults as a prop
                     Extended stays, cultural immersion, eco-conscious.
                 </p>
 
-                {/* Search Bar */}
-                <Container className="search-container" style={{ animation: 'fadeIn 2s ease-out' }}>
-                    <Form className="search-form">
-                        <Row className="search-row">
-                            {/* Destination Field with Autocomplete */}
-                            <Col md={4} className='search-col'>
-                                <Form.Group className="search-group">
-                                    <FaMapMarkerAlt className="search-icon" />
-                                    <Autocomplete
-                                        onLoad={(autocomplete) => (autoCompleteRef.current = autocomplete)}
-                                        onPlaceChanged={handlePlaceSelect}
-                                    >
-                                        <Form.Control
-                                            type="text"
-                                            placeholder="Where to?"
-                                            value={searchInput}
-                                            onChange={(e) => setSearchInput(e.target.value)}
-                                        />
-                                    </Autocomplete>
-                                </Form.Group>
-                            </Col>
+                {/* Search Form */}
+                <Form
+                    className="d-flex justify-content-center align-items-center mt-4 gap-2"
+                    style={{ animation: 'fadeIn 2s ease-out' }}
+                >
+                    {/* Destination Field with Autocomplete */}
+                    <div className="position-relative" style={{ width: '50%' }}>
+                        <Autocomplete
+                            onLoad={(autocomplete) => (autoCompleteRef.current = autocomplete)}
+                            onPlaceChanged={handlePlaceSelect}
+                        >
+                            <Form.Control
+                                ref={inputRef}
+                                type="text"
+                                placeholder="Where do you want to slow down?"
+                                className="search-input"
+                                style={{
+                                    width: '100%',
+                                    minWidth: '250px',
+                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                }}
+                                value={searchInput}
+                                onChange={(e) => {
+                                    setSearchInput(e.target.value);
+                                    setAutocompleteSelected(false); // Reset selection
+                                }}
+                                onKeyDown={handleKeyDown} // Handles Enter key behavior
+                            />
+                        </Autocomplete>
+                    </div>
 
-                            {/* Category Select */}
-                            <Col md={4} className="search-col">
-                                <Form.Group className="search-group">
-                                    <FaList className="search-icon" />
-                                    <Form.Select value={travelStyle} onChange={(e) => setTravelStyle(e.target.value)}>
-                                        <option>Cultural Immersion</option>
-                                        <option>Eco-Stays</option>
-                                        <option>Outdoor Adventures</option>
-                                        <option>Eco-Tourism</option>
-                                        <option>Farm-to-Table Dining</option>
-                                        <option>Wildlife Conservation</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Col>
+                    {/* Category Select */}
+                    <Form.Select
+                        value={travelStyle}
+                        className="search-input"
+                        style={{
+                            width: '25%',
+                            minWidth: '180px',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        }}
+                        onChange={(e) => setTravelStyle(e.target.value)}
+                    >
+                        <option>Cultural Immersion</option>
+                        <option>Eco-Stays</option>
+                        <option>Outdoor Adventures</option>
+                        <option>Eco-Tourism</option>
+                        <option>Farm-to-Table Dining</option>
+                        <option>Wildlife Conservation</option>
+                    </Form.Select>
 
-                            <Col md={3} className="search-col">
-                                <Form.Group className="search-group">
-                                    <FaUsers className="search-icon" />
-                                    <Form.Control type="number" min="1" value={groupSize} onChange={(e) => setGroupSize(e.target.value)} />
-                                </Form.Group>
-                            </Col>
-
-                            {/* Search Button */}
-                            <Col md={1} className="search-col">
-                                <Button className="search-button" onClick={handleSearch}>Search</Button>
-                            </Col>
-                        </Row>
-                    </Form>
-                </Container>
+                    {/* Search Button */}
+                    <Button
+                        variant="success"
+                        className="search-button"
+                        style={{
+                            minWidth: '120px',
+                            background: 'linear-gradient(90deg, #28a745, #218838)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                        }}
+                        onClick={handleSearch}
+                    >
+                        Search
+                    </Button>
+                </Form>
             </Container>
         </div>
     );
