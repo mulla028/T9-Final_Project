@@ -90,7 +90,7 @@ export async function sendPasswordResetEmail(email) {
 export async function setPassword(id, password) {
     const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/resetPassword`, {
         method: "POST",
-        body: JSON.stringify({id, password}),
+        body: JSON.stringify({ id, password }),
     });
 
     const data = await res.json();
@@ -99,6 +99,28 @@ export async function setPassword(id, password) {
         return 200;
     } else {
         throw new Error(data.message);
+    }
+}
+
+export async function fetchPlaces(location, travelStyle) {
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
+export async function fetchPlaceDetails(place_id) {
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/details?place_id=${place_id}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
     }
 }
 

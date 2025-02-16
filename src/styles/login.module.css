@@ -11,16 +11,20 @@
 }
 
 /* Login.css */
-.login-page {
+.login-container {
     display: flex;
-    align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-    padding: 0;
-    height: 100vh; /* Ensure full height */
+    align-items: center;
+    height: 100vh;
 }
+
+.login-box {
+    width: 35%;
+    max-width: none;
+    margin-top: 50px;
+    padding: 30px;
+    background: #fff;
+  }
 
 /* Overlay class */
 .overlay {
@@ -32,13 +36,41 @@
     background: rgba(0, 0, 0, 0.6); /* Darker overlay to make text stand out */
 }
 
+/* Password field styling */
+.password-container {
+    position: relative;
+}
+  
+.password-container span {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* Forgot password link */
+.forgot-password {
+    font-size: small;
+    color: #101112;
+    font-weight: 500;
+}
+
+/* Register link */
+.register-link {
+    font-size: small;
+    color: #101112;
+    font-weight: 500;
+}
+
 /* Quote Text Container */
 .quote-container {
-    z-index: 2; /* Ensure quote text is above the overlay */
+    z-index: 2;
     position: relative;
     color: white;
     text-align: center;
     padding: 20px;
+    animation: fadeIn 1.2s ease-in-out;
 }
 
 /* Main Quote Text */
@@ -48,14 +80,25 @@
     font-style: italic;
     font-family: 'Mystical Woods Rough Script', sans-serif;
     margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Optional shadow for readability */
 }
 
 /* Subtext */
 .quote-subtext {
-    font-size: 18px;
-    font-weight: 300;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Optional shadow for readability */
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* Button styling */
+.custom-submit-button {
+    width: 100%;
+    padding: 12px 30px;
+    margin-top: 5px;
+    border-radius: 30px;
+    background: linear-gradient(90deg, #28a745, #218838);
+    border: none;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
 }
 
 .social-login-wrapper {
@@ -63,9 +106,9 @@
     flex-direction: column;
     align-items: center; /* Center align items */
     justify-content: center;
-    gap: 20px; /* Space between 'Or sign in with' and the buttons */
+    gap: 8px; /* Space between 'Or sign in with' and the buttons */
     padding: 10px 0; /* Space above and below */
-    margin-top: 20px; /* Adjust spacing above */
+    margin-top: 20px;
 }
 
 .social-login-buttons {
@@ -73,18 +116,17 @@
     flex-direction: row; /* Change from column to row for horizontal alignment */
     gap: 20px; /* Space between buttons */
     justify-content: center; /* Center align the buttons */
-    margin-bottom: 20px; /* Add space below the social buttons */
+    margin-bottom: 10px; /* Add space below the social buttons */
     margin: 0 10px;
 }
 
 .custom-google-button,
-.custom-facebook-button,
-.custom-apple-button {
+.custom-facebook-button {
     border: none;
-    padding: 10px; /* Uniform padding for buttons */
-    border-radius: 50%; /* Reduced border radius for a more circular look */
-    width: 60px; /* Set fixed width */
-    height: 60px; /* Set fixed height */
+    padding: 10px; 
+    border-radius: 50%; 
+    width: 50px;
+    height: 50px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,8 +135,7 @@
 }
 
 .custom-google-button:hover,
-.custom-facebook-button:hover,
-.custom-apple-button:hover {
+.custom-facebook-button:hover {
     transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
@@ -109,15 +150,11 @@
     color: white; /* Text color */
 }
 
-.custom-apple-button {
-    background-color: #000 !important; /* Apple color */
-    color: white; /* Text color */
-}
-
 
 /* RegisterModal.css */
 .modal-dialog{
-    width: 40%;
+    width: 55%;
+    border-radius: 20%;
     max-width: none;
 }
 
@@ -166,4 +203,19 @@
     height: 1px; /* Line thickness */
     background-color: #d3d3d3; /* Line color */
     margin: 0 10px; /* Space between line and text */
+}
+
+.custom-label {
+    font-size: 14px;
+    font-weight: bold; 
+}
+
+.custom-input {
+    background: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as needed */
+    border: 2px solid #9ea3a8;
+    border-radius: 5px;
+    padding: 12px 20px;
+    margin: 5px 0;
+    width: 100%;
+    color: #9ea3a8; /* Text color */
 }
