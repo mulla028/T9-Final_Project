@@ -15,11 +15,6 @@
 - Verified that only admin users can access the dashboard  
 - Confirmed that direct URL access is restricted for unauthorized users  
 - Simulated and tested the statistics display to ensure accuracy  
-<<<<<<< HEAD
-=======
-# Changelog  
-
-## Sprint 2 (Sp-2)  
 
 ### New Features  
 - **Admin Dashboard for Service Statistics** ([#44](https://github.com/mulla028/T9-Final_Project/pull/44))  
