@@ -3,7 +3,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook');
 const User = require('../models/SocialUser');
-const BASE_URL = require('../utils/general');
+const { BASE_URL}  = require('../utils/general');
 
 passport.use(
     new GoogleStrategy(
