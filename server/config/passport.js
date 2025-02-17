@@ -3,13 +3,14 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook');
 const User = require('../models/SocialUser');
+const BASE_URL = require('../utils/general');
 
 passport.use(
     new GoogleStrategy(
         {
             clientID: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: 'http://localhost:8080/api/auth/google/callback',
+            callbackURL: `${BASE_URL}/auth/google/callback`,
         },
         async (accessToken, refreshToken, profile, done) => {
             try {
@@ -35,7 +36,7 @@ passport.use(
         {
             clientID: process.env.FACEBOOK_APP_ID,
             clientSecret: process.env.FACEBOOK_APP_SECRET,
-            callbackURL: 'http://localhost:8080/api/auth/facebook/callback',
+            callbackURL: `${BASE_URL}/auth/facebook/callback`,
         },
         async (accessToken, refreshToken, profile, done) => {
             try {

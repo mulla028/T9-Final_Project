@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { BASE_URL } from '../../../server/utils/general';
 
 export default function UpdateUser({ userId }) {
     const [username, setUsername] = useState('');
@@ -11,7 +12,7 @@ export default function UpdateUser({ userId }) {
 
     useEffect(() => {
         async function fetchUser() {
-            const res = await fetch(`http://localhost:8080/api/users/${userId}`);
+            const res = await fetch(`${BASE_URL}/users/${userId}`);
             const data = await res.json();
             setUsername(data.username);
             setEmail(data.email);
@@ -26,7 +27,7 @@ export default function UpdateUser({ userId }) {
             return;
         }
 
-        const res = await fetch(`http://localhost:8080/api/users/${userId}`, {
+        const res = await fetch(`${BASE_URL}/users/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'

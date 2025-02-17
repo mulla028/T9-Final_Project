@@ -14,7 +14,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: 'http://localhost:3000' || 'https://drift-way.vercel.app', credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 
@@ -54,6 +54,7 @@ app.post('/api/resetPassword', async (req, res) => {
   app.get('/api/visitors', (req, res) => {
     res.json({ count: visitorCount });
   });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
