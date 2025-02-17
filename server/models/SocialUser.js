@@ -7,6 +7,7 @@ const socialUserSchema = new mongoose.Schema({
     provider: { type: String, required: true }, // e.g., 'google', 'facebook'
     providerId: { type: String, required: true }, // Social media ID
     createdAt: { type: Date, default: Date.now },
+    itinerary : [{ type : Object }],
 });
 
 module.exports = mongoose.model('Social-User', socialUserSchema);
