@@ -10,6 +10,8 @@ import RegisterModal from '../components/RegisterModal';
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import styles from '../styles/login.module.css';
 import { API_BASE_URL } from '../utils/general';
+import { useForm } from 'react-hook-form';
+
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
