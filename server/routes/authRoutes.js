@@ -3,7 +3,7 @@ const passport = require('passport');
 const { generateToken } = require('../utils/jwtUtils');
 const { register, login } = require('../controllers/authController');
 const router = express.Router();
-const { CALLBACK_URL } = require('../../server/utils/general');
+const { CALLBACK_URL } = require('../utils/general');
 
 // Registration route
 router.post('/register', register);
