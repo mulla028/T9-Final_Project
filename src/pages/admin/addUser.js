@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
-import { API_BASE_URL } from '../utils/general';
+import { API_BASE_URL } from '../../utils/general';
 
 export default function AddUser() {
     const [username, setUsername] = useState('');

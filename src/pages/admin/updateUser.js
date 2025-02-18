@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
-import { API_BASE_URL } from '../utils/general';
+import { API_BASE_URL } from '../../utils/general';
 
 export default function UpdateUser({ userId }) {
     const [username, setUsername] = useState('');
