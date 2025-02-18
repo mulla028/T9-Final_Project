@@ -61,7 +61,7 @@ module.exports.sendPasswordReset = async function (email) {
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">
-                                          <a href="http://localhost:3000" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
+                                          <a href="http://localhost3000" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
                                             DriftWay
                                           </a>
                                         </td>
