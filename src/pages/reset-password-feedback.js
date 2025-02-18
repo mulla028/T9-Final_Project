@@ -10,10 +10,10 @@ const ResetPasswordFeedback = () => {
         <Container fluid="md" >
           <Navbar.Brand href="/">Driftway</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Nav>
+            <Button variant="dark" href="/signup" className="my-button">Sign in</Button>
+          </Nav>
         </Container>
-        <Nav>
-          <Button variant="success" href="/signup" className="my-button">Sign in</Button>
-        </Nav>
       </Navbar>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}
