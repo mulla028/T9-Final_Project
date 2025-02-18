@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
+import { API_BASE_URL } from '../../utils/general';
 
 export default function AddUser() {
     const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ export default function AddUser() {
             return;
         }
 
-        const res = await fetch('http://localhost:8080/api/register', {
+        const res = await fetch(`${API_BASE_URL}/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

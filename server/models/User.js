@@ -6,8 +6,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
-    // favorites: [{ type: Object }],
-    // history: [{ type: Object }]
+    itinerary : [ { type : Object } ],
 });
 
 module.exports = mongoose.model('User', userSchema);
