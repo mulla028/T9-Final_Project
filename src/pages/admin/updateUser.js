@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { API_BASE_URL } from '../../utils/general';
-=======
-import { API_BASE_URL } from '../utils/general';
->>>>>>> e4b1ba0 (BASE_API replaced with API_BASE_URL)
-=======
-import { API_BASE_URL } from '../../utils/general';
->>>>>>> 43b566a (Fixed wrong path)
 
 export default function UpdateUser({ userId }) {
     const [username, setUsername] = useState('');
