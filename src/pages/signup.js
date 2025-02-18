@@ -51,7 +51,7 @@ export default function Login() {
   const handleShowForgotPassword = () => setShowForgotPassword(true);
 
   const handleSocialLogin = (provider) => {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}`;
+    const apiUrl = `${API_BASE_URL}/auth/${provider}`;
     window.location.href = apiUrl; // Redirect the user to the backend's Passport authentication route
   };
 
