@@ -4,10 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { API_BASE_URL } from '../../utils/general';
 =======
 import { API_BASE_URL } from '../utils/general';
 >>>>>>> e4b1ba0 (BASE_API replaced with API_BASE_URL)
+=======
+import { API_BASE_URL } from '../../utils/general';
+>>>>>>> 43b566a (Fixed wrong path)
 
 async function fetchUsers() {
   const res = await fetch(`${API_BASE_URL}/Users`);
