@@ -3,6 +3,7 @@ const passport = require('passport');
 const { generateToken } = require('../utils/jwtUtils');
 const { register, login } = require('../controllers/authController');
 const router = express.Router();
+const { CALLBACK_URL } = require('../utils/general');
 
 // Registration route
 router.post('/register', register);
@@ -46,13 +47,13 @@ router.get('/facebook', passport.authenticate('facebook', {
 // Callback Route for Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Redirect to the new callback page
+    res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
 });
 
 // Callback Route for Facebook
 router.get('/facebook/callback', passport.authenticate('facebook', { session: false }), (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Redirect to the new callback page
+    res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
 });
 
 

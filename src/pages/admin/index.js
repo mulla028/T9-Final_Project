@@ -3,16 +3,16 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
-import { BASE_URL } from "../../../server/utils/general";
+import { API_BASE_URL } from '../utils/general';
 
 async function fetchUsers() {
-  const res = await fetch(`${BASE_URL}/Users`);
+  const res = await fetch(`${API_BASE_URL}/Users`);
   const data = await res.json();
   return data;
 }
 
 async function fetchVisitorCount() {
-  const res = await fetch(`${BASE_URL}/visitors`);
+  const res = await fetch(`${API_BASE_URL}/visitors`);
   const data = await res.json();
   return data.count;
 }
@@ -30,7 +30,7 @@ export default function Admin() {
       return;
     }
 
-    fetch(`{${BASE_URL}}/Admin`, {
+    fetch(`{${API_BASE_URL}}/Admin`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -58,7 +58,7 @@ export default function Admin() {
   }, []);
 
   const handleDelete = async (userId) => {
-    const res = await fetch(`${BASE_URL}/Users/${userId}`, {
+    const res = await fetch(`${API_BASE_URL}/Users/${userId}`, {
       method: 'DELETE',
     });
 
