@@ -29,14 +29,17 @@ const Hero = ({ setSearchResults }) => {
             alert("Please enter a destination before searching.");
             return;
         }
-
+    
+        console.log("🔍 Sending request to API with:", { searchInput, travelStyle });
+    
         try {
             const data = await fetchPlaces(searchInput, travelStyle);
+            console.log("✅ Search Results:", data);
             setSearchResults(data);
         } catch (error) {
-            console.error("Error fetching places:", error);
+            console.error("❌ Error fetching places:", error);
         }
-    };
+    };    
 
     // Handle Enter Key Behavior
     const handleKeyDown = (e) => {

@@ -103,8 +103,9 @@ export async function setPassword(id, password) {
     }
 }
 
+// services/index.js
 export async function fetchPlaces(location, travelStyle) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
     const data = await res.json();
 
     if (res.status === 200) {
@@ -113,6 +114,7 @@ export async function fetchPlaces(location, travelStyle) {
         throw new Error(data.error);
     }
 }
+
 
 export async function fetchPlaceDetails(place_id) {
     const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/details?place_id=${place_id}`);

@@ -1,7 +1,12 @@
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 const SearchResults = ({ searchResults }) => {
-    if (!searchResults || searchResults.length === 0) return null; // Don't show if no results
+    console.log("🔍 Received search results:", searchResults); // ✅ Log data for debugging
+
+    if (!searchResults || searchResults.length === 0) {
+        console.warn("⚠️ No search results found.");
+        return null; // Don't show if no results
+    }
 
     return (
         <Container className="search-results mt-5">
