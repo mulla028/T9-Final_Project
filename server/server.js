@@ -7,6 +7,7 @@ const auth = require('./routes/authRoutes');
 const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
 const sendPasswordReset = require("./controllers/passwordResetController");
+const { CALLBACK_URL } = require('./utils/general');
 
 const app = express();
 
@@ -14,7 +15,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({ origin: 'http://localhost:3000' || 'https://drift-way.vercel.app', credentials: true }));
+app.use(cors({ origin: `${CALLBACK_URL}` || 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 

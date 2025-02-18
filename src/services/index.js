@@ -1,6 +1,7 @@
 // services/index.js
 import { jwtDecode } from 'jwt-decode';
 import Router from 'next/router';
+import { API_BASE_URL } from '@/utils/general';
 
 export function setToken(token) {
     localStorage.setItem('access_token', token);
@@ -40,7 +41,7 @@ export function removeToken() {
 
 export async function registerUser(user, password, confirmPassword) {
     const { firstName, lastName, email } = user;
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+    const res = await my_fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
         body: JSON.stringify({ username: `${firstName} ${lastName}`, email, password, confirmPassword }),
     });
@@ -57,7 +58,7 @@ export async function registerUser(user, password, confirmPassword) {
 }
 
 export async function authenticateUser(email, password) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    const res = await my_fetch(`${API_BASE_URL}/auth/login`, {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });
@@ -73,7 +74,7 @@ export async function authenticateUser(email, password) {
 }
 
 export async function sendPasswordResetEmail(email) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/passwordResetEmail`, {
+    const res = await my_fetch(`${API_BASE_URL}/passwordResetEmail`, {
         method: "POST",
         body: JSON.stringify(email),
     });
@@ -88,7 +89,7 @@ export async function sendPasswordResetEmail(email) {
 }
 
 export async function setPassword(id, password) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/resetPassword`, {
+    const res = await my_fetch(`${API_BASE_URL}/resetPassword`, {
         method: "POST",
         body: JSON.stringify({id, password}),
     });
