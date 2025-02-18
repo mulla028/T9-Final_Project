@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import RegisterModal from '../components/RegisterModal'; // Import the modal component
 import ForgotPasswordModal from '../components/ForgotPasswordModal'; // Import the modal component
 import styles from '../styles/login.module.css'; // Import custom CSS for styling
-import { BASE_URL } from '../../server/utils/general';
+import { API_BASE_URL } from '../utils/general';
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
@@ -86,7 +86,7 @@ export default function Login() {
     e.preventDefault();
     if (isAdminLogin) {
       try {
-        const response = await fetch(`${BASE_URL}/Admin/login/admin`, {
+        const response = await fetch(`${API_BASE_URL}/Admin/login/admin`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
