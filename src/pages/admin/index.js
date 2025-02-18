@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
-import { API_BASE_URL } from '../utils/general';
+import { API_BASE_URL } from '../../utils/general';
 
 async function fetchUsers() {
   const res = await fetch(`${API_BASE_URL}/Users`);
