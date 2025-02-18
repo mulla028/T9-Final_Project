@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
 import AppleLogin from 'react-apple-login';
 import styles from '../styles/login.module.css'; // Import custom CSS for styling
+import { API_BASE_URL } from '@/utils/general';
 
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
