@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Changelog  
 
 ## Sprint 2 (Sp-2)  
@@ -43,3 +44,17 @@
 - Confirmed that Header authentication logic displays the correct buttons based on login state.
 - Manually tested server API routes to ensure all endpoints work correctly post-merge.
 
+=======
+TESTING PR
+
+# Changelog
+
+Every sprint's progress reflected here.
+
+## Sprint 1
+
+### Added
+
+- Added Login feature
+- Added Register feature
+>>>>>>> 55ef7e2 (Root files added)
