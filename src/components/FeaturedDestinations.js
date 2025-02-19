@@ -157,7 +157,11 @@ const FeaturedDestinations = () => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default FeaturedDestinations;
 =======
 export default FeaturedDestinations;
 >>>>>>> 6a51d3c (structure changed)
+=======
+export default FeaturedDestinations;
+>>>>>>> d6d7489 (Home page implemented (#27))

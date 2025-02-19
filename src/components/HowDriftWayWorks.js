@@ -64,7 +64,11 @@ const HowDriftWayWorks = () => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default HowDriftWayWorks;
 =======
 export default HowDriftWayWorks;
 >>>>>>> 6a51d3c (structure changed)
+=======
+export default HowDriftWayWorks;
+>>>>>>> d6d7489 (Home page implemented (#27))

@@ -14,18 +14,27 @@ const Header = () => {
 
 const Header = () => {
     return (
+<<<<<<< HEAD
         <Navbar bg="light" expand="lg">
             <Container fluid="md" >
 >>>>>>> 6a51d3c (structure changed)
+=======
+        <Navbar bg="light" expand="lg" fixed="top"> {/* Keeps the header fixed */}
+            <Container fluid="md">
+>>>>>>> d6d7489 (Home page implemented (#27))
                 <Navbar.Brand href="/">Driftway</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="m-auto flex">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d6d7489 (Home page implemented (#27))
                         <Nav.Link href="#why-slow-travel" className="no-bold-link">How It Works</Nav.Link>
                         <Nav.Link href="#hero" className="no-bold-link">Discover</Nav.Link>
                         <Nav.Link href="#eco-partners" className="no-bold-link">EcoPartnerships</Nav.Link>
                         <Nav.Link href="#blog-section" className="no-bold-link">Blog</Nav.Link>
+<<<<<<< HEAD
                     </Nav>
                     <Nav>
                         {token ? (
@@ -49,6 +58,13 @@ const Header = () => {
                     <Nav>
                         <Button variant="success" href="/signup" className="my-button">Sign in</Button>
 >>>>>>> 6a51d3c (structure changed)
+=======
+                    </Nav>
+                    <Nav>
+                        <Button variant="success" href="/signup" className="my-button">
+                            Sign in
+                        </Button>
+>>>>>>> d6d7489 (Home page implemented (#27))
                     </Nav>
                 </Navbar.Collapse>
             </Container>

@@ -56,6 +56,7 @@ Every sprint's progress reflected here.
 ### Added
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 - Added Login feature
 - Added Register feature
 >>>>>>> 55ef7e2 (Root files added)
@@ -66,3 +67,8 @@ Every sprint's progress reflected here.
 =======
 - Forgot Password logic and UI/UX using `nodemailer` Added [#28](https://github.com/mulla028/T9-Final_Project/pull/28)
 >>>>>>> 89ea291 (Forgot Password logic and UI implemented using nodemailer (#28))
+=======
+- Added the homepage [#27](https://github.com/mulla028/T9-Final_Project/pull/27)
+- Registration Page [#29](https://github.com/mulla028/T9-Final_Project/pull/29)
+- Forgot Password logic and UI/UX using `nodemailer` Added [#28](https://github.com/mulla028/T9-Final_Project/pull/28)
+>>>>>>> d6d7489 (Home page implemented (#27))

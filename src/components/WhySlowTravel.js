@@ -162,7 +162,11 @@ import { FaLeaf, FaGlobe, FaHandsHelping } from 'react-icons/fa';
 
 const WhySlowTravel = () => {
     return (
-        <div className="why-slow-travel" style={{ padding: '60px 0', backgroundColor: '#f9f9f9' }}>
+        <div
+            id="why-slow-travel" // Section ID for navigation
+            className="why-slow-travel"
+            style={{ padding: '60px 0', backgroundColor: '#f9f9f9' }}
+        >
             <Container>
                 <h2 className="text-center mb-4">Why Slow Travel Matters</h2>
                 <Row>
@@ -183,7 +187,9 @@ const WhySlowTravel = () => {
                     </Col>
                 </Row>
                 <div className="d-flex justify-content-center mt-5">
-                    <Button variant="primary" size="lg" href="/booking" className=" my-button">Start Planning Your Trip</Button>
+                    <Button variant="primary" size="lg" href="/booking" className="my-button">
+                        Start Planning Your Trip
+                    </Button>
                 </div>
 >>>>>>> 6a51d3c (structure changed)
             </Container>
@@ -191,9 +197,13 @@ const WhySlowTravel = () => {
     );
 };
 
+<<<<<<< HEAD
 export default WhySlowTravel;
 <<<<<<< HEAD
 
 
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+export default WhySlowTravel;
+>>>>>>> d6d7489 (Home page implemented (#27))

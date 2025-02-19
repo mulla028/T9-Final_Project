@@ -90,7 +90,11 @@ export default Footer;
 // };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // export default Footer;
 =======
 // export default Footer;
 >>>>>>> 6a51d3c (structure changed)
+=======
+// export default Footer;
+>>>>>>> d6d7489 (Home page implemented (#27))

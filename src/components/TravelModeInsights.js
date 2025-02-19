@@ -56,7 +56,11 @@ const TravelModeInsights = () => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export default TravelModeInsights;
 =======
 export default TravelModeInsights;
 >>>>>>> 6a51d3c (structure changed)
+=======
+export default TravelModeInsights;
+>>>>>>> d6d7489 (Home page implemented (#27))
