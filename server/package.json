@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "name": "driftway-app-backend",
+=======
+  "name": "innoCook-bundles-backend",
+>>>>>>> 3350c9c (server added)
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -17,7 +21,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.3",
+<<<<<<< HEAD
     "nodemailer": "^6.10.0",
+=======
+>>>>>>> 3350c9c (server added)
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-facebook-token": "^4.0.0",

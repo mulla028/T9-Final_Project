@@ -1,6 +1,11 @@
 // controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
+=======
+const passport = require('passport');
+const { generateToken } = require('../utils/jwtUtils');
+>>>>>>> 3350c9c (server added)
 const User = require('../models/User');
 
 exports.register = async (req, res) => {
@@ -15,7 +20,12 @@ exports.register = async (req, res) => {
         if (user) return res.status(400).json({ message: 'User already exists!' });
 
         user = new User({ username, email, password });
+<<<<<<< HEAD
         user.password = await bcrypt.hash(password, process.env.PASSWORD_SALT);
+=======
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+>>>>>>> 3350c9c (server added)
         await user.save();
 
         const payload = { user: { id: user.id, username: user.username } };

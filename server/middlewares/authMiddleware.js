@@ -15,6 +15,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+<<<<<<< HEAD
 const verifyAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -35,4 +36,6 @@ const verifyAdmin = (req, res, next) => {
 };
 
 module.exports = verifyAdmin;
+=======
+>>>>>>> 3350c9c (server added)
 module.exports = authMiddleware;

@@ -1,14 +1,21 @@
+<<<<<<< HEAD
+=======
+// server.js
+>>>>>>> 3350c9c (server added)
 require('dotenv').config();
 const express = require('express');
 const passport = require('./config/passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const auth = require('./routes/authRoutes');
+<<<<<<< HEAD
 const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const { CALLBACK_URL } = require('./utils/general');
+=======
+>>>>>>> 3350c9c (server added)
 
 const app = express();
 
@@ -16,12 +23,17 @@ const app = express();
 connectDB();
 
 // Middleware
+<<<<<<< HEAD
 app.use(cors({ origin: CALLBACK_URL || 'http://localhost:3000', credentials: true }));
+=======
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+>>>>>>> 3350c9c (server added)
 app.use(express.json());
 app.use(passport.initialize());
 
 // Define Routes
 app.use('/api/auth', auth);
+<<<<<<< HEAD
 app.use('/api/Users', User);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
@@ -62,3 +74,8 @@ app.get('/api/visitors', (req, res) => {
 // Start Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+=======
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+>>>>>>> 3350c9c (server added)

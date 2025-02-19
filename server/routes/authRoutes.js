@@ -1,8 +1,13 @@
+<<<<<<< HEAD
+=======
+// routes/authRoutes.js
+>>>>>>> 3350c9c (server added)
 const express = require('express');
 const passport = require('passport');
 const { generateToken } = require('../utils/jwtUtils');
 const { register, login } = require('../controllers/authController');
 const router = express.Router();
+<<<<<<< HEAD
 const { CALLBACK_URL } = require('../utils/general');
 
 // Registration route
@@ -32,6 +37,11 @@ console.log(req.path)
         res.status(500).json({ message: "Server error", error });
     }
 });
+=======
+
+router.post('/register', register);
+router.post('/login', login);
+>>>>>>> 3350c9c (server added)
 
 // Google Login Route
 router.get('/google', passport.authenticate('google', {
@@ -43,17 +53,28 @@ router.get('/facebook', passport.authenticate('facebook', {
     scope: ['email'], // Scopes you want to request
 }));
 
+<<<<<<< HEAD
 
 // Callback Route for Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
     const token = generateToken(req.user);
     res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
+=======
+// Callback Route for Google
+router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+    const token = generateToken(req.user);
+    res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Redirect to the new callback page
+>>>>>>> 3350c9c (server added)
 });
 
 // Callback Route for Facebook
 router.get('/facebook/callback', passport.authenticate('facebook', { session: false }), (req, res) => {
     const token = generateToken(req.user);
+<<<<<<< HEAD
     res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
+=======
+    res.redirect(`http://localhost:3000/auth/callback?token=${token}`); // Redirect to the new callback page
+>>>>>>> 3350c9c (server added)
 });
 
 

@@ -35,4 +35,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 compose.yml
+=======
+>>>>>>> 3350c9c (server added)
