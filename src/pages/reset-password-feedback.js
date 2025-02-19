@@ -11,6 +11,7 @@ const ResetPasswordFeedback = () => {
           <Navbar.Brand href="/">Driftway</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
 <<<<<<< HEAD
+<<<<<<< HEAD
           <Nav>
             <Button variant="dark" href="/signup" className="my-button">Sign in</Button>
           </Nav>
@@ -21,6 +22,12 @@ const ResetPasswordFeedback = () => {
           <Button variant="success" href="/signup" className="my-button">Sign in</Button>
         </Nav>
 >>>>>>> 89ea291 (Forgot Password logic and UI implemented using nodemailer (#28))
+=======
+          <Nav>
+            <Button variant="dark" href="/signup" className="my-button">Sign in</Button>
+          </Nav>
+        </Container>
+>>>>>>> 3bec758 (adding booking feature files)
       </Navbar>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}

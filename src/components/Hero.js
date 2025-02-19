@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useState, useRef, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@react-google-maps/api';
@@ -169,40 +170,141 @@ const Hero = ({ setSearchResults }) => {
 //     );
 // };
 
+=======
+import { useState, useRef } from 'react';
+>>>>>>> 3bec758 (adding booking feature files)
 import { Container, Form, Button } from 'react-bootstrap';
+import { Autocomplete } from '@react-google-maps/api';
+import { fetchPlaces } from '@/services/index';
 
-const Hero = () => {
+const Hero = ({ setSearchResults }) => { // Receive setSearchResults as a prop
+    const [searchInput, setSearchInput] = useState("");
+    const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+    const autoCompleteRef = useRef(null);
+    const [travelStyle, setTravelStyle] = useState('Cultural Immersion');
+
+    const handlePlaceSelect = () => {
+        if (autoCompleteRef.current) {
+            const place = autoCompleteRef.current.getPlace();
+            if (place && place.place_id) {
+                setSearchInput(place.formatted_address);
+                setSelectedPlaceId(place.place_id);
+            }
+        }
+    };
+
+    const handleSearch = async () => {
+        if (!searchInput.trim()) return;
+
+        try {
+            const place = autoCompleteRef.current?.getPlace();
+            const placeId = place?.place_id || selectedPlaceId;
+
+            // Fetch search results and update index.js state
+            const data = await fetchPlaces(searchInput, travelStyle);
+            setSearchResults(data); // Update state in index.js
+        } catch (error) {
+            console.error("Error fetching places:", error);
+        }
+    };
+
     return (
-        <div id = "hero"
+        <div
+            id="hero"
             className="hero-section"
             style={{
-                backgroundImage: 'url(https://images.unsplash.com/photo-1721456793774-03b354e24171?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)',
+                background: `linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), 
+                             url(https://images.unsplash.com/photo-1721456793774-03b354e24171?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 height: '100vh',
-                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
             }}
         >
-            <div className="overlay"></div>
-            <Container className="hero-content">
-                <h1 className="hero-title">Discover the Art of Slow Travel</h1>
-                <p className="hero-subtitle">
-                    Plan longer, eco-conscious trips that immerse you in culture, reduce your footprint, and support local communities.
+            <Container className="hero-content text-center">
+                <h1 className="hero-title" style={{ color: '#fff', marginBottom: '30px', animation: 'fadeIn 1s ease-out' }}>
+                    Discover the Art of Slow Travel
+                </h1>
+                <p className="hero-subtitle" style={{ color: '#f0f0f0', animation: 'fadeIn 1.5s ease-out' }}>
+                    Extended stays, cultural immersion, eco-conscious.
                 </p>
 
+<<<<<<< HEAD
                 {/* Search Bar */}
                 <Form className="d-flex justify-content-center mt-4">
                     <Form.Control type="text" placeholder="Search for Destinations" className="mr-3 w-50 search-input" />
                     <Button variant="success" className="search-button" style={{ marginLeft: '10px' }}>
 >>>>>>> 6a51d3c (structure changed)
+=======
+                {/* Search Form */}
+                <Form
+                    className="d-flex justify-content-center align-items-center mt-4 gap-2"
+                    style={{ animation: 'fadeIn 2s ease-out' }}
+                >
+                    {/* Destination Field with Autocomplete */}
+                    <div className="position-relative" style={{ width: '50%' }}>
+                        <Autocomplete
+                            onLoad={(autocomplete) => (autoCompleteRef.current = autocomplete)}
+                            onPlaceChanged={handlePlaceSelect}
+                        >
+                            <Form.Control
+                                type="text"
+                                placeholder="Where do you want to slow down?"
+                                className="search-input"
+                                style={{
+                                    width: '100%',
+                                    minWidth: '250px',
+                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                }}
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                            />
+                        </Autocomplete>
+                    </div>
+
+                    {/* Category Select */}
+                    <Form.Select
+                        value={travelStyle}
+                        className="search-input"
+                        style={{
+                            width: '25%',
+                            minWidth: '180px',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                        }}
+                        onChange={(e) => setTravelStyle(e.target.value)}
+                    >
+                        <option>Cultural Immersion</option>
+                        <option>Eco-Stays</option>
+                        <option>Outdoor Adventures</option>
+                        <option>Eco-Tourism</option>
+                        <option>Farm-to-Table Dining</option>
+                        <option>Wildlife Conservation</option>
+                    </Form.Select>
+
+                    {/* Search Button */}
+                    <Button
+                        variant="success"
+                        className="search-button"
+                        style={{
+                            minWidth: '120px',
+                            background: 'linear-gradient(90deg, #28a745, #218838)',
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                        }}
+                        onClick={handleSearch}
+                    >
+>>>>>>> 3bec758 (adding booking feature files)
                         Search
                     </Button>
                 </Form>
             </Container>
-        </div>
+        </div >
     );
 };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export default Hero;
 <<<<<<< HEAD
@@ -212,3 +314,6 @@ export default Hero;
 =======
 export default Hero;
 >>>>>>> d6d7489 (Home page implemented (#27))
+=======
+export default Hero;
+>>>>>>> 3bec758 (adding booking feature files)

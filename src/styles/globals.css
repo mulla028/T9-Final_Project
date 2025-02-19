@@ -1,10 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 @import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 @font-face {
   font-family: 'Mystical Woods Rough Script';
   src: url('../../public/assets/fonts/mystical-woods/MysticalWoodsRoughScript.eot');
@@ -19,16 +25,21 @@
 
 body {
 <<<<<<< HEAD
+<<<<<<< HEAD
   font-family: 'Montserrat', 'Lucida Sans Regular', sans-serif;
 =======
   font-family: 'Poppins', 'Lucida Sans Regular', sans-serif;
 >>>>>>> 6a51d3c (structure changed)
+=======
+  font-family: 'Montserrat', 'Lucida Sans Regular', sans-serif;
+>>>>>>> 3bec758 (adding booking feature files)
   background-color: white;
   margin: 0;
   padding: 0;
 }
 
 .hero-section {
+<<<<<<< HEAD
 <<<<<<< HEAD
   position: relative;
   overflow: hidden;
@@ -42,6 +53,10 @@ body {
   text-align: center;
   padding: 0;
 >>>>>>> 6a51d3c (structure changed)
+=======
+  position: relative;
+  overflow: hidden;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .hero-section .overlay {
@@ -51,11 +66,16 @@ body {
   width: 100%;
   height: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
 =======
   background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
 >>>>>>> 6a51d3c (structure changed)
+=======
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .hero-section .hero-content {
@@ -65,6 +85,7 @@ body {
 }
 
 .hero-section .hero-title {
+<<<<<<< HEAD
 <<<<<<< HEAD
   font-size: 3.5rem;
   font-style: italic;
@@ -97,30 +118,42 @@ body {
 =======
   font-size: 4rem;
   font-weight: lighter;
+=======
+  font-size: 3.5rem;
+>>>>>>> 3bec758 (adding booking feature files)
   font-style: italic;
-  font-family: 'Mystical Woods Rough Script', 'Playfair Display', serif;
+  font-family: 'Mystical Woods Rough Script', 'Playfair', serif;
   margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-section .hero-subtitle {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   max-width: 700px;
-  margin: 0 auto 30px;
+  margin: 0 auto;
 }
 
 .hero-section .search-input {
-  /* border-radius: 25px; */
-  padding: 15px;
+  border-radius: 30px;
+  padding: 20px;
   border: none;
 }
 
-/* .hero-section .search-button {
-  border-radius: 25px;
-} */
+.hero-section .search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
 
+<<<<<<< HEAD
 .hero-buttons .btn {
   margin: 10px;
 >>>>>>> 6a51d3c (structure changed)
+=======
+.hero-section .search-button {
+  border-radius: 40px;
+  padding: 20px 30px;
+  border: 'none',
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 h1, h2 {
@@ -128,13 +161,19 @@ h1, h2 {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 h2 {
   font-size: 2.8rem;
   font-weight: 500;
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .container {
   padding: 20px;
 }
@@ -142,6 +181,9 @@ h2 {
 .my-button {
   margin: 10px;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
   padding: 10px 14px;
   border-radius: 30px;
   font-weight: bold;
@@ -161,9 +203,12 @@ h2 {
   padding: 8px 14px;
   border-radius: 30px;
   border: none;
+<<<<<<< HEAD
 =======
   /* border-radius: 25px; */
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 /* .navbar {
@@ -176,6 +221,7 @@ h2 {
 
 .navbar .navbar-brand {
 <<<<<<< HEAD
+<<<<<<< HEAD
   font-family: 'Lora', serif;
   font-weight: 700;
   font-size: 2.5rem;
@@ -184,6 +230,11 @@ h2 {
   font-weight: bold;
   font-size: xx-large;
 >>>>>>> 6a51d3c (structure changed)
+=======
+  font-family: 'Lora', serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .nav-link {
@@ -192,13 +243,19 @@ h2 {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .why-slow-travel {
   position: relative;
   overflow: hidden;
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .why-slow-travel h3, .how-it-works h4 {
   margin-top: 15px;
 }
@@ -209,6 +266,9 @@ h2 {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .why-slow-travel .text-center h3 {
   transition: color 0.3s ease;
 }
@@ -217,13 +277,19 @@ h2 {
   color: #28a745;
 }
 
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .why-slow-travel .col-md-4, .how-it-works .col-md-3 {
   margin-bottom: 20px;
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .hidden {
   opacity: 0;
   transform: translateY(50px);
@@ -246,13 +312,17 @@ h2 {
 
 .featured-destinations .destination-carousel,
 .booking-search .destination-carousel {
+<<<<<<< HEAD
 =======
 .featured-destinations .destination-carousel {
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+<<<<<<< HEAD
 <<<<<<< HEAD
   overflow: hidden;
 }
@@ -289,39 +359,62 @@ h2 {
 .featured-destinations .destination-card img,
 .search-results .destination-card img {
 =======
+=======
+  overflow: hidden;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
-.featured-destinations .carousel-wrapper {
-  overflow: scroll /* Hide overflow to prevent showing cards outside the container */
+.featured-destinations .carousel-wrapper,
+.booking-search .carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
 }
 
-.featured-destinations .carousel-row {
-  display: flex;
-  transition: transform 0.5s ease-in-out; /* Smooth easing effect */
+.featured-destinations .carousel-row,
+.booking-search .carousel-row {
+  display: flex; 
+  flex-wrap: nowrap; 
+  gap: 20px; /* Optional: Adds space between cards */
+  transition: transform 0.5s ease-in-out;
 }
 
-.featured-destinations .destination-card {
+.carousel-row .destination-card {
+  flex: 0 0 25%; 
+}
+
+.featured-destinations .destination-card,
+.booking-search .destination-card {
   border: none;
+  margin-bottom: 30px;
   transition: transform 0.3s ease-in-out;
 }
 
-.featured-destinations .destination-card:hover {
+/* .featured-destinations .destination-card:hover {
   transform: translateY(-10px);
-}
+} */
 
 .featured-destinations .destination-card img {
+<<<<<<< HEAD
 >>>>>>> 6a51d3c (structure changed)
   height: 270px;
+=======
+  height: 300px;
+>>>>>>> 3bec758 (adding booking feature files)
   object-fit: cover;
   border-radius: 10px;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 .featured-destinations .carousel-control,
 .booking-search .carousel-control {
 =======
 .featured-destinations .carousel-control {
 >>>>>>> 6a51d3c (structure changed)
+=======
+.featured-destinations .carousel-control,
+.booking-search .carousel-control {
+>>>>>>> 3bec758 (adding booking feature files)
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -340,15 +433,21 @@ h2 {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .featured-destinations .carousel-control:hover,
 .booking-search .carousel-control:hover {
 =======
 .featured-destinations .carousel-control:hover {
 >>>>>>> 6a51d3c (structure changed)
+=======
+.featured-destinations .carousel-control:hover,
+.booking-search .carousel-control:hover {
+>>>>>>> 3bec758 (adding booking feature files)
   background: #28a745; /* Green background on hover */
   color: #fff;
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 .featured-destinations .carousel-control.prev,
 .booking-search .carousel-control.prev {
@@ -366,6 +465,16 @@ h2 {
 .featured-destinations .carousel-control.next {
   right: -50px;
 >>>>>>> 6a51d3c (structure changed)
+=======
+.featured-destinations .carousel-control.prev,
+.booking-search .carousel-control.prev {
+  left: 0px;
+}
+
+.featured-destinations .carousel-control.next,
+.booking-search .carousel-control.next {
+  right: 0px;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .featured-destinations .carousel-control svg {
@@ -410,6 +519,7 @@ h2 {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* .blog-section .card:hover {
   transform: translateY(-10px);
 } */
@@ -418,6 +528,11 @@ h2 {
   transform: translateY(-10px);
 }
 >>>>>>> 6a51d3c (structure changed)
+=======
+/* .blog-section .card:hover {
+  transform: translateY(-10px);
+} */
+>>>>>>> 3bec758 (adding booking feature files)
 
 .blog-section .card img {
   height: 200px;
@@ -467,11 +582,15 @@ footer form {
   position: relative;
   width: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
   height: 500px;
 =======
   height: 400px;
   overflow: hidden;
 >>>>>>> 6a51d3c (structure changed)
+=======
+  height: 500px;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .banner-image {
@@ -505,11 +624,15 @@ footer form {
 
 /* Search Section */
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 .search-container {
   display: flex;
   justify-content: center;
   margin-top: -50px;
   position: relative;
+<<<<<<< HEAD
   align-items: center;
 }
 
@@ -612,14 +735,111 @@ footer form {
   border-radius: 8px;
   padding: 12px;
   margin-right: 10px;
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
-.booking-search .search-form button {
-  border-radius: 8px;
+/* Floating Search Bar */
+.search-form {
+  background: white;
+  padding: 1px auto;
+  border-radius: 50px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  z-index: 10;
+}
+
+/* Align input fields in a row */
+.search-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0px;
+  width: 100%;
+}
+
+/* Each search field */
+.search-col {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+/* Search Group (Icon + Input) */
+.search-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #9ea3a8;
+  border-radius: 40px;
+  padding: 12px 15px;
+  width: 100%;
+}
+
+/* Icons inside the fields */
+.search-icon {
+  font-size: 1.2rem;
+  color: #1d2d50;
+  margin-right: 8px;
+}
+
+/* Input Fields */
+.search-form input,
+.search-form select {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  width: 100%;
+  color: #9ea3a8;
+  background: transparent;
+}
+
+.search-form input:focus,
+.search-form select:focus {
+  box-shadow: none;
+}
+
+/* Custom styling for the DatePicker */
+.date-picker {
+  width: 100% !important; /* Ensures full width */
+  display: block; /* Ensures it behaves like other form controls */
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid #9ea3a8;
+  border-radius: 5px;
+  padding: 12px 15px; /* Adjust padding */
+  font-size: 16px; /* Match input text size */
+  cursor: pointer;
+}
+
+/* Ensure consistency inside a form group */
+.form-group .date-picker {
+  width: 100%;
+}
+
+/* Search Button */
+.banner-section .search-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
   padding: 12px 25px;
-  font-size: 16px;
   font-weight: bold;
+<<<<<<< HEAD
 >>>>>>> 6a51d3c (structure changed)
+=======
+  background: #28a745;
+  color: white;
+  border: none;
+  width: 100%;
+  height: 60px;
+}
+
+.search-button:hover {
+  background: #027d47;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .booking-search h2 {
@@ -629,6 +849,7 @@ footer form {
 }
 
 /* Filters Section */
+<<<<<<< HEAD
 <<<<<<< HEAD
 .filter-accordion .accordion-item {
   border: none;
@@ -673,16 +894,33 @@ footer form {
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 >>>>>>> 6a51d3c (structure changed)
+=======
+.filter-accordion .accordion-item {
+  border: none;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Featured Places Cards */
+.featured-places img {
+  height: 400px; /* Set a fixed height for all carousel images */
+  margin: auto;
+  padding: 10px;
+  object-fit: cover;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .booking-search .card img {
   height: 200px;
   object-fit: cover;
 <<<<<<< HEAD
+<<<<<<< HEAD
   border-radius: 5px 5px 0 0;
 =======
   border-radius: 15px 15px 0 0;
 >>>>>>> 6a51d3c (structure changed)
+=======
+  border-radius: 5px 5px 0 0;
+>>>>>>> 3bec758 (adding booking feature files)
 }
 
 .booking-search .card-title {
@@ -718,6 +956,7 @@ footer form {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .search-results-title {
   font-family: 'Times New Roman', serif;
   font-size: 42px;
@@ -730,6 +969,9 @@ footer form {
 >>>>>>> 6a51d3c (structure changed)
 
 /* search results page */
+=======
+/* search results section */
+>>>>>>> 3bec758 (adding booking feature files)
 .search-results h3 {
   font-family: 'Poppins', sans-serif;
   font-weight: bold;
@@ -740,13 +982,13 @@ footer form {
   transition: transform 0.3s ease-in-out;
 }
 
-.search-results .card:hover {
+/* .search-results .card:hover {
   transform: translateY(-5px);
-}
+} */
 
 .search-results .card img {
   border-radius: 10px 10px 0 0;
-  height: 180px;
+  height: 300px;
   object-fit: cover;
 }
 
@@ -782,6 +1024,26 @@ footer form {
 .booking-details .btn {
   border-radius: 25px;
 }
+
+.location-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 20px; /* Rounded edges */
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  background-color: #f8f9fa; /* Light gray background */
+  white-space: nowrap;
+}
+
+.location-tag svg {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
 
 /* Hero Section */
 .itinerary-planner .hero {
@@ -1237,6 +1499,9 @@ footer form {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 @keyframes fadeIn {
   from {
       opacity: 0;
@@ -1261,5 +1526,8 @@ footer form {
       transform: scale(1);
   }
 }
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)

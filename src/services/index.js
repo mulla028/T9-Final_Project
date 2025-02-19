@@ -124,6 +124,19 @@ export async function fetchPlaceDetails(place_id) {
         throw new Error(data.error);
     }
 }
+
+export async function fetchNearbyAttractions(location) {
+    const locationString = `${location.lat},${location.lng}`; // Convert location object to string
+    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/nearby?location=${encodeURIComponent(locationString)}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
 export async function my_fetch(url, args) {
     const _args = {
         ...args,

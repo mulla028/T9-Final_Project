@@ -28,10 +28,14 @@ const Footer = () => {
                                 <Form.Control type="email" placeholder="Enter your email" style={{ border: '1px solid #333' }} />
                             </Form.Group>
 <<<<<<< HEAD
+<<<<<<< HEAD
                             <Button variant="dark" type="submit">Subscribe</Button>
 =======
                             <Button variant="primary" type="submit">Subscribe</Button>
 >>>>>>> 6a51d3c (structure changed)
+=======
+                            <Button variant="dark" type="submit">Subscribe</Button>
+>>>>>>> 3bec758 (adding booking feature files)
                         </Form>
                         <div className="social-icons mt-3">
                             <a href="https://instagram.com" style={{ marginRight: '10px' }}><FaInstagram size={24} /></a>

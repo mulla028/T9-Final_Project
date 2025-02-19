@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Container, Row, Col, Button } from 'react-bootstrap';
 =======
 import { Container, Row, Col } from 'react-bootstrap';
 >>>>>>> 6a51d3c (structure changed)
+=======
+import { Container, Row, Col, Button } from 'react-bootstrap';
+>>>>>>> 3bec758 (adding booking feature files)
 import { FaMapMarkerAlt, FaCalendarAlt, FaStore, FaLeaf } from 'react-icons/fa';
 
 const HowDriftWayWorks = () => {
@@ -33,6 +37,9 @@ const HowDriftWayWorks = () => {
                     </Col>
                 </Row>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
                 <div className="d-flex justify-content-center mt-5">
                     <Button
                         variant="primary"
@@ -56,8 +63,11 @@ const HowDriftWayWorks = () => {
                         Start Planning Your Trip
                     </Button>
                 </div>
+<<<<<<< HEAD
 =======
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
             </Container>
         </div>
     );

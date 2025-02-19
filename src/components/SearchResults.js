@@ -1,8 +1,25 @@
+<<<<<<< HEAD
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
 const SearchResults = ({ searchResults }) => {
     if (!searchResults || searchResults.length === 0) return null; // Don't show if no results
 
+=======
+import { useRouter } from 'next/router';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { isAuthenticated } from '@/services';
+
+const SearchResults = ({ searchResults }) => {
+    const router = useRouter();
+    if (!searchResults || searchResults.length === 0) return null; // Don't show if no results
+
+    const handleOnclick = (result) => {
+        const authState = isAuthenticated();
+        const destination = authState && result?.place_id ? `/booking-details/${result.place_id}` : `/signup`;
+        router.push(destination);
+    }
+
+>>>>>>> 3bec758 (adding booking feature files)
     return (
         <Container className="search-results mt-5">
             <h2 className="search-results-title">Search Results</h2>
@@ -14,7 +31,11 @@ const SearchResults = ({ searchResults }) => {
                             <Card.Body>
                                 <Card.Title>{result.name}</Card.Title>
                                 <Card.Text>{result.description || 'No description available.'}</Card.Text>
+<<<<<<< HEAD
                                 <Button variant="outline-success" className='my-button' href={`/booking-details/${result.place_id}`}>
+=======
+                                <Button variant="outline-success" className='my-button' onClick={() => handleOnclick(result)}>
+>>>>>>> 3bec758 (adding booking feature files)
                                     View Details
                                 </Button>
                             </Card.Body>

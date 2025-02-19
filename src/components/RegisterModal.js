@@ -2,15 +2,20 @@ import { useForm } from 'react-hook-form';
 import { Modal, Button, Form, Row, Col, Alert, Container } from 'react-bootstrap';
 import { useState } from 'react';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 =======
 import { FaFacebook, FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
 >>>>>>> 6a51d3c (structure changed)
+=======
+import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
+>>>>>>> 3bec758 (adding booking feature files)
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { FacebookProvider } from 'react-facebook';
 import { registerUser } from "@/services";
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import styles from '../styles/login.module.css'; // Import custom CSS for styling
 import { API_BASE_URL } from '@/utils/general';
@@ -19,13 +24,18 @@ const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 =======
 import AppleLogin from 'react-apple-login';
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 import styles from '../styles/login.module.css'; // Import custom CSS for styling
 
 const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
+<<<<<<< HEAD
 const appleClientId = 'YOUR_APPLE_CLIENT_ID';
 const appleRedirectURI = 'YOUR_APPLE_REDIRECT_URI';
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 
 export default function RegisterModal({ show, handleClose }) {
     const { register, handleSubmit, formState: { errors, touchedFields }, trigger, reset } = useForm({
@@ -41,12 +51,17 @@ export default function RegisterModal({ show, handleClose }) {
     const [warning, setWarning] = useState('');
     const [showPassword, setShowPassword] = useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [loading, setLoading] = useState({ google: false, facebook: false });
 
 =======
     const [googleLoading, setGoogleLoading] = useState(false);
     const [facebookLoading, setFacebookLoading] = useState(false)
 >>>>>>> 6a51d3c (structure changed)
+=======
+    const [loading, setLoading] = useState({ google: false, facebook: false });
+
+>>>>>>> 3bec758 (adding booking feature files)
     const router = useRouter();
     const { login } = useAuth();
 
@@ -56,6 +71,7 @@ export default function RegisterModal({ show, handleClose }) {
     };
 
     const handleSocialRegister = (provider) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
         setLoading((prev) => ({ ...prev, [provider]: true }));
         window.location.href = `${API_BASE_URL}/auth/${provider}`;
@@ -92,6 +108,10 @@ export default function RegisterModal({ show, handleClose }) {
     // Apple Login
     const onAppleLoginSuccess = (response) => {
         handleSocialRegister(response.authorization.code, 'apple');
+=======
+        setLoading((prev) => ({ ...prev, [provider]: true }));
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}`;
+>>>>>>> 3bec758 (adding booking feature files)
     };
 
     const onSubmit = async (data, e) => {
@@ -147,6 +167,7 @@ export default function RegisterModal({ show, handleClose }) {
                                     <Col>
                                         <Form.Group controlId="firstName">
 <<<<<<< HEAD
+<<<<<<< HEAD
                                             <Form.Label className={styles['custom-label']}>First Name</Form.Label>
                                             <Form.Control className={styles["custom-input"]}
                                                 placeholder="First name"
@@ -160,12 +181,20 @@ export default function RegisterModal({ show, handleClose }) {
                                                 isInvalid={touchedFields.firstName && errors.firstName}
                                                 style={{ padding: '15px' }}
 >>>>>>> 6a51d3c (structure changed)
+=======
+                                            <Form.Label className={styles['custom-label']}> First Name</Form.Label>
+                                            <Form.Control className={styles["custom-input"]}
+                                                placeholder="First name"
+                                                {...register('firstName', { required: 'First name is required' })}
+                                                isInvalid={touchedFields.firstName && errors.firstName}
+>>>>>>> 3bec758 (adding booking feature files)
                                             />
                                             {errors.firstName && <Form.Text className="text-danger">{errors.firstName.message}</Form.Text>}
                                         </Form.Group>
                                     </Col>
                                     <Col>
                                         <Form.Group controlId="lastName">
+<<<<<<< HEAD
 <<<<<<< HEAD
                                             <Form.Label className={styles['custom-label']}>Last Name</Form.Label>
                                             <Form.Control className={styles["custom-input"]}
@@ -180,12 +209,20 @@ export default function RegisterModal({ show, handleClose }) {
                                                 isInvalid={touchedFields.lastName && errors.lastName}
                                                 style={{ padding: '15px' }}
 >>>>>>> 6a51d3c (structure changed)
+=======
+                                            <Form.Label className={styles['custom-label']}> Last Name</Form.Label>
+                                            <Form.Control className={styles["custom-input"]}
+                                                placeholder="Last name"
+                                                {...register('lastName', { required: 'Last name is required' })}
+                                                isInvalid={touchedFields.lastName && errors.lastName}
+>>>>>>> 3bec758 (adding booking feature files)
                                             />
                                             {errors.lastName && <Form.Text className="text-danger">{errors.lastName.message}</Form.Text>}
                                         </Form.Group>
                                     </Col>
                                 </Row>
 
+<<<<<<< HEAD
 <<<<<<< HEAD
                                 <Form.Group className="mt-4 mb-4" controlId="formEmail">
                                     <Form.Label className={styles['custom-label']}>Email Address</Form.Label>
@@ -195,21 +232,34 @@ export default function RegisterModal({ show, handleClose }) {
                                     <Form.Label> Email Address</Form.Label>
                                     <Form.Control
 >>>>>>> 6a51d3c (structure changed)
+=======
+                                <Form.Group className="mt-4 mb-4" controlId="formEmail">
+                                    <Form.Label className={styles['custom-label']}> Email Address</Form.Label>
+                                    <Form.Control className={styles["custom-input"]}
+>>>>>>> 3bec758 (adding booking feature files)
                                         type="email"
                                         placeholder="Enter email"
                                         {...register('email', { required: 'Email is required' })}
                                         isInvalid={touchedFields.email && errors.email}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                                         style={{ padding: '15px' }}
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
                                     />
                                     {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
                                 </Form.Group>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <Form.Group className="mb-4" controlId="formPassword" style={{ position: 'relative' }}>
                                     <Form.Label className={styles['custom-label']}>Password</Form.Label>
+=======
+                                <Form.Group className="mb-4" controlId="formPassword" style={{ position: 'relative' }}>
+                                    <Form.Label className={styles['custom-label']}> Password</Form.Label>
+>>>>>>> 3bec758 (adding booking feature files)
                                     <div className={styles["password-container"]}>
                                         <Form.Control className={styles["custom-input"]}
                                             type={showPassword ? "text" : "password"}
@@ -218,10 +268,15 @@ export default function RegisterModal({ show, handleClose }) {
                                             isInvalid={touchedFields.password && errors.password}
                                             style={{ padding: '15px', paddingRight: '50px' }}
                                         />
+<<<<<<< HEAD
+=======
+                                        {/* Eye Icon Button */}
+>>>>>>> 3bec758 (adding booking feature files)
                                         <span onClick={togglePasswordVisibility}>
                                             {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                                         </span>
                                     </div>
+<<<<<<< HEAD
 =======
                                 <Form.Group className="mb-4" controlId="formBasicPassword" style={{ position: 'relative' }}>
                                     <Form.Label> Password</Form.Label>
@@ -247,11 +302,14 @@ export default function RegisterModal({ show, handleClose }) {
                                         {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                                     </span>
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
                                     {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
                                     {errors.password?.type === "minLength" && <Form.Text className="text-danger">Must be at least 8 characters</Form.Text>}
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="formConfirmPassword">
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     <Form.Label className={styles['custom-label']}>Confirm Password</Form.Label>
                                     <Form.Control className={styles["custom-input"]}
@@ -259,6 +317,10 @@ export default function RegisterModal({ show, handleClose }) {
                                     <Form.Label> Confirm Password</Form.Label>
                                     <Form.Control
 >>>>>>> 6a51d3c (structure changed)
+=======
+                                    <Form.Label className={styles['custom-label']}> Confirm Password</Form.Label>
+                                    <Form.Control className={styles["custom-input"]}
+>>>>>>> 3bec758 (adding booking feature files)
                                         type="password"
                                         placeholder="Confirm Password"
                                         {...register('confirmPassword', { required: 'Confirm password is required' })}
@@ -269,6 +331,7 @@ export default function RegisterModal({ show, handleClose }) {
                                 </Form.Group>
 
                                 <div className="d-grid gap-2">
+<<<<<<< HEAD
 <<<<<<< HEAD
                                     <Button variant="success" className={styles["custom-submit-button"]} type="submit" onClick={() => trigger()}>Join now</Button>
                                 </div>
@@ -299,14 +362,37 @@ export default function RegisterModal({ show, handleClose }) {
                             </div>
 =======
                                     <Button variant="success" style={{ padding: '18px', marginTop: '5px', marginBottom: '20px' }} type="submit" onClick={() => trigger()}>Join now</Button>
+=======
+                                    <Button variant="success" className={styles["custom-submit-button"]} type="submit" onClick={() => trigger()}>Join now</Button>
+>>>>>>> 3bec758 (adding booking feature files)
                                 </div>
                             </Form>
-                        </div>
 
-                        <div className={styles['social-login-wrapper']}>
-                            <div className={styles['or-signin-text']}>
-                                <span>Or sign up with</span>
+                            <div className={styles['social-login-wrapper']}>
+                                <div className={styles['or-signin-text']}>
+                                    <span>Or sign up with</span>
+                                </div>
+
+                                {/* Social login options container */}
+                                <Container className={styles['social-login-buttons']}>
+                                    <Button
+                                        className={styles['custom-google-button']}
+                                        disabled={loading.google}
+                                        onClick={() => handleSocialRegister('google')}
+                                    >
+                                        {loading.google ? '...' : <FaGoogle size={24} />}
+                                    </Button>
+
+                                    <Button
+                                        className={styles['custom-facebook-button']}
+                                        disabled={loading.facebook}
+                                        onClick={() => handleSocialRegister('facebook')}
+                                    >
+                                        {loading.facebook ? '...' : <FaFacebook size={24} />}
+                                    </Button>
+                                </Container>
                             </div>
+<<<<<<< HEAD
 
                             {/* Social login options container */}
                             <Container className={styles['social-login-buttons']}>
@@ -327,6 +413,8 @@ export default function RegisterModal({ show, handleClose }) {
                                 </Button>
                             </Container>
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
                         </div>
                     </Modal.Body>
                 </Modal>

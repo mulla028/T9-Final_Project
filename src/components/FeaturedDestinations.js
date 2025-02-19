@@ -34,6 +34,9 @@ const FeaturedDestinations = () => {
             description: 'Embark on a journey through the untouched wilderness.',
             link: '#'
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
         },
         {
             image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -53,6 +56,7 @@ const FeaturedDestinations = () => {
             description: 'Explore scenic vineyards and sustainable farmhouses.',
             link: '#'
         },
+<<<<<<< HEAD
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -65,18 +69,23 @@ const FeaturedDestinations = () => {
         if (currentIndex > 0) setCurrentIndex(currentIndex - 4);
 =======
         }
+=======
+>>>>>>> 3bec758 (adding booking feature files)
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const visibleDestinations = destinations.slice(currentIndex, currentIndex + 4);
 
     const handleNext = () => {
-        if (currentIndex < destinations.length - 4) setCurrentIndex(currentIndex + 1);
+        if (currentIndex < destinations.length - 4) setCurrentIndex(currentIndex + 4);
     };
 
     const handlePrev = () => {
+<<<<<<< HEAD
         if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
 >>>>>>> 6a51d3c (structure changed)
+=======
+        if (currentIndex > 0) setCurrentIndex(currentIndex - 4);
+>>>>>>> 3bec758 (adding booking feature files)
     };
 
     return (
@@ -84,11 +93,16 @@ const FeaturedDestinations = () => {
             <Container>
                 <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <Row className="destination-carousel">
 
 =======
                 <div className="destination-carousel">
 >>>>>>> 6a51d3c (structure changed)
+=======
+                <Row className="destination-carousel">
+
+>>>>>>> 3bec758 (adding booking feature files)
                     {/* Left Arrow: Show only if not at the first card */}
                     {currentIndex > 0 && (
                         <Button variant="outline-secondary" className="carousel-control prev" onClick={handlePrev}>
@@ -98,6 +112,9 @@ const FeaturedDestinations = () => {
 
                     {/* Destination Cards */}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
                     <div className="carousel-wrapper">
                         <Row
                             className="carousel-row"
@@ -118,6 +135,7 @@ const FeaturedDestinations = () => {
                             ))}
                         </Row>
                     </div>
+<<<<<<< HEAD
 =======
                     <Row
                         className="carousel-row"
@@ -139,6 +157,8 @@ const FeaturedDestinations = () => {
                         ))}
                     </Row>
 >>>>>>> 6a51d3c (structure changed)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 
                     {/* Right Arrow: Show only if not at the last card */}
                     {currentIndex < destinations.length - 4 && (
@@ -147,10 +167,14 @@ const FeaturedDestinations = () => {
                         </Button>
                     )}
 <<<<<<< HEAD
+<<<<<<< HEAD
                 </Row>
 =======
                 </div>
 >>>>>>> 6a51d3c (structure changed)
+=======
+                </Row>
+>>>>>>> 3bec758 (adding booking feature files)
             </Container>
         </div>
     );

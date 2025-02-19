@@ -1,5 +1,8 @@
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 import { useAuth } from '@/context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
 
@@ -61,10 +64,20 @@ const Header = () => {
 =======
                     </Nav>
                     <Nav>
+<<<<<<< HEAD
                         <Button variant="success" href="/signup" className="my-button">
                             Sign in
                         </Button>
 >>>>>>> d6d7489 (Home page implemented (#27))
+=======
+                        {token ? (
+                            <ProfileDropdown />
+                        ) : (
+                            <Button variant="dark" href="/signup" className="my-button">
+                                Sign in
+                            </Button>
+                        )}
+>>>>>>> 3bec758 (adding booking feature files)
                     </Nav>
                 </Navbar.Collapse>
             </Container>

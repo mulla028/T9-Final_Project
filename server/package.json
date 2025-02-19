@@ -38,6 +38,7 @@
     "passport-facebook-token": "^4.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-google-oidc": "^0.1.0",
-    "passport-google-token": "^0.1.2"
+    "passport-google-token": "^0.1.2",
+    "redis": "^4.7.0"
   }
 }

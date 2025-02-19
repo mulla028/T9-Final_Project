@@ -2,10 +2,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 const passport = require('passport');
 const { generateToken } = require('../utils/jwtUtils');
 >>>>>>> 3350c9c (server added)
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 const User = require('../models/User');
 
 exports.register = async (req, res) => {
@@ -47,7 +50,7 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: 'User not existed. Register Now!' });
-        
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 

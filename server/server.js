@@ -10,8 +10,11 @@ const cors = require('cors');
 const auth = require('./routes/authRoutes');
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
+=======
+>>>>>>> 3bec758 (adding booking feature files)
 const places = require('./routes/placesRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const { CALLBACK_URL } = require('./utils/general');
@@ -31,12 +34,17 @@ connectDB();
 app.use(cors({ origin: CALLBACK_URL || 'http://localhost:3000', credentials: true }));
 =======
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+<<<<<<< HEAD
 >>>>>>> 3350c9c (server added)
+=======
+// app.use(cors());
+>>>>>>> 3bec758 (adding booking feature files)
 app.use(express.json());
 app.use(passport.initialize());
 
 // Define Routes
 app.use('/api/auth', auth);
+<<<<<<< HEAD
 <<<<<<< HEAD
 app.use('/api/Users', User);
 app.use('/api/Admin', AdminRoutes);
@@ -79,17 +87,20 @@ app.get('/api/visitors', (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 =======
+=======
+app.use('/api/places', places);
+>>>>>>> 3bec758 (adding booking feature files)
 
 // Send email for forgetting password
 app.post('/api/passwordResetEmail', async (req, res) => {
     const { email } = req.body;
     try {
         await sendPasswordReset.sendPasswordReset(email);
-        res.status(200).send({email});
+        res.status(200).send({ email });
     } catch (error) {
         res.status(500).send({ message: error.message });
     }
-  });
+});
 
 // Send reset password
 app.post('/api/resetPassword', async (req, res) => {
@@ -97,11 +108,11 @@ app.post('/api/resetPassword', async (req, res) => {
     const { password } = req.body;
     try {
         await sendPasswordReset.resetPassword(id, password);
-        res.status(200).send({id});
+        res.status(200).send({ id });
     } catch (error) {
         res.status(500).send(error.message);
     }
-  });
+});
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
