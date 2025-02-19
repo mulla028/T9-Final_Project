@@ -1,2 +1,2 @@
-export const CALLBACK_URL = process.env.NODE_ENV == "prod" ? process.env.CALLBACK_URL : 'http://localhost:8080/api';
-export const REDIRECT_URL = process.env.NODE_ENV == "prod" ? 'https://drift-way.vercel.app' : 'http://localhost:3000';
+export const CALLBACK_URL = process.env.CALLBACK_URL || 'http://localhost:8080/api';
+export const REDIRECT_URL = process.env.REDIRECT_URL || 'http://localhost:3000';
