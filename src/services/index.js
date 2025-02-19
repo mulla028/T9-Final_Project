@@ -119,6 +119,44 @@ export async function setPassword(id, password) {
     }
 }
 
+export async function getItineraryForDay(id, day) {
+    const res = await my_fetch(`${API_BASE_URL}/itinerary`, {
+        method: "POST",
+        body: JSON.stringify({id, day}),
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export const updateItineraryForDay = async (id, day, newItinerary, transportMode) => {
+    try {
+        const response = await my_fetch(`${API_BASE_URL}/setItinerary`, {
+            method: "POST",
+            body: JSON.stringify({
+                id,
+                day,
+                newItinerary,
+                transportMode, // Send the travel mode here
+            }),
+        });
+
+        console.log(response);
+
+        if (!response.ok) {
+            throw new Error("Failed to update itinerary");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error updating itinerary:", error);
+        throw error;
+    }
+};
 export async function fetchPlaces(location, travelStyle) {
     const res = await my_fetch(`${API_BASE_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
     console.log("fetchPlaces() res: ", res);
@@ -176,5 +214,3 @@ export async function my_fetch(url, args) {
         throw error;
     }
 }
-
-

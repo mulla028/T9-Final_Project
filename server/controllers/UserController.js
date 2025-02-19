@@ -52,4 +52,44 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser };
+// Get the user itinerary details for a specific day
+const getItineraryForDay = async (userId, day) => {
+    try {
+        const user = await User.findOne(
+            { _id: userId, "itinerary.day": day }, 
+            { "itinerary.$": 1 } // Projection to return only the matching itinerary day
+        );
+        return user ? user.itinerary[0] : null;
+    } catch (error) {
+        console.error("Error fetching itinerary:", error);
+        throw error;
+    }
+}
+const updateUserItineraryForDay = async (userId, day, newItinerary, newTransportMode) => {
+    try {
+        const result = await User.updateOne(
+            { _id: userId, "itinerary.day": day },
+            { 
+                $set: { 
+                    "itinerary.$.experiences": newItinerary.experiences,
+                    "itinerary.$.transport.mode": newTransportMode // Update transport mode
+                }
+            }
+        );
+
+        if (result.matchedCount === 0) {
+            // If no matching day found, add a new itinerary entry with the transport mode
+            await User.updateOne(
+                { _id: userId },
+                { $push: { itinerary: { day, experiences: newItinerary.experiences, transport: { mode: newTransportMode } } } }
+            );
+        }
+
+        return { success: true, message: "Itinerary updated with transport mode" };
+    } catch (error) {
+        console.error("Error updating itinerary:", error);
+        throw error;
+    }
+};
+
+module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, getItineraryForDay, updateUserItineraryForDay };

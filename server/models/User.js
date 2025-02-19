@@ -5,20 +5,18 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
-
     itinerary: [
         {
-            day: { type: Number, required: true }, // Day index (Day 1, Day 2, ...)
-
+            day: { type: Number, required: true },
             stay: {
                 placeId: { type: String }, // Google Places ID (Optional if no stay)
                 placeName: { type: String },
                 location: { type: String },
-                checkIn: { type: Date },
-                checkOut: { type: Date },
+                checkIn: { type: Date }, 
+                checkOut: { type: Date }, 
                 guests: { type: Number, min: 1 }
             },
-
+ 
             experiences: [
                 {
                     placeId: { type: String }, // Google Places ID
@@ -41,5 +39,3 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('User', userSchema);
-
-
