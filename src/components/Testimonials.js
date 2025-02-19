@@ -3,6 +3,7 @@ import { Container, Carousel } from 'react-bootstrap';
 const Testimonials = () => {
     const testimonials = [
         {
+<<<<<<< HEAD
             image: 'http://www.neiyitu.com/cjpic/frombd/0/253/2420273647/1297396620.jpg', 
             name: 'Emily, Bali',
             quote: 'Thanks to DriftWay, I connected with local artisans in Bali while staying at an eco-friendly homestay. Truly an unforgettable experience!',
@@ -17,6 +18,22 @@ const Testimonials = () => {
             name: 'Sophia, Tuscany',
             quote: 'I stayed at a sustainable farmhouse in Tuscany and got to experience the local culture up close. DriftWay made it all so easy.',
         },
+=======
+            image: '/images/testimonial1.jpg',
+            name: 'Emily, Bali',
+            quote: 'Thanks to DriftWay, I connected with local artisans in Bali while staying at an eco-friendly homestay. Truly an unforgettable experience!'
+        },
+        {
+            image: '/images/testimonial2.jpg',
+            name: 'Liam, Kyoto',
+            quote: 'The best part of my trip to Kyoto was the slow travel. DriftWay helped me discover quiet temples and eco-friendly stays.'
+        },
+        {
+            image: '/images/testimonial3.jpg',
+            name: 'Sophia, Tuscany',
+            quote: 'I stayed at a sustainable farmhouse in Tuscany and got to experience the local culture up close. DriftWay made it all so easy.'
+        }
+>>>>>>> 6a51d3c (structure changed)
     ];
 
     return (
@@ -31,6 +48,7 @@ const Testimonials = () => {
                                     src={testimonial.image}
                                     alt={testimonial.name}
                                     className="testimonial-img"
+<<<<<<< HEAD
                                     style={{
                                         borderRadius: '50%',
                                         width: '120px',
@@ -38,11 +56,18 @@ const Testimonials = () => {
                                         objectFit: 'cover',
                                         border: '3px solid #ddd',
                                     }}
+=======
+                                    style={{ borderRadius: '50%', width: '120px', height: '120px', objectFit: 'cover' }}
+>>>>>>> 6a51d3c (structure changed)
                                 />
                             </div>
                             <Carousel.Caption>
                                 <p className="testimonial-quote">"{testimonial.quote}"</p>
+<<<<<<< HEAD
                                 <h5 style={{ fontWeight: 'bold' }}>{testimonial.name}</h5>
+=======
+                                <h5>{testimonial.name}</h5>
+>>>>>>> 6a51d3c (structure changed)
                             </Carousel.Caption>
                         </Carousel.Item>
                     ))}
@@ -52,4 +77,8 @@ const Testimonials = () => {
     );
 };
 
+<<<<<<< HEAD
 export default Testimonials;
+=======
+export default Testimonials;
+>>>>>>> 6a51d3c (structure changed)

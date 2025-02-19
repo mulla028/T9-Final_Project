@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Container, Row, Col, Button } from 'react-bootstrap';
+=======
+import { Container, Row, Col } from 'react-bootstrap';
+>>>>>>> 6a51d3c (structure changed)
 import { FaMapMarkerAlt, FaCalendarAlt, FaStore, FaLeaf } from 'react-icons/fa';
 
 const HowDriftWayWorks = () => {
@@ -28,6 +32,7 @@ const HowDriftWayWorks = () => {
                         <p>Monitor your carbon footprint and get tips to reduce it.</p>
                     </Col>
                 </Row>
+<<<<<<< HEAD
                 <div className="d-flex justify-content-center mt-5">
                     <Button
                         variant="primary"
@@ -51,9 +56,15 @@ const HowDriftWayWorks = () => {
                         Start Planning Your Trip
                     </Button>
                 </div>
+=======
+>>>>>>> 6a51d3c (structure changed)
             </Container>
         </div>
     );
 };
 
+<<<<<<< HEAD
 export default HowDriftWayWorks;
+=======
+export default HowDriftWayWorks;
+>>>>>>> 6a51d3c (structure changed)

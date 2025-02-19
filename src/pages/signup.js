@@ -1,7 +1,8 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { FacebookProvider } from 'react-facebook';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
-import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useState } from 'react';
 import { FaFacebook, FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { authenticateUser } from "@/services";
 import { useRouter } from "next/router";
@@ -170,4 +171,4 @@ export default function Login() {
             </GoogleOAuthProvider>
         </Container>
     );
-}
+};

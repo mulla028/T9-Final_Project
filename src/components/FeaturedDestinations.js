@@ -33,6 +33,7 @@ const FeaturedDestinations = () => {
             title: 'Patagonia, Argentina',
             description: 'Embark on a journey through the untouched wilderness.',
             link: '#'
+<<<<<<< HEAD
         },
         {
             image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -62,14 +63,32 @@ const FeaturedDestinations = () => {
 
     const handlePrev = () => {
         if (currentIndex > 0) setCurrentIndex(currentIndex - 4);
+=======
+        }
+    ];
+
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const visibleDestinations = destinations.slice(currentIndex, currentIndex + 4);
+
+    const handleNext = () => {
+        if (currentIndex < destinations.length - 4) setCurrentIndex(currentIndex + 1);
+    };
+
+    const handlePrev = () => {
+        if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+>>>>>>> 6a51d3c (structure changed)
     };
 
     return (
         <div className="featured-destinations" style={{ padding: '60px 0', position: 'relative' }}>
             <Container>
                 <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
+<<<<<<< HEAD
                 <Row className="destination-carousel">
 
+=======
+                <div className="destination-carousel">
+>>>>>>> 6a51d3c (structure changed)
                     {/* Left Arrow: Show only if not at the first card */}
                     {currentIndex > 0 && (
                         <Button variant="outline-secondary" className="carousel-control prev" onClick={handlePrev}>
@@ -78,6 +97,7 @@ const FeaturedDestinations = () => {
                     )}
 
                     {/* Destination Cards */}
+<<<<<<< HEAD
                     <div className="carousel-wrapper">
                         <Row
                             className="carousel-row"
@@ -98,6 +118,27 @@ const FeaturedDestinations = () => {
                             ))}
                         </Row>
                     </div>
+=======
+                    <Row
+                        className="carousel-row"
+                        style={{
+                            transform: `translateX(-${currentIndex * 30}%)`,
+                            transition: 'transform 0.2s ease-in-out',
+                        }}>
+                        {visibleDestinations.map((destination, index) => (
+                            <Col md={3} key={index} className="mb-4">
+                                <Card className="destination-card">
+                                    <Card.Img variant="top" src={destination.image} />
+                                    <Card.Body>
+                                        <Card.Title>{destination.title}</Card.Title>
+                                        <Card.Text>{destination.description}</Card.Text>
+                                        <Button variant="primary" href={destination.link}>Explore</Button>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
+                    </Row>
+>>>>>>> 6a51d3c (structure changed)
 
                     {/* Right Arrow: Show only if not at the last card */}
                     {currentIndex < destinations.length - 4 && (
@@ -105,10 +146,18 @@ const FeaturedDestinations = () => {
                             <FaArrowRight />
                         </Button>
                     )}
+<<<<<<< HEAD
                 </Row>
+=======
+                </div>
+>>>>>>> 6a51d3c (structure changed)
             </Container>
         </div>
     );
 };
 
+<<<<<<< HEAD
 export default FeaturedDestinations;
+=======
+export default FeaturedDestinations;
+>>>>>>> 6a51d3c (structure changed)

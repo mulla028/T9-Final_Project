@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useState } from 'react';
 import Header from '@/components/Header';
 import { Container, Row, Col, Form, Button, Card, Accordion, Carousel } from 'react-bootstrap';
@@ -27,6 +28,13 @@ const BookingSearch = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [startDate, endDate] = dateRange;
 
+=======
+import Header from '@/components/Header';
+import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
+import { FaBed, FaSearch, FaMapMarkerAlt, FaLeaf } from 'react-icons/fa'; // Icons for the page
+
+const BookingSearch = () => {
+>>>>>>> 6a51d3c (structure changed)
   return (
     <>
       <Header />
@@ -34,6 +42,7 @@ const BookingSearch = () => {
       <div className="banner-section">
         <img src="https://images.unsplash.com/photo-1496950866446-3253e1470e8e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="Travel Destination" className="banner-image" />
+<<<<<<< HEAD
 
         {/* Search Form */}
         <Container className="search-container">
@@ -135,6 +144,57 @@ const BookingSearch = () => {
         </Carousel>
 
         {/* Featured Journeys Section */}
+=======
+        <div className="banner-overlay">
+          <h2 className="text-white">Find Your Perfect Place</h2>
+        </div>
+      </div>
+
+      {/* Search Section */}
+      <Container className="booking-search mt-5">
+        <Row className="justify-content-center mb-4">
+          <Col md={10}>
+            {/* Search Bar */}
+            <Form className="search-form d-flex justify-content-between align-items-center">
+              <Form.Control type="text" placeholder="Search for places, hotels, or restaurants" className="mr-2" />
+              <Form.Control type="date" placeholder="Check-in Date" className="mr-2 w-50" />
+              <Form.Control type="date" placeholder="Check-out Date" className="mr-2 w-50" />
+              <Form.Control as="select" className="mr-2 w-50">
+                <option>Hotels</option>
+                <option>Restaurants</option>
+                <option>Attractions</option>
+              </Form.Control>
+              <Button variant="success" className="search-btn">
+                <div className="d-flex justify-content-center">Search <FaSearch /></div>
+              </Button>
+            </Form>
+          </Col>
+        </Row>
+
+        {/* Filters Section */}
+        <Row className="filters-section justify-content-center mt-4">
+          <Col md={8}>
+            <h5 className="text-center">Filters</h5>
+            <Form className="d-flex justify-content-between align-items-center">
+              <div className="filter-item">
+                <Form.Label className="mr-2">Price Range</Form.Label>
+                <Form.Control type="range" className="mr-4 custom-range" />
+              </div>
+              <div className="filter-item">
+                <Form.Label className="mr-2">Minimum Rating</Form.Label>
+                <Form.Control as="select" className="mr-4">
+                  <option key="3stars">3 Stars & Up</option>
+                  <option key="4stars">4 Stars & Up</option>
+                  <option key="5stars">5 Stars Only</option>
+                </Form.Control>
+              </div>
+              <Form.Check label="Eco-Friendly" className="filter-item" />
+            </Form>
+          </Col>
+        </Row>
+
+        {/* Featured Places Section */}
+>>>>>>> 6a51d3c (structure changed)
         <Row className="mt-5">
           <Col md={4} className="mb-4">
             <Card>

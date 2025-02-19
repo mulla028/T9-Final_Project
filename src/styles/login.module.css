@@ -26,6 +26,17 @@
     background: #fff;
   }
 
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 0;
+    height: 100vh; /* Ensure full height */
+}
+
 /* Overlay class */
 .overlay {
     position: absolute;
@@ -65,7 +76,7 @@
 
 /* Quote Text Container */
 .quote-container {
-    z-index: 2;
+    z-index: 2; /* Ensure quote text is above the overlay */
     position: relative;
     color: white;
     text-align: center;
@@ -80,6 +91,7 @@
     font-style: italic;
     font-family: 'Mystical Woods Rough Script', sans-serif;
     margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Optional shadow for readability */
 }
 
 /* Subtext */
@@ -127,16 +139,12 @@
     border-radius: 50%; 
     width: 50px;
     height: 50px; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease; /* Smooth hover effect */
-
 }
 
 .custom-google-button:hover,
 .custom-facebook-button:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    transform: scale(1.05);
+
 }
 
 /* Specific button colors */
@@ -152,10 +160,9 @@
 
 
 /* RegisterModal.css */
-.modal-dialog{
+.modal-dialog {
     width: 55%;
     border-radius: 20%;
-    max-width: none;
 }
 
 .register-modal-body {

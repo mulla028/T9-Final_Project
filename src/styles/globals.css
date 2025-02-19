@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
+=======
+>>>>>>> 6a51d3c (structure changed)
 @font-face {
   font-family: 'Mystical Woods Rough Script';
   src: url('../../public/assets/fonts/mystical-woods/MysticalWoodsRoughScript.eot');
@@ -15,15 +18,30 @@
 }
 
 body {
+<<<<<<< HEAD
   font-family: 'Montserrat', 'Lucida Sans Regular', sans-serif;
+=======
+  font-family: 'Poppins', 'Lucida Sans Regular', sans-serif;
+>>>>>>> 6a51d3c (structure changed)
   background-color: white;
   margin: 0;
   padding: 0;
 }
 
 .hero-section {
+<<<<<<< HEAD
   position: relative;
   overflow: hidden;
+=======
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 0;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .hero-section .overlay {
@@ -32,8 +50,12 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
+<<<<<<< HEAD
   background: rgba(0, 0, 0, 0.5);
   z-index: 1;
+=======
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .hero-section .hero-content {
@@ -43,6 +65,7 @@ body {
 }
 
 .hero-section .hero-title {
+<<<<<<< HEAD
   font-size: 3.5rem;
   font-style: italic;
   font-family: 'Mystical Woods Rough Script', 'Playfair', serif;
@@ -71,23 +94,54 @@ body {
   border-radius: 40px;
   padding: 20px 30px;
   border: 'none',
+=======
+  font-size: 4rem;
+  font-weight: lighter;
+  font-style: italic;
+  font-family: 'Mystical Woods Rough Script', 'Playfair Display', serif;
+  margin-bottom: 20px;
+}
+
+.hero-section .hero-subtitle {
+  font-size: 1.5rem;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.hero-section .search-input {
+  /* border-radius: 25px; */
+  padding: 15px;
+  border: none;
+}
+
+/* .hero-section .search-button {
+  border-radius: 25px;
+} */
+
+.hero-buttons .btn {
+  margin: 10px;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 h1, h2 {
   margin: 20px 0;
 }
 
+<<<<<<< HEAD
 h2 {
   font-size: 2.8rem;
   font-weight: 500;
 }
 
+=======
+>>>>>>> 6a51d3c (structure changed)
 .container {
   padding: 20px;
 }
 
 .my-button {
   margin: 10px;
+<<<<<<< HEAD
   padding: 10px 14px;
   border-radius: 30px;
   font-weight: bold;
@@ -107,6 +161,9 @@ h2 {
   padding: 8px 14px;
   border-radius: 30px;
   border: none;
+=======
+  /* border-radius: 25px; */
+>>>>>>> 6a51d3c (structure changed)
 }
 
 /* .navbar {
@@ -118,9 +175,15 @@ h2 {
 }
 
 .navbar .navbar-brand {
+<<<<<<< HEAD
   font-family: 'Lora', serif;
   font-weight: 700;
   font-size: 2.5rem;
+=======
+  font-family: 'poppins', serif;
+  font-weight: bold;
+  font-size: xx-large;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .nav-link {
@@ -128,11 +191,14 @@ h2 {
   margin-right: 10px;
 }
 
+<<<<<<< HEAD
 .why-slow-travel {
   position: relative;
   overflow: hidden;
 }
 
+=======
+>>>>>>> 6a51d3c (structure changed)
 .why-slow-travel h3, .how-it-works h4 {
   margin-top: 15px;
 }
@@ -142,6 +208,7 @@ h2 {
   color: #666;
 }
 
+<<<<<<< HEAD
 .why-slow-travel .text-center h3 {
   transition: color 0.3s ease;
 }
@@ -150,10 +217,13 @@ h2 {
   color: #28a745;
 }
 
+=======
+>>>>>>> 6a51d3c (structure changed)
 .why-slow-travel .col-md-4, .how-it-works .col-md-3 {
   margin-bottom: 20px;
 }
 
+<<<<<<< HEAD
 .hidden {
   opacity: 0;
   transform: translateY(50px);
@@ -176,10 +246,14 @@ h2 {
 
 .featured-destinations .destination-carousel,
 .booking-search .destination-carousel {
+=======
+.featured-destinations .destination-carousel {
+>>>>>>> 6a51d3c (structure changed)
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+<<<<<<< HEAD
   overflow: hidden;
 }
 
@@ -214,13 +288,40 @@ h2 {
 
 .featured-destinations .destination-card img,
 .search-results .destination-card img {
+=======
+}
+
+.featured-destinations .carousel-wrapper {
+  overflow: scroll /* Hide overflow to prevent showing cards outside the container */
+}
+
+.featured-destinations .carousel-row {
+  display: flex;
+  transition: transform 0.5s ease-in-out; /* Smooth easing effect */
+}
+
+.featured-destinations .destination-card {
+  border: none;
+  transition: transform 0.3s ease-in-out;
+}
+
+.featured-destinations .destination-card:hover {
+  transform: translateY(-10px);
+}
+
+.featured-destinations .destination-card img {
+>>>>>>> 6a51d3c (structure changed)
   height: 270px;
   object-fit: cover;
   border-radius: 10px;
 }
 
+<<<<<<< HEAD
 .featured-destinations .carousel-control,
 .booking-search .carousel-control {
+=======
+.featured-destinations .carousel-control {
+>>>>>>> 6a51d3c (structure changed)
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -238,12 +339,17 @@ h2 {
   transition: background 0.3s ease-in-out;
 }
 
+<<<<<<< HEAD
 .featured-destinations .carousel-control:hover,
 .booking-search .carousel-control:hover {
+=======
+.featured-destinations .carousel-control:hover {
+>>>>>>> 6a51d3c (structure changed)
   background: #28a745; /* Green background on hover */
   color: #fff;
 }
 
+<<<<<<< HEAD
 .featured-destinations .carousel-control.prev,
 .booking-search .carousel-control.prev {
   left: 0px;
@@ -252,6 +358,14 @@ h2 {
 .featured-destinations .carousel-control.next,
 .booking-search .carousel-control.next {
   right: 0px;
+=======
+.featured-destinations .carousel-control.prev {
+  left: -50px;
+}
+
+.featured-destinations .carousel-control.next {
+  right: -50px;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .featured-destinations .carousel-control svg {
@@ -295,9 +409,15 @@ h2 {
   border-style: dashed;
 }
 
+<<<<<<< HEAD
 /* .blog-section .card:hover {
   transform: translateY(-10px);
 } */
+=======
+.blog-section .card:hover {
+  transform: translateY(-10px);
+}
+>>>>>>> 6a51d3c (structure changed)
 
 .blog-section .card img {
   height: 200px;
@@ -346,7 +466,12 @@ footer form {
 .banner-section {
   position: relative;
   width: 100%;
+<<<<<<< HEAD
   height: 500px;
+=======
+  height: 400px;
+  overflow: hidden;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .banner-image {
@@ -361,7 +486,11 @@ footer form {
   left: 0;
   right: 0;
   bottom: 0;
+<<<<<<< HEAD
   background: rgba(0, 0, 0, 0);
+=======
+  background: rgba(0, 0, 0, 0.5);
+>>>>>>> 6a51d3c (structure changed)
   display: flex;
   justify-content: center;
   align-items: center;
@@ -375,6 +504,7 @@ footer form {
 }
 
 /* Search Section */
+<<<<<<< HEAD
 .search-container {
   display: flex;
   justify-content: center;
@@ -476,6 +606,20 @@ footer form {
 
 .search-button:hover {
   background: #027d47;
+=======
+.booking-search .search-form input,
+.booking-search .search-form select {
+  border-radius: 8px;
+  padding: 12px;
+  margin-right: 10px;
+}
+
+.booking-search .search-form button {
+  border-radius: 8px;
+  padding: 12px 25px;
+  font-size: 16px;
+  font-weight: bold;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .booking-search h2 {
@@ -485,6 +629,7 @@ footer form {
 }
 
 /* Filters Section */
+<<<<<<< HEAD
 .filter-accordion .accordion-item {
   border: none;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -496,12 +641,48 @@ footer form {
   margin: auto;
   padding: 10px;
   object-fit: cover;
+=======
+.filters-section {
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.filters-section h5 {
+  margin-bottom: 20px;
+  font-size: 1.25rem;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.custom-range {
+  width: 150px;
+}
+
+.filters-section .form-check {
+  margin-left: 20px;
+}
+
+/* Featured Places Cards */
+.booking-search .card {
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .booking-search .card img {
   height: 200px;
   object-fit: cover;
+<<<<<<< HEAD
   border-radius: 5px 5px 0 0;
+=======
+  border-radius: 15px 15px 0 0;
+>>>>>>> 6a51d3c (structure changed)
 }
 
 .booking-search .card-title {
@@ -536,6 +717,7 @@ footer form {
   }
 }
 
+<<<<<<< HEAD
 .search-results-title {
   font-family: 'Times New Roman', serif;
   font-size: 42px;
@@ -544,6 +726,8 @@ footer form {
   margin-top: 0;
   margin-bottom: 40px;
 }
+=======
+>>>>>>> 6a51d3c (structure changed)
 
 /* search results page */
 .search-results h3 {
@@ -1052,6 +1236,7 @@ footer form {
   transform: translateY(-5px);
 }
 
+<<<<<<< HEAD
 @keyframes fadeIn {
   from {
       opacity: 0;
@@ -1076,3 +1261,5 @@ footer form {
       transform: scale(1);
   }
 }
+=======
+>>>>>>> 6a51d3c (structure changed)
