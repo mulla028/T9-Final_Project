@@ -11,7 +11,7 @@ const Callback = () => {
 
     useEffect(() => {
         // Extract the token from the URL
-        const token = new URLSearchParams(window.location.search).get('code');
+        const token = new URLSearchParams(window.location.search).get('token');
         if (token) {
             // Store the token (e.g., in localStorage)
             setToken(token);
