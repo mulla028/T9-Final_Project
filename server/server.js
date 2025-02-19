@@ -9,13 +9,17 @@ const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
-const { CALLBACK_URL } = require('./utils/general');
+const { CALLBACK_URL, REDIRECT_URL } = require('./utils/general');
 
 const app = express();
 
 // Connect Database
 connectDB();
 
+if (process.env.NODE_ENV !== "prod") {
+    console.warn(`BACK-END started on: ${CALLBACK_URL}`);
+    console.warn(`FRONT_END started on: ${REDIRECT_URL}`)
+}
 // Middleware
 app.use(cors({ origin: CALLBACK_URL , credentials: true }));
 app.use(express.json());
