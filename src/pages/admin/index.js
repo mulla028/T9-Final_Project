@@ -30,8 +30,8 @@ export default function Admin() {
       return;
     }
 
-    fetch(`{${API_BASE_URL}}/Admin`, {
-      headers: { Authorization: `Bearer ${token}` },
+    fetch(`${API_BASE_URL}/Admin`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
     })
       .then((res) => res.json())
       .then((data) => {

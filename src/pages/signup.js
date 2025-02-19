@@ -66,12 +66,13 @@ export default function Login() {
     if (isAdminLogin) {
       try {
         const response = await authenticateAdmin(data.email, data.password)
-        const result = await response.json();
-
-        if (response.ok && result.role === "admin") {
-          router.push("/admin");
+        console.log("response is: ", response);
+        
+        if (response.role === "admin") {
+          router.push(`/admin`);
         } else {
-          setWarning(result.message || "You are not an admin");
+          setWarning(response.message || "You are not an admin");
+          throw new Error("You aren't an admin");
         }
       } catch (error) {
         setWarning("Error connecting to the server");
