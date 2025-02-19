@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const SocialUser = require('../models/SocialUser');
+const { CALLBACK_URL } = require('../utils/general');
 
 // Nodemailer transporter setup
 // .env does not work for nodemailer, so hardcoded the user and pass!
@@ -61,7 +62,7 @@ module.exports.sendPasswordReset = async function (email) {
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">
-                                          <a href="http://localhost:3000" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
+                                          <a href="${CALLBACK_URL}" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
                                             DriftWay
                                           </a>
                                         </td>
@@ -85,7 +86,7 @@ module.exports.sendPasswordReset = async function (email) {
                                                             <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start; ">
                                                                 Here is your password reset link:
                                                         </p><br><br><br>
-                                                        <button style="background-color:green; color:white; font-size:30px; border:none; border-radius:8px; padding:15px;"><a href="http://localhost:3000/reset-password/${user._id}" style="color:white; text-decoration:none; ">Reset password here</a></button><br><br><br>
+                                                        <button style="background-color:green; color:white; font-size:30px; border:none; border-radius:8px; padding:15px;"><a href="${CALLBACK_URL}/reset-password/${user._id}" style="color:white; text-decoration:none; ">Reset password here</a></button><br><br><br>
                                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start;">
                                                             If this link is not requested by you, you may ignore this email.</p><br>
                                                             <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start;">Regards,</p>
@@ -102,7 +103,7 @@ module.exports.sendPasswordReset = async function (email) {
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">
-                                            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <a href="http://localhost:3000/" style="text-decoration: none; color:rgba(69, 80, 86, 0.7411764705882353);"><strong>DriftWay Inc.</strong></a></p>
+                                            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <a href="${CALLBACK_URL}" style="text-decoration: none; color:rgba(69, 80, 86, 0.7411764705882353);"><strong>DriftWay Inc.</strong></a></p>
                                         </td>
                                     </tr>
                                     <tr>

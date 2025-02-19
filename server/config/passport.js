@@ -1,9 +1,9 @@
 // config/passport.js
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook');
 const User = require('../models/SocialUser');
-const { CALLBACK_URL }  = require('../utils/general');
+const { CALLBACK_URL}  = require('../utils/general');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(
     new GoogleStrategy(
@@ -23,7 +23,7 @@ passport.use(
                         providerId: profile.id,
                     });
                 }
-                return done(null, user);
+                return done(null, {user, accessToken});
             } catch (error) {
                 return done(error);
             }

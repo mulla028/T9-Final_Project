@@ -27,7 +27,7 @@ const Footer = () => {
                             <Form.Group controlId="formBasicEmail">
                                 <Form.Control type="email" placeholder="Enter your email" style={{ border: '1px solid #333' }} />
                             </Form.Group>
-                            <Button variant="primary" type="submit">Subscribe</Button>
+                            <Button variant="dark" type="submit">Subscribe</Button>
                         </Form>
                         <div className="social-icons mt-3">
                             <a href="https://instagram.com" style={{ marginRight: '10px' }}><FaInstagram size={24} /></a>

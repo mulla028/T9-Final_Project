@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
 import { API_BASE_URL } from '../../utils/general';
+import { isAuthenticated } from "@/services";
 
 async function fetchUsers() {
   const res = await fetch(`${API_BASE_URL}/Users`);
@@ -23,15 +24,14 @@ export default function Admin() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
+    
+    if (!isAuthenticated()) {
       router.push("/");
       return;
     }
 
-    fetch(`{${API_BASE_URL}}/Admin`, {
-      headers: { Authorization: `Bearer ${token}` },
+    fetch(`${API_BASE_URL}/Admin`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
     })
       .then((res) => res.json())
       .then((data) => {

@@ -23,7 +23,7 @@ const BlogSection = () => {
     ];
 
     return (
-        <div id="blog-section" className="blog-section" style={{ padding: '60px 0' }}> 
+        <div id="blog-section" className="blog-section" style={{ padding: '60px 0' }}>
             <Container>
                 <h2 className="text-center mb-4">Tips & Guides for Slow Travel</h2>
                 <Row>
@@ -35,9 +35,10 @@ const BlogSection = () => {
                                     <Card.Title>{post.title}</Card.Title>
                                     <Card.Text>{post.description}</Card.Text>
                                     <Button
-                                        variant="primary"
+                                        variant='dark'
+                                        className='read-more-button'
                                         href={post.link}
-                                        target="_blank" // Open in new tab
+                                        target="_blank"
                                         rel="noopener noreferrer" // For security
                                     >
                                         Read More
@@ -49,9 +50,13 @@ const BlogSection = () => {
                 </Row>
                 <div className="text-center">
                     <Button
-                        variant="outline-primary"
+                        variant="outline-dark"
                         href="#blog-section"
-                        className="no-bold-link"
+                        style={{
+                            padding: '12px 30px',
+                            borderRadius: '30px',
+                            marginTop: '30px',
+                        }}
                     >
                         Explore More Articles
                     </Button>
