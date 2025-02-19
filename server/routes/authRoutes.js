@@ -46,7 +46,8 @@ router.get('/facebook', passport.authenticate('facebook', {
 
 // Callback Route for Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-    const token = generateToken(req.user);
+    // const token = generateToken(req.user);
+    const token = req.user.accessToken;
     res.redirect(`${CALLBACK_URL}/auth/google/callback?token=${encodeURIComponent(token)}`);
 });
 
