@@ -5,7 +5,7 @@ Every sprint's progress relflected here.
 
 ### Deployment
 
-* Web Application has been **deployed** using vercel here's the [link](https://drift-way.vercel.app) where you access it!
+* Web Application has been **deployed** using vercel here's the [link](https://drift-way.vercel.app) where you access it! [#58](https://github.com/mulla028/T9-Final_Project/pull/58)
 
 #### **Access Control & Restrictions**
 
