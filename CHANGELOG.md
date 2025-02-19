@@ -43,3 +43,27 @@
 - Confirmed that Header authentication logic displays the correct buttons based on login state.
 - Manually tested server API routes to ensure all endpoints work correctly post-merge.
 
+### New Features
+
+- **Booking feature added** ([#62](https://github.com/mulla028/T9-Final_Project/pull/62))
+  - Implemented the booking system that allows users to book stays (accommodations) and experiences (activities).
+  - Users can add bookings to their **itinerary**, whether paid or unpaid.
+  - Integrated **Google Place IDs** to display details of selected destinations and to prevent duplicate entries for the same location.
+  - Booking details include check-in/check-out dates, number of guests, and pricing.
+  - Implemented caching to reduce API calls using Redis.
+
+#### **Access Control & Restrictions**
+
+- Only authenticated users can make bookings.
+- Direct API access is restricted for unauthorized users.
+- Implemented input validation to prevent invalid or incomplete bookings.
+- Limited the number of guests per booking to **5 people**.
+
+#### **Testing**
+
+- Verified that users can **view a list of hotels** in a selected destination.
+- Confirmed that users can **select check-in and check-out dates**.
+- Ensured that users can **specify the number of guests** (up to 5).
+- Checked that users can **add optional preferences** in the text field.
+- Simulated various inputs to validate system behavior and prevent invalid entries.
+
