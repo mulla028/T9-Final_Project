@@ -1,4 +1,3 @@
-// models/User.js
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -20,10 +19,10 @@ const userSchema = new mongoose.Schema({
  
             experiences: [
                 {
-                    placeId: { type: String }, 
-                    name: { type: String, required: true }, 
+                    placeId: { type: String }, // Google Places ID
+                    name: { type: String, required: true },
                     location: { type: String }, // Optional city/country
-                    time: { type: String }, // Morning, Afternoon, Evening
+                    time: { type: String },
                     paid: { type: Boolean, default: false }, // Whether it's booked/paid
                 }
             ],

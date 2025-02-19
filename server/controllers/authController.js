@@ -1,8 +1,6 @@
 // controllers/authController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const { generateToken } = require('../utils/jwtUtils');
 const User = require('../models/User');
 
 exports.register = async (req, res) => {
@@ -35,7 +33,7 @@ exports.login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) return res.status(400).json({ message: 'User not existed. Register Now!' });
-        
+
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 

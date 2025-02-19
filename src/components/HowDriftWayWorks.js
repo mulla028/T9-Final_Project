@@ -1,4 +1,4 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaMapMarkerAlt, FaCalendarAlt, FaStore, FaLeaf } from 'react-icons/fa';
 
 const HowDriftWayWorks = () => {
@@ -28,6 +28,29 @@ const HowDriftWayWorks = () => {
                         <p>Monitor your carbon footprint and get tips to reduce it.</p>
                     </Col>
                 </Row>
+                <div className="d-flex justify-content-center mt-5">
+                    <Button
+                        variant="primary"
+                        size="lg"
+                        href="/booking"
+                        style={{
+                            padding: '12px 30px',
+                            borderRadius: '30px',
+                            background: 'linear-gradient(90deg, #28a745, #218838)',
+                            border: 'none',
+                            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                            transition: 'transform 0.3s ease',
+                        }}
+                        onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = 'scale(1.1)')
+                        }
+                        onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = 'scale(1)')
+                        }
+                    >
+                        Start Planning Your Trip
+                    </Button>
+                </div>
             </Container>
         </div>
     );
