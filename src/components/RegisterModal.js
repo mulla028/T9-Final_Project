@@ -41,29 +41,20 @@ export default function RegisterModal({ show, handleClose }) {
         window.location.href = `${API_BASE_URL}/auth/${provider}`;
     };
 
-    // Google Login
-    const onGoogleRegisterSuccess = () => {
-        setLoading((prev) => ({ ...prev, google: true }));
-        handleSocialRegister('google');
-    };
-
-    // Facebook Login
-    const onFacebookRegisterSuccess = () => {
-        setLoading((prev) => ({ ...prev, facebook: true }));
-        handleSocialRegister('facebook');
-    };
-
     const onSubmit = async (data, e) => {
         e.preventDefault();
+        console.log('Form submitted'); // Debugging line
         try {
             const { firstName, lastName, email, password, confirmPassword } = data;
             const token = await registerUser({ firstName, lastName, email }, password, confirmPassword);
             if (token) {
-                login(token);
+                login(token)
+                console.log('Registration successful'); // Debugging line
+
                 router.push("/");
             }
         } catch (error) {
-            console.error('Error during registration:', error);
+            console.error('Error during registration:', error); // Debugging line
             setWarning(error.message);
         }
     };
@@ -82,6 +73,7 @@ export default function RegisterModal({ show, handleClose }) {
                     </Modal.Header>
 
                     <Modal.Body className="register-modal-body">
+                        {/* Error & Success Messages */}
                         {warning && <Alert variant="danger">{warning}</Alert>}
 
                         <div className="px-5">
@@ -89,7 +81,7 @@ export default function RegisterModal({ show, handleClose }) {
                                 <Row>
                                     <Col>
                                         <Form.Group controlId="firstName">
-                                            <Form.Label className={styles['custom-label']}>First Name</Form.Label>
+                                            <Form.Label className={styles['custom-label']}> First Name</Form.Label>
                                             <Form.Control className={styles["custom-input"]}
                                                 placeholder="First name"
                                                 {...register('firstName', { required: 'First name is required' })}
@@ -100,7 +92,7 @@ export default function RegisterModal({ show, handleClose }) {
                                     </Col>
                                     <Col>
                                         <Form.Group controlId="lastName">
-                                            <Form.Label className={styles['custom-label']}>Last Name</Form.Label>
+                                            <Form.Label className={styles['custom-label']}> Last Name</Form.Label>
                                             <Form.Control className={styles["custom-input"]}
                                                 placeholder="Last name"
                                                 {...register('lastName', { required: 'Last name is required' })}
@@ -112,7 +104,7 @@ export default function RegisterModal({ show, handleClose }) {
                                 </Row>
 
                                 <Form.Group className="mt-4 mb-4" controlId="formEmail">
-                                    <Form.Label className={styles['custom-label']}>Email Address</Form.Label>
+                                    <Form.Label className={styles['custom-label']}> Email Address</Form.Label>
                                     <Form.Control className={styles["custom-input"]}
                                         type="email"
                                         placeholder="Enter email"
@@ -123,7 +115,7 @@ export default function RegisterModal({ show, handleClose }) {
                                 </Form.Group>
 
                                 <Form.Group className="mb-4" controlId="formPassword" style={{ position: 'relative' }}>
-                                    <Form.Label className={styles['custom-label']}>Password</Form.Label>
+                                    <Form.Label className={styles['custom-label']}> Password</Form.Label>
                                     <div className={styles["password-container"]}>
                                         <Form.Control className={styles["custom-input"]}
                                             type={showPassword ? "text" : "password"}
@@ -132,6 +124,7 @@ export default function RegisterModal({ show, handleClose }) {
                                             isInvalid={touchedFields.password && errors.password}
                                             style={{ padding: '15px', paddingRight: '50px' }}
                                         />
+                                        {/* Eye Icon Button */}
                                         <span onClick={togglePasswordVisibility}>
                                             {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                                         </span>
@@ -141,7 +134,7 @@ export default function RegisterModal({ show, handleClose }) {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3" controlId="formConfirmPassword">
-                                    <Form.Label className={styles['custom-label']}>Confirm Password</Form.Label>
+                                    <Form.Label className={styles['custom-label']}> Confirm Password</Form.Label>
                                     <Form.Control className={styles["custom-input"]}
                                         type="password"
                                         placeholder="Confirm Password"
@@ -162,11 +155,12 @@ export default function RegisterModal({ show, handleClose }) {
                                     <span>Or sign up with</span>
                                 </div>
 
+                                {/* Social login options container */}
                                 <Container className={styles['social-login-buttons']}>
                                     <Button
                                         className={styles['custom-google-button']}
                                         disabled={loading.google}
-                                        onClick={onGoogleRegisterSuccess}
+                                        onClick={() => handleSocialRegister('google')}
                                     >
                                         {loading.google ? '...' : <FaGoogle size={24} />}
                                     </Button>
@@ -174,7 +168,7 @@ export default function RegisterModal({ show, handleClose }) {
                                     <Button
                                         className={styles['custom-facebook-button']}
                                         disabled={loading.facebook}
-                                        onClick={onFacebookRegisterSuccess}
+                                        onClick={() => handleSocialRegister('facebook')}
                                     >
                                         {loading.facebook ? '...' : <FaFacebook size={24} />}
                                     </Button>

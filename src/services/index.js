@@ -39,6 +39,22 @@ export function removeToken() {
     localStorage.removeItem('access_token');
 }
 
+export async function authenticateAdmin(email, password) {
+    const res = await my_fetch(`${API_BASE_URL}/Admin/login/admin`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        setToken(data.token);
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export async function registerUser(user, password, confirmPassword) {
     const { firstName, lastName, email } = user;
     const res = await my_fetch(`${API_BASE_URL}/auth/register`, {
@@ -104,7 +120,8 @@ export async function setPassword(id, password) {
 }
 
 export async function fetchPlaces(location, travelStyle) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
+    const res = await my_fetch(`${API_BASE_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
+    console.log("fetchPlaces() res: ", res);
     const data = await res.json();
 
     if (res.status === 200) {
@@ -115,7 +132,19 @@ export async function fetchPlaces(location, travelStyle) {
 }
 
 export async function fetchPlaceDetails(place_id) {
-    const res = await my_fetch(`${process.env.NEXT_PUBLIC_API_URL}/places/details?place_id=${place_id}`);
+    const res = await my_fetch(`${API_BASE_URL}/places/details?place_id=${place_id}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
+export async function fetchNearbyAttractions(location) {
+    const locationString = `${location.lat},${location.lng}`; // Convert location object to string
+    const res = await my_fetch(`${API_BASE_URL}/places/nearby?location=${encodeURIComponent(locationString)}`);
     const data = await res.json();
 
     if (res.status === 200) {

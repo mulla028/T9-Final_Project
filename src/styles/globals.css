@@ -212,9 +212,8 @@ h2 {
   transform: translateY(-10px);
 } */
 
-.featured-destinations .destination-card img,
-.search-results .destination-card img {
-  height: 270px;
+.featured-destinations .destination-card img {
+  height: 300px;
   object-fit: cover;
   border-radius: 10px;
 }
@@ -361,7 +360,7 @@ footer form {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -380,7 +379,6 @@ footer form {
   justify-content: center;
   margin-top: -50px;
   position: relative;
-  align-items: center;
 }
 
 /* Floating Search Bar */
@@ -400,10 +398,9 @@ footer form {
 .search-row {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 0px;
-  width: 90%;
-  margin-right: 20px;
+  width: 100%;
 }
 
 /* Each search field */
@@ -449,14 +446,19 @@ footer form {
 
 /* Custom styling for the DatePicker */
 .date-picker {
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 2px solid #9ea3a8;
-  border-radius: 8px;
-  padding: 6px 15px;
-  width: 100%;
+  width: 100% !important; /* Ensures full width */
+  display: block; /* Ensures it behaves like other form controls */
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid #9ea3a8;
+  border-radius: 5px;
+  padding: 12px 15px; /* Adjust padding */
+  font-size: 16px; /* Match input text size */
   cursor: pointer;
+}
+
+/* Ensure consistency inside a form group */
+.form-group .date-picker {
+  width: 100%;
 }
 
 /* Search Button */
@@ -536,16 +538,7 @@ footer form {
   }
 }
 
-.search-results-title {
-  font-family: 'Times New Roman', serif;
-  font-size: 42px;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 40px;
-}
-
-/* search results page */
+/* search results section */
 .search-results h3 {
   font-family: 'Poppins', sans-serif;
   font-weight: bold;
@@ -556,13 +549,13 @@ footer form {
   transition: transform 0.3s ease-in-out;
 }
 
-.search-results .card:hover {
+/* .search-results .card:hover {
   transform: translateY(-5px);
-}
+} */
 
 .search-results .card img {
   border-radius: 10px 10px 0 0;
-  height: 180px;
+  height: 300px;
   object-fit: cover;
 }
 
@@ -598,6 +591,26 @@ footer form {
 .booking-details .btn {
   border-radius: 25px;
 }
+
+.location-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 20px; /* Rounded edges */
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  background-color: #f8f9fa; /* Light gray background */
+  white-space: nowrap;
+}
+
+.location-tag svg {
+  margin-right: 5px;
+  font-size: 16px;
+}
+
 
 /* Hero Section */
 .itinerary-planner .hero {

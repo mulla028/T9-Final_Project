@@ -3,6 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
+const verifyAdmin = require("../middlewares/verifyAdmin")
 const router = express.Router();
 
 router.post("/login/admin", async (req, res) => {
@@ -32,27 +33,6 @@ router.post("/login/admin", async (req, res) => {
   }
 });
 
-module.exports = router;
-
-const verifyAdmin = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "Token is missing, unauthorized access" });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.role !== "admin") {
-      return res.status(403).json({ message: "Unauthorized access" });
-    }
-    req.admin = decoded;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Invalid token" });
-  }
-};
-
 router.get("/", verifyAdmin, async (req, res) => {
   try {
     const admins = await Admin.find({});
@@ -61,3 +41,5 @@ router.get("/", verifyAdmin, async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
+module.exports = router;

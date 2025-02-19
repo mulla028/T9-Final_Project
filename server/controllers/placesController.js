@@ -1,4 +1,47 @@
 // controllers/placesController.js
+const redisClient = require('../config/redis');
+
+const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+
+// Pricing functions
+const getCustomPrice = (priceLevel) => {
+    switch (priceLevel) {
+        case 1: return { price: 50, label: "Inexpensive" };
+        case 2: return { price: 100, label: "Moderate" };
+        case 3: return { price: 200, label: "Expensive" };
+        case 4: return { price: 350, label: "Very Expensive" };
+        default: return null; // No price info
+    }
+};
+
+function estimatePriceLevel(types, locality, rating) {
+    if (types.includes("lodging")) return estimateHotelPrice(types, rating);
+    if (types.includes("restaurant") || types.includes("bar") || types.includes("cafe")) return estimateRestaurantPrice(types, rating);
+
+    // General logic for other businesses
+    if (types.includes("resort") || types.includes("luxury") || types.includes("jewelry_store") || rating > 4.5) return 4;
+    if (types.includes("museum") || types.includes("casino") || types.includes("spa") || rating > 3.8) return 3;
+    if (types.includes("store") || types.includes("clothing_store") || types.includes("movie_theater") || rating > 2.8) return 2;
+
+    return 1; // Default to inexpensive
+}
+
+function estimateHotelPrice(types, rating) {
+    if (types.includes("motel") || types.includes("hostel") || types.includes("campground") || rating <= 2.5) return 1;
+    if (types.includes("inn") || types.includes("guest_house") || rating <= 3.8) return 2;
+    if (types.includes("boutique_hotel") || rating <= 4.5) return 3;
+    if (types.includes("resort") || types.includes("5-star_hotel") || rating > 4.5) return 4;
+    return 2; // Default to standard hotel if unknown
+}
+
+function estimateRestaurantPrice(types, rating) {
+    if (types.includes("fast_food") || types.includes("meal_takeaway") || rating <= 2.5) return 1;
+    if (types.includes("restaurant") || types.includes("cafe") || rating <= 3.8) return 2;
+    if (types.includes("gastropub") || types.includes("bar") || rating <= 4.5) return 3;
+    if (types.includes("fine_dining") || types.includes("5-star_restaurant") || rating > 4.5) return 4;
+    return 2; // Default to casual dining if unknown
+}
+
 
 exports.searchPlaces = async (req, res) => {
     try {
@@ -9,23 +52,26 @@ exports.searchPlaces = async (req, res) => {
             return res.status(400).json({ error: "Location and travelStyle are required" });
         }
 
-        const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+        // Check cache first
+        const cacheKey = `searchPlaces:${location}:${travelStyle}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            console.log("Serving from cache...");
+            return res.json(JSON.parse(cachedData));
+        }
 
         // Define search query based on travelStyle
         let placeQuery = "lodging"; // Default
-
-        if (travelStyle === "Cultural Immersion") {
-            placeQuery = "museums in " + location;
-        } else if (travelStyle === "Outdoor Adventures") {
-            placeQuery = "national parks, hiking trails in " + location;
-        } else if (travelStyle === "Eco-Stays") {
-            placeQuery = "eco-lodges, sustainable hotels in " + location;
-        } else if (travelStyle === "Eco-Tourism") {
-            placeQuery = "nature reserves, eco-tourism in " + location;
-        } else if (travelStyle === "Farm-to-Table Dining") {
-            placeQuery = "organic restaurants, farmers markets in " + location;
-        } else if (travelStyle === "Wildlife Conservation") {
-            placeQuery = "wildlife sanctuaries, nature reserves in " + location;
+        const styleQueries = {
+            "Cultural Immersion": "museums in",
+            "Outdoor Adventures": "national parks, hiking trails in",
+            "Eco-Stays": "eco-lodges, sustainable hotels in",
+            "Eco-Tourism": "nature reserves, eco-tourism in",
+            "Farm-to-Table Dining": "organic restaurants, farmers markets in",
+            "Wildlife Conservation": "wildlife sanctuaries, nature reserves in"
+        };
+        if (styleQueries[travelStyle]) {
+            placeQuery = `${styleQueries[travelStyle]} ${location}`;
         }
 
         // Fetch basic place data
@@ -35,7 +81,7 @@ exports.searchPlaces = async (req, res) => {
         const searchData = await searchResponse.json();
 
         // Extract place_ids for Places Details API
-        const places = await Promise.all(searchData.results.slice(0, 20).map(async (place) => {
+        const detailedPlaces = await Promise.all(searchData.results.slice(0, 20).map(async (place) => {
             const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,photos,editorial_summary,rating,user_ratings_total,website&key=${apiKey}`;
             const detailsResponse = await fetch(detailsUrl);
             const detailsData = await detailsResponse.json();
@@ -51,8 +97,13 @@ exports.searchPlaces = async (req, res) => {
                 image: detailsData.result.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${detailsData.result.photos[0].photo_reference}&key=${apiKey}` : null
             };
         }));
+        console.log("DP: ", detailedPlaces);
 
-        res.json(places);
+        // Cache results for 24 hours
+        await redisClient.set(cacheKey, JSON.stringify(detailedPlaces), { EX: 86400 });
+
+        console.log("Serving from API...");
+        res.json(detailedPlaces);
     } catch (error) {
         console.error("Error fetching places:", error);
         res.status(500).json({ error: "Error fetching places from Google Places API" });
@@ -67,18 +118,57 @@ exports.getPlaceDetails = async (req, res) => {
             return res.status(400).json({ error: "place_id is required" });
         }
 
-        const apiKey = process.env.GOOGLE_MAPS_API_KEY;
-        const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=name,formatted_address,photos,editorial_summary,rating,user_ratings_total,website,geometry&key=${apiKey}`;
+        // CHECK CACHE FIRST
+        const cachedData = await redisClient.get(place_id);
+        if (cachedData) {
+            const { data, timestamp } = JSON.parse(cachedData);
+            const currentTime = Date.now();
+            const cacheAge = (currentTime - timestamp) / 1000; // Convert to seconds
+
+            // AUTO-REFRESH CACHE IF OLD (every 24 hours)
+            if (cacheAge < 86400) { // 86400 sec = 24 hours
+                console.log("Serving from cache...");
+                return res.json(data);
+            }
+        }
+
+        const fields = "name,address_components,formatted_address,formatted_phone_number,photos,editorial_summary,rating,user_ratings_total,reviews,reservable,price_level,website,geometry,types";
+
+        const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place_id}&fields=${fields}&key=${apiKey}`;
         const detailsResponse = await fetch(detailsUrl);
         if (!detailsResponse.ok) throw new Error(`Google API error: ${detailsResponse.statusText}`);
         const detailsData = await detailsResponse.json();
 
         // Extract details
         const result = detailsData.result;
+        const components = result.address_components || [];
+
+        let locality = "Unknown";
+        let route = "Unknown";
+        let country = "Unknown";
+
+        if (components.length > 0) {
+            for (const component of components) {
+                if (component.types.includes("locality")) {
+                    locality = component.long_name;
+                }
+                if (locality === "Unknown" && component.types.includes("route")) {
+                    route = component.long_name;
+                }
+                if (component.types.includes("country")) {
+                    country = component.long_name; // Use short_name for country code if needed
+                }
+            }
+        }
+
+        const estimatedPriceLevel = estimatePriceLevel(result.types, locality, result.rating);
+        const finalPriceLevel = result.price_level ?? estimatedPriceLevel;
 
         const placeDetails = {
             name: result.name,
-            email: result.email || "Not Available",
+            locality: locality,
+            route: route,
+            country: country,
             address: result.formatted_address,
             phone: result.formatted_phone_number || "Not Available",
             website: result.website || null,
@@ -95,9 +185,18 @@ exports.getPlaceDetails = async (req, res) => {
             })) || [],
             images: result.photos?.map(photo =>
                 `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${photo.photo_reference}&key=${apiKey}`
-            ) || []
+            ) || [],
+            priceLevel: finalPriceLevel,
+            customPrice: getCustomPrice(finalPriceLevel),
+            reservable: result.reservable || ["lodging", "restaurant", "tourist_attraction"].some(type => result.types.includes(type)),
+            types: result.types
         };
 
+        // STORE IN CACHE WITH TIMESTAMP
+        const cacheData = { data: placeDetails, timestamp: Date.now() };
+        await redisClient.set(place_id, JSON.stringify(cacheData));
+
+        console.log("Serving from API...");
         res.json(placeDetails);
 
     } catch (error) {
@@ -105,3 +204,45 @@ exports.getPlaceDetails = async (req, res) => {
         res.status(500).json({ error: "Error fetching place details from Google Places API" });
     }
 };
+
+exports.getNearbyAttractions = async (req, res) => {
+    try {
+        let { location } = req.query;
+
+        // Ensure location is properly formatted
+        if (!location || !location.includes(",")) {
+            return res.status(400).json({ error: "Invalid location format" });
+        }
+
+        // Check cache first
+        const cacheKey = `nearbyAttractions:${location}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            console.log("Serving from cache...");
+            return res.json(JSON.parse(cachedData));
+        }
+
+        const attractionsUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${location}&radius=5000&type=tourist_attraction&keyword=eco&key=${apiKey}`;
+
+        const response = await fetch(attractionsUrl);
+        const data = await response.json();
+
+        // Process results
+        const attractions = data.results.map(place => ({
+            name: place.name || "Unknown",
+            rating: place.rating || "No rating",
+            location: place.vicinity || "No location available",
+            image: place.photos
+                ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
+                : null
+        }));
+
+        // Cache results for 12 hours
+        await redisClient.set(cacheKey, JSON.stringify(attractions), { EX: 43200 });
+
+        console.log("Serving from API...");
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch attractions" });
+    }
+};
+
