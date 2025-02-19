@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, CartesianGrid, ResponsiveContainer } from "recharts";
 import { API_BASE_URL } from '../../utils/general';
-import { isAuthenticated } from "@services";
+import { isAuthenticated } from "@/services";
 
 async function fetchUsers() {
   const res = await fetch(`${API_BASE_URL}/Users`);
