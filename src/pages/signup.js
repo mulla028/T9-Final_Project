@@ -4,7 +4,7 @@ import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { authenticateUser } from "@/services";
+import { authenticateUser, authenticateAdmin } from "@/services";
 import { useRouter } from "next/router";
 import { useAuth } from '@/context/AuthContext';
 import RegisterModal from '../components/RegisterModal';
@@ -52,14 +52,29 @@ export default function Login() {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
-    try {
-      const token = await authenticateUser(data.email, data.password);
-      login(token);
-      router.push("/");
+    if (isAdminLogin) {
+      try {
+        const response = await authenticateAdmin(data.email, data.password)
+        const result = await response.json();
 
-    } catch (error) {
-      console.error('Error during login:', error);
-      setWarning(error.message);
+        if (response.ok && result.role === "admin") {
+          router.push("/admin");
+        } else {
+          setWarning(result.message || "You are not an admin");
+        }
+      } catch (error) {
+        setWarning("Error connecting to the server");
+        console.error('Error during admin login:', error);
+      }
+    } else {
+      try {
+        const token = await authenticateUser(data.email, data.password);
+        login(token);
+        router.push("/");
+      } catch (error) {
+        console.error('Error during login:', error);
+        setWarning(error.message);
+      }
     }
   };
 
