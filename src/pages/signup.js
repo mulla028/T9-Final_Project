@@ -28,6 +28,7 @@ export default function Login() {
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState({ google: false, facebook: false });
+  const [isAdminLogin, setIsAdminLogin] = useState();
 
   const router = useRouter();
   const { login } = useAuth();
