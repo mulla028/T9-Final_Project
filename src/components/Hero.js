@@ -25,6 +25,7 @@ const Hero = ({ setSearchResults }) => {
 
     // Handle search logic
     const handleSearch = async () => {
+        console.log("HANDLE SEARCH IN USE");
         if (!searchInput.trim()) {
             alert("Please enter a destination before searching.");
             return;
@@ -32,8 +33,12 @@ const Hero = ({ setSearchResults }) => {
 
         try {
             const data = await fetchPlaces(searchInput, travelStyle);
+            console.log("SEARCHINPUT: ", searchInput);
+            console.log("TRAVELSTYLE: ", travelStyle);
+
             setSearchResults(data);
         } catch (error) {
+            alert("ERROR FETCHING PLACES")
             console.error("Error fetching places:", error);
         }
     };
