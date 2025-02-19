@@ -47,13 +47,13 @@ router.get('/facebook', passport.authenticate('facebook', {
 // Callback Route for Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
+    res.redirect(`${CALLBACK_URL}/auth/google/callback?token=${encodeURIComponent(token)}`);
 });
 
 // Callback Route for Facebook
 router.get('/facebook/callback', passport.authenticate('facebook', { session: false }), (req, res) => {
     const token = generateToken(req.user);
-    res.redirect(`${CALLBACK_URL}/auth/callback?token=${token}`); // Redirect to the new callback page
+    res.redirect(`${CALLBACK_URL}/auth/facebook/callback?token=${encodeURIComponent(token)}`);
 });
 
 

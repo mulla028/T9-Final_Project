@@ -51,6 +51,16 @@ export default function Login() {
     window.location.href = `${API_BASE_URL}/auth/${provider}`;
   };
 
+  useEffect(() => {
+    const role = router.query.role
+    if (role === 'admin') {
+      setIsAdminLogin(true);
+    } else {
+      setIsAdminLogin(false);
+    }
+    console.log(role);
+  }, [router.query.role])
+
   const onSubmit = async (data, e) => {
     e.preventDefault();
     if (isAdminLogin) {
