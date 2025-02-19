@@ -157,6 +157,7 @@ export const updateItineraryForDay = async (id, day, newItinerary, transportMode
         throw error;
     }
 };
+
 export async function fetchPlaces(location, travelStyle) {
     const res = await my_fetch(`${API_BASE_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
     console.log("fetchPlaces() res: ", res);

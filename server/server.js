@@ -9,7 +9,7 @@ const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
-const { CALLBACK_URL, REDIRECT_URL } = require('./utils/general');
+const { REDIRECT_URL } = require('./utils/general');
 
 const app = express();
 
@@ -17,7 +17,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({ origin: CALLBACK_URL , credentials: true }));
+app.use(cors({ origin: REDIRECT_URL , credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 
