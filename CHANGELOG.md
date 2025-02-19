@@ -55,6 +55,10 @@ Every sprint's progress reflected here.
 
 ### Added
 
+<<<<<<< HEAD
 - Added Login feature
 - Added Register feature
 >>>>>>> 55ef7e2 (Root files added)
+=======
+- Registration Page [#29](https://github.com/mulla028/T9-Final_Project/pull/29)
+>>>>>>> 0cc09c2 (Registration page implemented (#29))

@@ -1,9 +1,13 @@
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
   "name": "driftway-app-backend",
 =======
   "name": "innoCook-bundles-backend",
 >>>>>>> 3350c9c (server added)
+=======
+  "name": "driftway-app-backend",
+>>>>>>> 0cc09c2 (Registration page implemented (#29))
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
