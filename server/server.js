@@ -17,7 +17,7 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors({ origin: REDIRECT_URL , credentials: true }));
+app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000' , credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 
