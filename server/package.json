@@ -26,9 +26,13 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.3",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "nodemailer": "^6.10.0",
 =======
 >>>>>>> 3350c9c (server added)
+=======
+    "nodemailer": "^6.10.0",
+>>>>>>> 89ea291 (Forgot Password logic and UI implemented using nodemailer (#28))
     "passport": "^0.7.0",
     "passport-facebook": "^3.0.0",
     "passport-facebook-token": "^4.0.0",

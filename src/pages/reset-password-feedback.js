@@ -10,10 +10,17 @@ const ResetPasswordFeedback = () => {
         <Container fluid="md" >
           <Navbar.Brand href="/">Driftway</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
+<<<<<<< HEAD
           <Nav>
             <Button variant="dark" href="/signup" className="my-button">Sign in</Button>
           </Nav>
         </Container>
+=======
+        </Container>
+        <Nav>
+          <Button variant="success" href="/signup" className="my-button">Sign in</Button>
+        </Nav>
+>>>>>>> 89ea291 (Forgot Password logic and UI implemented using nodemailer (#28))
       </Navbar>
       <div
         style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}

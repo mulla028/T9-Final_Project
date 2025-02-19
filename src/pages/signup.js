@@ -3,24 +3,23 @@ import { FacebookProvider } from 'react-facebook';
 import { Form, Button, Alert, Container } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { FaFacebook, FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { authenticateUser } from "@/services";
 import { useRouter } from "next/router";
 import { useAuth } from '@/context/AuthContext';
 import RegisterModal from '../components/RegisterModal';
 import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import styles from '../styles/login.module.css';
-import { API_BASE_URL } from '../utils/general';
-
+ 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
-
+ 
 export default function Login() {
     const { register, handleSubmit, formState: { errors, touchedFields }, trigger } = useForm({
-        defaultValues: {
-            email: '',
-            password: ''
-        }
+    defaultValues: {
+        email: '',
+        password: ''
+    }
     });
 
     const [warning, setWarning] = useState('');
@@ -31,63 +30,43 @@ export default function Login() {
 
     const router = useRouter();
     const { login } = useAuth();
-    const [isAdminLogin, setIsAdminLogin] = useState(false);
 
-    useEffect(() => {
-        const role = router.query.role;
-        setIsAdminLogin(role === 'admin');
-    }, [router.query.role]);
+    const handleClose = () => {
+    //reset(); // Reset the form fields and touched fields
+    setShowRegister(false);
+    };
 
-    const handleCloseRegister = () => setShowRegister(false);
-    const handleCloseForgotPassword = () => setShowForgotPassword(false);
+    const handleCloseForgotPassword = () => {
+    //reset(); // Reset the form fields and touched fields
+    setShowForgotPassword(false);
+    };
+
+    const handleShow = () => setShowRegister(true);
+    const handleShowForgotPassword = () => setShowForgotPassword(true);
 
     const handleSocialLogin = (provider) => {
-        setLoading((prev) => ({ ...prev, [provider]: true }));
-        const apiUrl = `${API_BASE_URL}/auth/${provider}`;
-        window.location.href = apiUrl;
+    setLoading((prev) => ({ ...prev, [provider]: true }));
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/${provider}`;
     };
 
     const onSubmit = async (data, e) => {
-        e.preventDefault();
-        if (isAdminLogin) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/Admin/login/admin`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: data.email,
-                        password: data.password,
-                    }),
-                });
+    e.preventDefault();
+    try {
+        const token = await authenticateUser(data.email, data.password);
+        login(token);
+        router.push("/");
 
-                const result = await response.json();
-
-                if (response.ok && result.role === "admin") {
-                    localStorage.setItem("token", result.token);
-                    router.push("/admin");
-                } else {
-                    setWarning(result.message || "You are not an admin");
-                }
-            } catch (error) {
-                setWarning("Error connecting to the server");
-                console.error("Admin login error:", error);
-            }
-        } else {
-            try {
-                const token = await authenticateUser(data.email, data.password);
-                login(token);
-                router.push("/");
-            } catch (error) {
-                console.error("Login error:", error);
-                setWarning(error.message);
-            }
-        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        setWarning(error.message);
+    }
     };
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
+    // Toggle the visibility of the password
+    const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+    };
+ 
     return (
         <Container fluid className={styles["login-container"]}>
             <GoogleOAuthProvider clientId={clientId}>
@@ -172,5 +151,3 @@ export default function Login() {
         </Container>
     );
 };
-
-                   
