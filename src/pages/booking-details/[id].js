@@ -52,6 +52,12 @@ const BookingDetails = () => {
     const handleClose = () => setShowConfirmation(false);
     const handleShow = () => setShowConfirmation(true);
 
+    const handleConfirmBooking = (bookingData) => {
+        // Handle the booking confirmation
+        console.log('Booking confirmed:', bookingData);
+        handleClose();
+    };
+
     /** Pricing & Availability Logic */
     const isBookable = placeDetails.reservable;
     const priceData = isBookable ? placeDetails.customPrice : null;
@@ -64,6 +70,33 @@ const BookingDetails = () => {
         { name: "Luxury Package", price: 250, description: "Room + Spa + Private Dinner" },
         { name: "Adventure Package", price: 400, description: "Room + Guided Tours" }
     ];
+
+    // Prepare booking data
+    const getBookingData = () => {
+        if (isPackageMode && hasPrice) {
+            return {
+                startDate,
+                endDate,
+                guests,
+                packageType,
+                price: packages.find(pkg => pkg.name.toLowerCase().includes(packageType))?.price || 0
+            };
+        } else if (hasPrice) {
+            return {
+                startDate,
+                endDate,
+                guests,
+                preferences,
+                price: priceData?.price || 0
+            };
+        } else {
+            return {
+                startDate: visitDate,
+                time,
+                guests: 1
+            };
+        }
+    };
 
     return (
         <Container className="booking-details" style={{ marginTop: "60px" }}>
@@ -354,7 +387,13 @@ const BookingDetails = () => {
                     )) : <p>No reviews available.</p>}
                 </Col>
             </Row>
-            <BookingModal show={showConfirmation} handleClose={handleClose} />
+            <BookingModal 
+                show={showConfirmation} 
+                handleClose={handleClose} 
+                placeDetails={placeDetails}
+                bookingData={getBookingData()}
+                onConfirm={handleConfirmBooking}
+            />
         </Container>
     );
 };
