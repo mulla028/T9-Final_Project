@@ -17,7 +17,12 @@ const socialUserSchema = new mongoose.Schema({
                 location: { type: String },
                 checkIn: { type: Date },
                 checkOut: { type: Date },
-                guests: { type: Number, min: 1 }
+                guests: { type: Number, min: 1 },
+                email:{ type: String },
+                totalPrice: { type: Number },
+                package: { type: String },
+                phone: { type: String },
+                preferences: { type: String },
             },
 
             experiences: [
@@ -27,6 +32,7 @@ const socialUserSchema = new mongoose.Schema({
                     location: { type: String }, // Optional city/country
                     time: { type: String },
                     paid: { type: Boolean, default: false }, // Whether it's booked/paid
+                    date: { type: Date },
                 }
             ],
 

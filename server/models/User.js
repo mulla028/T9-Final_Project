@@ -12,18 +12,24 @@ const userSchema = new mongoose.Schema({
                 placeId: { type: String }, // Google Places ID (Optional if no stay)
                 placeName: { type: String },
                 location: { type: String },
+                phone: { type: String },
                 checkIn: { type: Date }, 
                 checkOut: { type: Date }, 
-                guests: { type: Number, min: 1 }
+                guests: { type: Number, min: 1 },
+                email:{ type: String },
+                totalPrice: { type: Number},
+                package:{ type: String},
+                preferences:{ type: String},
             },
  
             experiences: [
                 {
                     placeId: { type: String }, // Google Places ID
-                    name: { type: String, required: true },
+                    name: { type: String, required: false },
                     location: { type: String }, // Optional city/country
                     time: { type: String },
                     paid: { type: Boolean, default: false }, // Whether it's booked/paid
+                    date: { type: Date },
                 }
             ],
 
@@ -31,7 +37,7 @@ const userSchema = new mongoose.Schema({
                 mode: {
                     type: String,
                     enum: ["drive", "bike", "walk", "public transport"],
-                    required: true
+                    required: false
                 }
             }
         }

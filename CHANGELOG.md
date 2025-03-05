@@ -3,6 +3,12 @@ Every sprint's progress relflected here.
 
 ## Sprint 2 (Sp-2)  
 
+### confirm-booking
+
+- Users can review and edit their booked places before confirmation
+- Users are able to change the date, number of guests and even cancel the process
+- All confirmed booking palces by users will be saved to database for the record and itenareray purpose 
+
 ### Deployment
 
 * Web Application has been **deployed** using vercel here's the [link](https://drift-way.vercel.app) where you access it! [#58](https://github.com/mulla028/T9-Final_Project/pull/58)

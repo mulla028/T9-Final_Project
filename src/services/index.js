@@ -37,6 +37,7 @@ export function isAuthenticated() {
 
 export function removeToken() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('email');
 }
 
 export async function authenticateAdmin(email, password) {
