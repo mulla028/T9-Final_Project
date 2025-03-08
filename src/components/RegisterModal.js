@@ -67,7 +67,7 @@ export default function RegisterModal({ show, handleClose }) {
     return (
         <GoogleOAuthProvider clientId={googleClientId}>
             <FacebookProvider appId={facebookAppId}>
-                <Modal dialogClassName={styles['modal-dialog']} show={show} onHide={handleCloseModal} centered scrollable>
+                <Modal dialogClassName={styles['modal-dialog']} contentClassName={styles['custom-modal']} show={show} onHide={handleCloseModal} centered scrollable>
                     <Modal.Header closeButton>
                         <Modal.Title>Join DriftWay Today</Modal.Title>
                     </Modal.Header>

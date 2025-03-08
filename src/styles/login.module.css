@@ -158,6 +158,11 @@
     max-width: none;
 }
 
+.custom-modal {
+    border-radius: 20px;
+    border: none;
+}
+
 .register-modal-body {
     /* background-image: url('path/to/your/background-image.jpg'); */
     background-size: cover;

@@ -24,7 +24,7 @@ export default function BookingModal({
     guests: "",
     startDate: "",
     endDate: "",
-    time:""
+    time: ""
   });
   const [time, setTime] = useState(new Date());
 
@@ -72,20 +72,20 @@ export default function BookingModal({
 
   const validate = () => {
     let newErrors = { visitDate: "", time: "" };
-  
+
     const now = new Date();
     const selectedDate = new Date(startDate);
-    const selectedTime = new Date(time); 
-  
+    const selectedTime = new Date(time);
+
     if (!visitDate) {
       newErrors.visitDate = "Visit date is required.";
     }
-  
+
     if (!time) {
       newErrors.time = "Time cannot be empty.";
     } else if (
-      selectedDate.toDateString() === now.toDateString() && 
-      selectedTime.getHours() < now.getHours() 
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() < now.getHours()
     ) {
       newErrors.time = "Selected time cannot be in the past.";
     } else if (
@@ -95,13 +95,13 @@ export default function BookingModal({
     ) {
       newErrors.time = "Selected time cannot be in the past.";
     }
-  
+
     setErrors(newErrors);
     return !Object.values(newErrors).some((error) => error);
   };
-  
 
- 
+
+
   const handleConfirmBooking = async () => {
     const isValid = validate();
     const isFormValid = validateForm();
@@ -122,7 +122,7 @@ export default function BookingModal({
       bookingPayload.guests = guests;
       bookingPayload.phone = placeDetails.phone;
       bookingPayload.package = bookingData.packageType;
-      bookingPayload.preferences =bookingData.preferences;
+      bookingPayload.preferences = bookingData.preferences;
       bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * (guests || 1) : bookingData.price * (guests || 1);
     } else {
       bookingPayload.experiences = [
@@ -160,7 +160,7 @@ export default function BookingModal({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg" centered>
+    <Modal show={show} contentClassName='custom-modal' onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Your Booking</Modal.Title>
       </Modal.Header>
@@ -237,10 +237,10 @@ export default function BookingModal({
                       <div className="mb-2">
                         <strong>Total:</strong> $
                         {bookingData.price * (guests || 1)}
-                  
+
                       </div>
                     </>
-                  ):
+                  ) :
                     <>
                       <div className="mb-2">
                         <strong>Base Price:</strong> ${customPackagePrice}
@@ -298,7 +298,7 @@ export default function BookingModal({
                     selected={time}
                     onChange={(time) => {
                       setTime(time);
-                      setErrors((prev) => ({ ...prev, time: "" })); 
+                      setErrors((prev) => ({ ...prev, time: "" }));
                     }}
                     showTimeSelect
                     showTimeSelectOnly
