@@ -232,6 +232,19 @@ export async function deleteTip(id) {
     });
 }
 
+export async function createOrUpdateTip(url, method, tip) {
+    await my_fetch(url, {
+        method: method,
+        body: JSON.stringify(tip),
+    });
+}
+
+export async function deleteTip(id) {
+    await my_fetch(`${API_BASE_URL}/tips/${id}`, {
+        method: "DELETE",
+    });
+}
+
 export async function my_fetch(url, args) {
     const _args = {
         ...args,
