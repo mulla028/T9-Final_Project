@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fetchPlaceDetails, fetchNearbyAttractions } from "@/services";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import BookingModal from "@/components/BookingModal";
+import TipsDisplay from "@/components/TipsDisplay";
 
 // Load Google Maps dynamically
 const Map = dynamic(() => import("@/components/GoogleMap"), { ssr: false });
@@ -105,7 +106,7 @@ const BookingDetails = () => {
                 <Col md={8}>
                     {/* Navigation Tabs */}
                     <Nav fill variant="pills" className="border rounded mb-3 gap-2 p-2" activeKey={activeTab}>
-                        {["details", "attractions", "reviews"].map(section => (
+                        {["details", "tips", "attractions", "reviews"].map(section => (
                             <Nav.Item key={section}>
                                 <Nav.Link
                                     eventKey={`#${section}`}
@@ -146,22 +147,39 @@ const BookingDetails = () => {
                     <Card className="p-3 shadow-sm mb-3">
                         <h4>Contact Information</h4>
                         <p><strong>Phone:</strong> {placeDetails.phone || "Not Available"}</p>
-                        {/* <p><strong>Location:</strong> {placeDetails.address}</p> */}
                         <p><strong>Website:</strong> <a href={placeDetails.website} target="_blank">{placeDetails.website || "N/A"}</a></p>
                     </Card>
 
                     {/* Pricing & Availability / Package Toggle */}
-                    <Card className="p-3 shadow-sm mt-4">
+                    <Card className="pricing-card p-4 mt-4 shadow-lg">
                         {/* Conditional Heading */}
-                        <h4>{hasPrice ? "Choose Your Booking Option" : "Add to Itinerary"}</h4>
+                        <h4 className="text-center mb-3">
+                            {hasPrice ? "Choose Your Booking Option" : "Add to Itinerary"}
+                        </h4>
 
                         {/* Pricing & Availability / Package Toggle (only if there's a price) */}
                         {hasPrice && (
-                            <ToggleButtonGroup type="radio" name="bookingMode" defaultValue={0} onChange={(val) => setIsPackageMode(val === 1)}>
-                                <ToggleButton id="standard" value={0} variant="outline-primary">
+                            <ToggleButtonGroup
+                                type="radio"
+                                name="bookingMode"
+                                defaultValue={0}
+                                onChange={(val) => setIsPackageMode(val === 1)}
+                                className="d-flex justify-content-center mb-4"
+                            >
+                                <ToggleButton
+                                    id="standard"
+                                    value={0}
+                                    variant={isPackageMode ? "outline-primary" : "primary"}
+                                    className="toggle-btn"
+                                >
                                     Standard Pricing
                                 </ToggleButton>
-                                <ToggleButton id="packages" value={1} variant="outline-success">
+                                <ToggleButton
+                                    id="packages"
+                                    value={1}
+                                    variant={isPackageMode ? "success" : "outline-success"}
+                                    className="toggle-btn"
+                                >
                                     Custom Packages
                                 </ToggleButton>
                             </ToggleButtonGroup>
@@ -170,9 +188,13 @@ const BookingDetails = () => {
                         {/* Standard Pricing */}
                         {!isPackageMode && hasPrice && (
                             <>
-                                <p><strong>Price Level:</strong> {priceIndicator}</p>
+                                <p className="text-muted text-center">
+                                    <strong>Price Level:</strong> {priceIndicator}
+                                </p>
+
                                 <Form>
-                                    <Form.Group controlId="date" className="form-group mb-3">
+                                    {/* Date Range Picker */}
+                                    <Form.Group className="mb-3">
                                         <DatePicker
                                             showIcon
                                             selected={startDate}
@@ -183,20 +205,20 @@ const BookingDetails = () => {
                                             minDate={new Date()}
                                             dateFormat="MMM d, yyyy"
                                             placeholderText="Select Dates"
-                                            className="date-picker"
-                                            icon={<FaCalendarAlt className="search-icon" />}
+                                            wrapperClassName="d-flex justify-content-between align-items-center"
+                                            className="form-control date-picker"
                                         />
                                     </Form.Group>
 
                                     {isBookable ? (
                                         <>
-                                            <Form.Group controlId="guests" className="mb-3">
+                                            {/* Guests Field */}
+                                            <Form.Group className="mb-3">
                                                 <Form.Label>Number of Guests</Form.Label>
                                                 <Form.Control
                                                     type="number"
                                                     min="1"
                                                     max="5"
-                                                    required
                                                     value={guests}
                                                     onChange={(e) => {
                                                         const value = Math.min(5, Math.max(1, Number(e.target.value)));
@@ -205,18 +227,31 @@ const BookingDetails = () => {
                                                 />
                                             </Form.Group>
 
-                                            <Form.Group controlId="preferences" className="mb-3">
+                                            {/* Preferences Field */}
+                                            <Form.Group className="mb-3">
                                                 <Form.Label>Preferences</Form.Label>
-                                                <Form.Control as="textarea" rows={3}
+                                                <Form.Control
+                                                    as="textarea"
+                                                    rows={3}
+                                                    placeholder="Any special requests?"
                                                     value={preferences}
                                                     onChange={(e) => setPreferences(e.target.value)}
                                                 />
                                             </Form.Group>
 
-                                            <Button variant="outline-primary" className="w-100 mb-3"
-                                                onClick={() => router.push(placeDetails.mapUrl)}>View on Map</Button>
+                                            {/* View on Map Button */}
+                                            <Button
+                                                variant="outline-primary"
+                                                className="w-100 mb-2 view-btn"
+                                                onClick={() => router.push(placeDetails.mapUrl)}
+                                            >
+                                                View on Map
+                                            </Button>
 
-                                            <Button variant="success" className="w-100"
+                                            {/* Book Now Button */}
+                                            <Button
+                                                variant="success"
+                                                className="w-100 book-btn"
                                                 onClick={handleShow}
                                             >
                                                 {priceData ? `Book Now for $${priceData.price}` : "Book Now"}
@@ -224,10 +259,16 @@ const BookingDetails = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button variant="outline-primary" className="w-100 mb-3"
-                                                onClick={() => router.push(placeDetails.mapUrl)}>View on Map</Button>
-
-                                            <Button variant="warning" className="w-100"
+                                            <Button
+                                                variant="outline-primary"
+                                                className="w-100 mb-2 view-btn"
+                                                onClick={() => router.push(placeDetails.mapUrl)}
+                                            >
+                                                View on Map
+                                            </Button>
+                                            <Button
+                                                variant="warning"
+                                                className="w-100 itinerary-btn"
                                                 onClick={handleShow}
                                             >
                                                 Add to Itinerary
@@ -238,29 +279,36 @@ const BookingDetails = () => {
                             </>
                         )}
 
-                        {/* Custom Booking Packages */}
+                        {/* Custom Packages */}
                         {isPackageMode && hasPrice && (
                             <>
-                                <h5>Available Packages</h5>
-                                <ul>
+                                <h5 className="text-center mb-3">Available Packages</h5>
+                                <ul className="package-list">
                                     {packages.map((pkg, index) => (
-                                        <li key={index}>
+                                        <li key={index} className="mb-2">
                                             <strong>{pkg.name}:</strong> {pkg.description} - ${pkg.price} per night
                                         </li>
                                     ))}
                                 </ul>
 
                                 <Form>
-                                    <Form.Group controlId="bookingPackage" className="mb-3">
-                                        <Form.Label>Select Booking Package</Form.Label>
-                                        <Form.Select value={packageType} onChange={(e) => setPackageType(e.target.value)}>
-                                            <option value="standard">Standard Stay ($100)</option>
-                                            <option value="all-inclusive">Luxury Package ($250)</option>
-                                            <option value="vip">Adventure Package ($400)</option>
+                                    {/* Package Dropdown */}
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Select Package</Form.Label>
+                                        <Form.Select
+                                            value={packageType}
+                                            onChange={(e) => setPackageType(e.target.value)}
+                                        >
+                                            {packages.map((pkg, index) => (
+                                                <option key={index} value={pkg.name.toLowerCase()}>
+                                                    {pkg.name} (${pkg.price})
+                                                </option>
+                                            ))}
                                         </Form.Select>
                                     </Form.Group>
 
-                                    <Form.Group controlId="date" className="form-group mb-3">
+                                    {/* Date Range */}
+                                    <Form.Group className="mb-3">
                                         <DatePicker
                                             showIcon
                                             selected={startDate}
@@ -271,76 +319,28 @@ const BookingDetails = () => {
                                             minDate={new Date()}
                                             dateFormat="MMM d, yyyy"
                                             placeholderText="Select Dates"
-                                            className="date-picker"
-                                            icon={<FaCalendarAlt className="search-icon" />}
+                                            wrapperClassName="d-flex justify-content-between align-items-center"
+                                            className="form-control date-picker"
                                         />
                                     </Form.Group>
 
-                                    <Form.Group controlId="guests" className="mb-3">
-                                        <Form.Label>Number of Guests</Form.Label>
-                                        <Form.Control
-                                            type="number"
-                                            min="1"
-                                            max="5"
-                                            required
-                                            value={guests}
-                                            onChange={(e) => {
-                                                const value = Math.min(5, Math.max(1, Number(e.target.value)));
-                                                setGuests(value);
-                                            }}
-                                        />
-                                    </Form.Group>
+                                    <Button
+                                        variant="outline-primary"
+                                        className="w-100 mb-3 view-btn"
+                                        onClick={() => router.push(placeDetails.mapUrl)}
+                                    >
+                                        View on Map
+                                    </Button>
 
-                                    <Button variant="outline-primary" className="w-100 mb-3"
-                                        onClick={() => router.push(placeDetails.mapUrl)}>View on Map</Button>
-
-                                    <Button variant="success" className="w-100"
+                                    <Button
+                                        variant="success"
+                                        className="w-100 book-btn"
                                         onClick={handleShow}
-                                    >Book Package</Button>
+                                    >
+                                        Book Package
+                                    </Button>
                                 </Form>
                             </>
-                        )}
-
-                        {/* If no price, allow users to still select dates and add to itinerary */}
-                        {!hasPrice && (
-                            <Form>
-                                <Form.Group controlId="date" className="mb-3">
-                                    <DatePicker
-                                        showIcon
-                                        selected={visitDate}
-                                        onChange={(date) => setVisitDate(date)}
-                                        minDate={new Date()}
-                                        dateFormat="MMM d, yyyy"
-                                        placeholderText="Select Dates"
-                                        className="date-picker"
-                                        icon={<FaCalendarAlt className="search-icon" />}
-                                    />
-                                </Form.Group>
-
-                                <Form.Group controlId="date" className="mb-3">
-                                    <DatePicker
-                                        showIcon
-                                        selected={time}
-                                        onChange={(time) => setTime(time)}
-                                        showTimeSelect
-                                        showTimeSelectOnly
-                                        timeIntervals={15}
-                                        timeCaption="Time"
-                                        dateFormat="h:mm aa"
-                                        placeholderText="Time"
-                                        className="date-picker"
-                                        icon={<FaClock className="search-icon" />}
-                                    />
-                                </Form.Group>
-
-                                <Button variant="outline-primary" className="w-100 mb-3"
-                                    onClick={() => router.push(placeDetails.mapUrl)}>View on Map</Button>
-                                <Button variant="warning" className="w-100"
-                                    onClick={handleShow}
-                                >
-                                    Add to Itinerary
-                                </Button>
-                            </Form>
                         )}
                     </Card>
                 </Col>
@@ -357,6 +357,13 @@ const BookingDetails = () => {
                     <Card className="p-3 shadow-sm mt-3">
                         <Map lat={placeDetails.lat} lng={placeDetails.lng} />
                     </Card>
+                </Col>
+            </Row>
+
+            {/* Eco-Friendly Tips Section - Below the Description */}
+            <Row className="mt-5" id="tips">
+                <Col md={8}>
+                    <TipsDisplay tips={placeDetails.ecoTips} />
                 </Col>
             </Row>
 
@@ -387,9 +394,9 @@ const BookingDetails = () => {
                     )) : <p>No reviews available.</p>}
                 </Col>
             </Row>
-            <BookingModal 
-                show={showConfirmation} 
-                handleClose={handleClose} 
+            <BookingModal
+                show={showConfirmation}
+                handleClose={handleClose}
                 placeDetails={placeDetails}
                 bookingData={getBookingData()}
                 onConfirm={handleConfirmBooking}

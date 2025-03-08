@@ -1,5 +1,6 @@
 // controllers/placesController.js
 const redisClient = require('../config/redis');
+const Tip = require('../models/Tip');
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -97,7 +98,6 @@ exports.searchPlaces = async (req, res) => {
                 image: detailsData.result.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${detailsData.result.photos[0].photo_reference}&key=${apiKey}` : null
             };
         }));
-        console.log("DP: ", detailedPlaces);
 
         // Cache results for 24 hours
         await redisClient.set(cacheKey, JSON.stringify(detailedPlaces), { EX: 86400 });
@@ -191,6 +191,20 @@ exports.getPlaceDetails = async (req, res) => {
             reservable: result.reservable || ["lodging", "restaurant", "tourist_attraction"].some(type => result.types.includes(type)),
             types: result.types
         };
+
+        // 🌱 Fetch Relevant Eco-Friendly Tips  
+        const relevantTips = await Tip.find({
+            $or: [
+                { category: { $in: result.types } }, // Match place types (e.g., "hotel", "park")
+                { category: locality }, // Match city
+                { category: country }, // Match country
+                { category: "general" } // Include general tips as a fallback
+            ]
+        });
+
+        placeDetails.ecoTips = relevantTips.map(tip => tip.text);
+
+        console.log("Eco-Tips:", placeDetails.ecoTips);
 
         // STORE IN CACHE WITH TIMESTAMP
         const cacheData = { data: placeDetails, timestamp: Date.now() };

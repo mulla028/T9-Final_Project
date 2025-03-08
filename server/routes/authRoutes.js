@@ -11,7 +11,7 @@ router.post('/login', login);
 // Login route
 router.post('/login/admin', async (req, res) => {  // Changed this line to async
     const { email, password } = req.body;
-console.log(req.path)
+    console.log(req.path)
     try {
         const admin = await Admin.findOne({ email });
 
@@ -54,7 +54,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
 
 // Callback Route for Facebook
 router.get('/facebook/callback', passport.authenticate('facebook', { session: false }), (req, res) => {
-    const token = generateToken(req.user);
+    const token = generateToken(req.user.user);
     res.redirect(`${REDIRECT_URL}/auth/facebook/callback?token=${encodeURIComponent(token)}`);
 });
 

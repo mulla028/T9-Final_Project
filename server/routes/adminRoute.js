@@ -3,7 +3,7 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
-const verifyAdmin = require("../middlewares/verifyAdmin")
+const { verifyAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.post("/login/admin", async (req, res) => {

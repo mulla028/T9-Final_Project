@@ -16,7 +16,7 @@ export default function BookingModal({ handleClose, show, placeDetails, bookingD
     };
 
     return (
-        <Modal show={show} onHide={handleClose} size="lg" centered>
+        <Modal show={show} contentClassName='custom-modal' onHide={handleClose} size="lg" centered>
             <Modal.Header closeButton>
                 <Modal.Title>Confirm Your Booking</Modal.Title>
             </Modal.Header>
@@ -25,7 +25,7 @@ export default function BookingModal({ handleClose, show, placeDetails, bookingD
                 {placeDetails && bookingData && (
                     <>
                         <h4 className="mb-4">{placeDetails.name}</h4>
-                        
+
                         <Row className="mb-4">
                             <Col md={6}>
                                 <h5 className="text-muted mb-3">Booking Details</h5>
@@ -46,7 +46,7 @@ export default function BookingModal({ handleClose, show, placeDetails, bookingD
                                     </div>
                                 )}
                             </Col>
-                            
+
                             <Col md={6}>
                                 <h5 className="text-muted mb-3">Price Details</h5>
                                 {bookingData.price && (
