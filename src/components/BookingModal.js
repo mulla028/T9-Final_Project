@@ -72,18 +72,35 @@ export default function BookingModal({
   };
 
   const validate = () => {
-    let newErrors = { startDate: "", time: "" };
-    if (!startDate) {
-      newErrors.startDate = "Visit date is required.";
+    let newErrors = { visitDate: "", time: "" };
+  
+    const now = new Date();
+    const selectedDate = new Date(startDate);
+    const selectedTime = new Date(time); 
+  
+    if (!visitDate) {
+      newErrors.visitDate = "Visit date is required.";
     }
-
+  
     if (!time) {
       newErrors.time = "Time cannot be empty.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() && 
+      selectedTime.getHours() < now.getHours() 
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() === now.getHours() &&
+      selectedTime.getMinutes() < now.getMinutes()
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
     }
-
+  
     setErrors(newErrors);
     return !Object.values(newErrors).some((error) => error);
   };
+  
 
  
   const handleConfirmBooking = async () => {

@@ -60,19 +60,34 @@ const BookingDetails = () => {
   const today = new Date().toISOString().split("T")[0];
 
   const validate = () => {
-    let newErrors = { visitDate: "", time: "" };
+  let newErrors = { visitDate: "", time: "" };
 
-    if (!visitDate) {
-      newErrors.visitDate = "Visit date is required.";
-    }
+  const now = new Date();
+  const selectedDate = new Date(visitDate); 
+  const selectedTime = new Date(time);
 
-    if (!time) {
-      newErrors.time = "Time cannot be empty.";
-    }
+  if (!visitDate) {
+    newErrors.visitDate = "Visit date is required.";
+  }
 
-    setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
-  };
+  if (!time) {
+    newErrors.time = "Time cannot be empty.";
+  } else if (
+    selectedDate.toDateString() === now.toDateString() && 
+    selectedTime.getHours() < now.getHours() 
+  ) {
+    newErrors.time = "Selected time cannot be in the past.";
+  } else if (
+    selectedDate.toDateString() === now.toDateString() &&
+    selectedTime.getHours() === now.getHours() &&
+    selectedTime.getMinutes() < now.getMinutes()
+  ) {
+    newErrors.time = "Selected time cannot be in the past.";
+  }
+
+  setErrors(newErrors);
+  return !Object.values(newErrors).some((error) => error);
+};
 
   const handleShowNotPrice = () => {
     if (validate()) {
