@@ -10,7 +10,6 @@ const places = require('./routes/placesRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
-const bookingRoutes = require('./routes/bookingRoutes');
 
 const app = express();
 
@@ -27,7 +26,6 @@ app.use('/api/auth', auth);
 app.use('/api/Users', User);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
-app.use('/api/bookings', bookingRoutes);
 
 // Send email for password reset
 app.post('/api/passwordResetEmail', async (req, res) => {
