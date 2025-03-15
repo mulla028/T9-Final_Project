@@ -24,7 +24,7 @@ export default function BookingModal({
     guests: "",
     startDate: "",
     endDate: "",
-    time:""
+    time:"",
   });
   const [time, setTime] = useState(new Date());
 
@@ -36,13 +36,13 @@ export default function BookingModal({
   }, [bookingData]);
 
 
-  useEffect(() => {
+ useEffect(() => {
     let newPrice = 0;
-    if (bookingData.packageType === 'vip') {
+    if (bookingData.packageType === "vip") {
       newPrice = 400;
-    } else if (bookingData.packageType === 'standard') {
+    } else if (bookingData.packageType === "standard") {
       newPrice = 100;
-    } else if (bookingData.packageType === 'all-inclusive') {
+    } else if (bookingData.packageType === "all-inclusive") {
       newPrice = 250;
     }
     setCustomPackagePrice(newPrice);
@@ -123,14 +123,27 @@ export default function BookingModal({
       bookingPayload.phone = placeDetails.phone;
       bookingPayload.package = bookingData.packageType;
       bookingPayload.preferences =bookingData.preferences;
-      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * (guests || 1) : bookingData.price * (guests || 1);
+      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * 
+        Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+              (1000 * 60 * 60 * 24),
+            1,
+          )
+          : bookingData.price *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+              (1000 * 60 * 60 * 24),
+            1,
+          )
     } else {
       bookingPayload.experiences = [
         {
           name: placeDetails.name,
           location: placeDetails.address,
           time: time.toLocaleTimeString(),
-          date: time.toLocaleDateString()
+          date: time.toLocaleDateString(),
         },
       ];
     }
@@ -169,7 +182,8 @@ export default function BookingModal({
         {placeDetails &&
           bookingData &&
           (bookingData.model == "isPackageMode" ||
-            bookingData.model == "hasPrice" || bookingData.model == "isPackageMode&&hasPrice" ? (
+            bookingData.model == "hasPrice" || 
+            bookingData.model == "isPackageMode&&hasPrice" ? (
             <>
               <h4 className="mb-4">{placeDetails.name}</h4>
 
@@ -236,22 +250,33 @@ export default function BookingModal({
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {bookingData.price * (guests || 1)}
-                  
+                        {bookingData.price * 
+                          Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                              (1000 * 60 * 60 * 24),
+                            1,
+                          )}
                       </div>
                     </>
-                  ):
+                  ): (
                     <>
                       <div className="mb-2">
                         <strong>Base Price:</strong> ${customPackagePrice}
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {customPackagePrice * (guests || 1)}
+                        {customPackagePrice * 
+                         Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                              (1000 * 60 * 60 * 24),
+                            1,
+                          )}
 
                       </div>
                     </>
-                  }
+                  )}
                 </Col>
               </Row>
               {bookingData.preferences && (

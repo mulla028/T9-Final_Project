@@ -19,11 +19,15 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fetchPlaceDetails, fetchNearbyAttractions } from "@/services";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import BookingModal from "@/components/BookingModal";
+import { useSelector } from "react-redux";
 
 // Load Google Maps dynamically
 const Map = dynamic(() => import("@/components/GoogleMap"), { ssr: false });
 
 const BookingDetails = () => {
+  // const travelStyle = useSelector(
+  //   (state) => state.travelStyle?.travelStyle || "Cultural Immersion",
+  // );
   const router = useRouter();
   const { id } = router.query; // Get place_id from URL
 
@@ -39,8 +43,17 @@ const BookingDetails = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [visitDate, setVisitDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
+  const [travelStyle, setTravelStyle] = useState();
   const [startDate, endDate] = dateRange;
+  const [hasPrice, setHasPrice] = useState();
 
+  useEffect(() => {
+    setTravelStyle(localStorage.getItem("travelStyle"));
+  }, [localStorage.getItem(travelStyle)]);
+
+  useEffect(() => {
+    setHasPrice(travelStyle === "Eco-Stays");
+  }, [travelStyle]);
 
   useEffect(() => {
     if (!visitDate) {
@@ -49,6 +62,9 @@ const BookingDetails = () => {
       setErrors((prev) => ({ ...prev, visitDate: false }));
     }
   }, [visitDate]);
+  useEffect(() => {
+    console.log(placeDetails);
+  }, [placeDetails]);
 
   const [errors, setErrors] = useState({
     guests: false,
@@ -58,36 +74,38 @@ const BookingDetails = () => {
   });
 
   const today = new Date().toISOString().split("T")[0];
-
+  useEffect(() => {
+    console.log(placeDetails);
+  }, [placeDetails]);
   const validate = () => {
-  let newErrors = { visitDate: "", time: "" };
+    let newErrors = { visitDate: "", time: "" };
 
-  const now = new Date();
-  const selectedDate = new Date(visitDate); 
-  const selectedTime = new Date(time);
+    const now = new Date();
+    const selectedDate = new Date(visitDate);
+    const selectedTime = new Date(time);
 
-  if (!visitDate) {
-    newErrors.visitDate = "Visit date is required.";
-  }
+    if (!visitDate) {
+      newErrors.visitDate = "Visit date is required.";
+    }
 
-  if (!time) {
-    newErrors.time = "Time cannot be empty.";
-  } else if (
-    selectedDate.toDateString() === now.toDateString() && 
-    selectedTime.getHours() < now.getHours() 
-  ) {
-    newErrors.time = "Selected time cannot be in the past.";
-  } else if (
-    selectedDate.toDateString() === now.toDateString() &&
-    selectedTime.getHours() === now.getHours() &&
-    selectedTime.getMinutes() < now.getMinutes()
-  ) {
-    newErrors.time = "Selected time cannot be in the past.";
-  }
+    if (!time) {
+      newErrors.time = "Time cannot be empty.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() < now.getHours()
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() === now.getHours() &&
+      selectedTime.getMinutes() < now.getMinutes()
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
+    }
 
-  setErrors(newErrors);
-  return !Object.values(newErrors).some((error) => error);
-};
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
 
   const handleShowNotPrice = () => {
     if (validate()) {
@@ -153,7 +171,7 @@ const BookingDetails = () => {
   const priceIndicator = priceData
     ? `$${priceData.price} (${priceData.label})`
     : "N/A";
-  const hasPrice = priceIndicator !== "N/A" ? true : false;
+  // const hasPrice = priceIndicator !== "N/A" ? true : false;
 
   /** Custom Booking Packages */
   const packages = [
@@ -195,7 +213,7 @@ const BookingDetails = () => {
     } else {
       return {
         startDate: visitDate,
-        time:time,
+        time: time,
         model: "!hasPrice",
       };
     }
@@ -511,7 +529,7 @@ const BookingDetails = () => {
                     selected={time}
                     onChange={(time) => {
                       setTime(time);
-                      setErrors((prev) => ({ ...prev, time: "" })); 
+                      setErrors((prev) => ({ ...prev, time: "" }));
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -522,8 +540,9 @@ const BookingDetails = () => {
                     className={`date-picker ${errors.time ? "border border-danger" : ""}`}
                     icon={<FaClock className="search-icon" />}
                   />
-                     {errors.time && <div className="text-danger mt-1">{errors.time}</div>}
-
+                  {errors.time && (
+                    <div className="text-danger mt-1">{errors.time}</div>
+                  )}
                 </Form.Group>
 
                 <Button
