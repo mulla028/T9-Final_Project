@@ -56,6 +56,22 @@ export async function authenticateAdmin(email, password) {
     }
 }
 
+export async function authenticateAdmin(email, password) {
+    const res = await my_fetch(`${API_BASE_URL}/Admin/login/admin`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        setToken(data.token);
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export async function registerUser(user, password, confirmPassword) {
     const { firstName, lastName, email } = user;
     const res = await my_fetch(`${API_BASE_URL}/auth/register`, {
