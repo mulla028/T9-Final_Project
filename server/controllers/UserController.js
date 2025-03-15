@@ -65,6 +65,20 @@ const getItineraryForDay = async (userId, day) => {
         throw error;
     }
 }
+
+
+// Get all user itineraries
+const getItineraries = async (userId) => {
+    try {
+        const user = await User.findOne(
+            { _id: userId }, 
+        );
+        return user ? user.itinerary : null;
+    } catch (error) {
+        console.error("Error fetching itineraries:", error);
+        throw error;
+    }
+}
 const updateUserItineraryForDay = async (userId, day, newItinerary, newTransportMode) => {
     try {
         const result = await User.updateOne(
@@ -92,4 +106,4 @@ const updateUserItineraryForDay = async (userId, day, newItinerary, newTransport
     }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, getItineraryForDay, updateUserItineraryForDay };
+module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, getItineraryForDay, getItineraries, updateUserItineraryForDay };

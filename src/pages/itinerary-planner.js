@@ -1,6 +1,6 @@
 "use client";
 import { FaCar, FaBiking, FaWalking, FaBus } from "react-icons/fa";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Navbar, Stack } from "react-bootstrap";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import MapComponent from "@/components/MapComponent";
