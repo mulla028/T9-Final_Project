@@ -37,6 +37,23 @@ export function isAuthenticated() {
 
 export function removeToken() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('email');
+}
+
+export async function authenticateAdmin(email, password) {
+    const res = await my_fetch(`${API_BASE_URL}/Admin/login/admin`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        setToken(data.token);
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
 }
 
 export async function authenticateAdmin(email, password) {

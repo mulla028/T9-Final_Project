@@ -63,6 +63,7 @@ export default function Login() {
 
   const onSubmit = async (data, e) => {
     e.preventDefault();
+    localStorage.setItem('email', data.email);
     if (isAdminLogin) {
       try {
         const response = await authenticateAdmin(data.email, data.password)

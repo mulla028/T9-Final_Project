@@ -34,5 +34,4 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
-module.exports = verifyAdmin;
-module.exports = authMiddleware;
+module.exports = { authMiddleware, verifyAdmin };
