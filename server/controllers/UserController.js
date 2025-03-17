@@ -54,9 +54,10 @@ const deleteUser = async (req, res) => {
 
 // Get the user itinerary details for a specific day
 const getItineraryForDay = async (userId, day) => {
+    const numericDay = Number(day); // Ensure day is a Number
     try {
         const user = await User.findOne(
-            { _id: userId, "itinerary.day": day }, 
+            { _id: userId, "itinerary.day": numericDay }, 
             { "itinerary.$": 1 } // Projection to return only the matching itinerary day
         );
         return user ? user.itinerary[0] : null;
@@ -85,6 +86,7 @@ const updateUserItineraryForDay = async (userId, day, newItinerary, newTransport
             { _id: userId, "itinerary.day": day },
             { 
                 $set: { 
+                    "itinerary.$.stay": newItinerary.stay,
                     "itinerary.$.experiences": newItinerary.experiences,
                     "itinerary.$.transport.mode": newTransportMode // Update transport mode
                 }

@@ -21,9 +21,14 @@ const ItineraryPlanner = () => {
 
     const [newStop, setNewStop] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [addSelectedLocation, setAddSelectedLocation] = useState(false);
     const [loadingLocation, setLoadingLocation] = useState(true);
     const [googleLoaded, setGoogleLoaded] = useState(false);
     const [travelMode, setTravelMode] = useState("DRIVING"); // Track selected travel mode
+    const [checkInDate, setCheckInDate] = useState(null);
+    const [checkOutDate, setCheckOutDate] = useState(null);
+    const [showCheckin, setshowCheckin] = useState(false);
 
     const inputRef = useRef(null);
 
@@ -35,57 +40,84 @@ const ItineraryPlanner = () => {
     useEffect(() => {
         if (!id || !day) return;
 
-        // Fetch the itinerary for the specific user and day
         const fetchItinerary = async () => {
             try {
                 const itineraryData = await getItineraryForDay(id, day);
-                //console.log("Fetched itinerary:", itineraryData); // Debug log
                 if (itineraryData) {
-                    setItinerary(itineraryData); // Save the full itinerary
+                    console.log("Fetched itinerary:", itineraryData);
 
-                    const mapTravelMode = (mode) => {
-                        const modeMap = {
-                            "drive" : "DRIVING",
-                            "bike" : "BICYCLING",
-                            "walk" :  "WALKING",
-                            "public transport" : "TRANSIT"
-                        };
-                        return modeMap[mode] || "DRIVING"; // Default to "drive" if the mode is unrecognized
-                      };
+                    setItinerary(itineraryData);
+                    const newStops = [];
+                    const addedPlaces = new Set();
 
-                    const mappedMode = mapTravelMode(itineraryData.itinerary.transport.mode);
-                    setTravelMode(mappedMode);
-                    let newStops = []; // Temporary array to accumulate stops
+                    // Set the travel mode based on fetched itinerary
+                    if (itineraryData.itinerary.transport.mode) {
+                        switch (itineraryData.itinerary.transport.mode) {
+                            case "drive":
+                                setTravelMode("DRIVING");
+                                break;
+                            case "bike":
+                                setTravelMode("BICYCLING");
+                                break;
 
-                    // Convert itinerary data to stop data from stay
-                    itineraryData.itinerary.stay?.forEach(itinerary => {
-                        const newStop = {
-                            name: itinerary.name,
-                            address: itinerary.location,
-                            placeId: itinerary.placeId
-                        };
-                        newStops.push(newStop);
+                            case "walk":
+                                setTravelMode("WALKING");
+                                break;
+
+                            case "public transport":
+                                setTravelMode("TRANSIT");
+                                break;
+
+                        }
+                        console.log(itineraryData.itinerary.transport.mode);
+                    }
+
+
+                    // Process Stay as a Stop (if it exists)
+                    if (itineraryData.itinerary.stay) {
+                        const stay = itineraryData.itinerary.stay;
+                        const key = stay.placeId || stay.location; // Unique key for deduplication
+                        if (!addedPlaces.has(key)) {
+                            newStops.push({
+                                name: stay.placeName || "Stay Location",
+                                address: stay.location,
+                                placeId: stay.placeId,
+                                checkIn: stay.checkIn,
+                                checkOut: stay.checkOut,
+                                guests: stay.guests,
+                                preferences: stay.preferences,
+
+                            });
+                            addedPlaces.add(key);
+                        }
+                    }
+
+                    // Process Experiences as Stops
+                    itineraryData.itinerary.experiences?.forEach(exp => {
+                        const key = exp.placeId || exp.location;
+                        if (!addedPlaces.has(key)) {
+                            newStops.push({
+                                name: exp.name,
+                                address: exp.location,
+                                placeId: exp.placeId,
+                                time: exp.time
+                            });
+                            addedPlaces.add(key);
+                        }
                     });
 
-                    // Add experiences to the stops
-                    itineraryData.itinerary.experiences?.forEach(itinerary => {
-                        
-                        const newStop = {
-                            name: itinerary.name,
-                            address: itinerary.location,
-                            placeId: itinerary.placeId
-                        };
-                        newStops.push(newStop);
-                    });
+                    console.log("Final processed stops:", newStops); // Debugging
+
+                    setStops(newStops);
 
 
-                   // console.log("Stops to set:", newStops); // Debug log
-                    setStops(newStops); // Set stops with all accumulated stops
                 } else {
                     console.log("No itinerary found");
+                    setLoadingLocation(false);
                 }
             } catch (error) {
                 console.error("Error fetching itinerary:", error);
+                setLoadingLocation(false);
             }
         };
 
@@ -104,25 +136,33 @@ const ItineraryPlanner = () => {
     }, []);
 
     useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setCurrentLocation({ lat: latitude, lng: longitude });
+        // **Set Default Map Location to First Stop**
+        if (stops.length > 0 && window.google && window.google.maps) {
+            const firstStop = stops[0];
+            console.log("First stop for map:", firstStop);
+
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode({ address: firstStop.address }, (results, status) => {
+                if (status === "OK" && results[0].geometry) {
+                    setCurrentLocation({
+                        lat: results[0].geometry.location.lat(),
+                        lng: results[0].geometry.location.lng()
+                    });
                     setLoadingLocation(false);
-                },
-                (error) => {
-                    console.error("Error getting location:", error);
-                    setCurrentLocation({ lat: 40.7128, lng: -74.0060 }); // Default to New York
+                } else {
+                    console.error("Geocoding failed:", status);
                     setLoadingLocation(false);
                 }
-            );
+            });
         } else {
-            console.error("Geolocation not supported");
-            setCurrentLocation({ lat: 40.7128, lng: -74.0060 });
             setLoadingLocation(false);
         }
     }, []);
+
+    useEffect(() => {
+        console.log("Stops have changed:", stops);
+        // You can add any logic here to react to the change in stops
+    }, [stops]);
 
     useEffect(() => {
         if (googleLoaded && inputRef.current) {
@@ -140,134 +180,315 @@ const ItineraryPlanner = () => {
         }
     }, [googleLoaded]);
 
+    useEffect(() => {
+        if (!addSelectedLocation) return;
+
+        if (selectedLocation && selectedLocation.type === "lodging") {
+            setshowCheckin(true);
+
+            // Check if there's already a lodging stop
+            const stayCheck = stops.some(stop => stop.type === "lodging" || stop.checkIn);
+
+            if (stayCheck) {
+                alert("You have already selected your stay for this day, please remove to add another.");
+                setSelectedLocation(null); // Hide InfoWindow after adding the stop
+                setAddSelectedLocation(false); // Reset the flag
+                setshowCheckin(false);
+                return;
+            }
+
+            // Add lodging stop with check-in and check-out dates
+            setStops((prevStops) => [
+                ...prevStops,
+                { ...selectedLocation, checkIn: checkInDate, checkOut: checkOutDate }
+            ]);
+
+        } else {
+            // For non-lodging locations, just add the stop
+            setStops((prevStops) => [...prevStops, selectedLocation]);
+        }
+
+        setSelectedLocation(null); // Hide InfoWindow after adding the stop
+        setAddSelectedLocation(false); // Reset the flag
+        setshowCheckin(false);
+
+    }, [addSelectedLocation, selectedLocation, checkInDate, checkOutDate]);
+
+
     const handleAddStop = () => {
         if (!newStop || !newStop.address) return;
-        setStops([...stops, newStop]);
-        setNewStop(null);
+        setshowCheckin(true);
+
+        // If it's a lodging type, include check-in and check-out dates
+        if (newStop.type === "lodging" && checkInDate && checkOutDate) {
+            setStops([...stops, { ...newStop, checkInDate, checkOutDate }]);
+        } else {
+            setStops([...stops, newStop]);
+        }
+
+        setNewStop(null); // Clear the input after adding
+        setCheckInDate(null); // Reset check-in date
+        setCheckOutDate(null); // Reset check-out date
+        setshowCheckin(false);
+
     };
 
     const handleRemoveStop = (index) => {
         setStops(stops.filter((_, i) => i !== index));
     };
 
+    function convertTimeTo12HourFormat(time24) {
+        const [hours, minutes] = time24.split(":").map(Number);
+        const ampm = hours >= 12 ? "PM" : "AM";
+        const hours12 = hours % 12 || 12; // Convert 0 or 12+ to 12-hour format
+        return `${hours12}:${minutes.toString().padStart(2, "0")}:00 ${ampm}`;
+    }
+
+    function convertTimeTo24HourFormat(time12) {
+        const [time, period] = time12.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (period === "PM" && hours !== 12) {
+            hours += 12; // Convert PM hours (except 12 PM)
+        } else if (period === "AM" && hours === 12) {
+            hours = 0; // Convert 12 AM to 00
+        }
+
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    }
+
     const handleSaveItinerary = async () => {
         if (!id || !day) return;
 
+        let stay = {};
+        let experiences = [];
+        let missingFields = [];
+
+        stops.forEach((stop, index) => {
+            if (stop.type === "lodging") {
+                if (!stop.checkIn || !stop.checkOut || !stop.guests) {
+                    missingFields.push(`Lodging stop ${index + 1} is missing checkin date`);
+                }
+                if (!stop.checkOut || !stop.guests) {
+                    missingFields.push(`Lodging stop ${index + 1} is missing checkout date`);
+                }
+                if (!stop.checkIn || !stop.checkOut || !stop.guests) {
+                    missingFields.push(`Lodging stop ${index + 1} is missing guest number`);
+                }
+                stay = {
+                    placeId: stop.placeId || null,
+                    placeName: stop.name || null,
+                    checkIn: stop.checkIn,
+                    checkOut: stop.checkOut,
+                    location: stop.address || null,
+                    phone: stop.phone || null,
+                    guests: stop.guests || null,
+                    preferences: stop.preferences || null,
+                    paid: false, // Default value
+                };
+            } else {
+                if (!stop.name || !stop.address || !stop.time) {
+                    missingFields.push(`Experience stop ${index + 1} is missing required details.`);
+                }
+                experiences.push({
+                    placeId: stop.placeId || null,
+                    name: stop.name || null,
+                    location: stop.address || null,
+                    time: stop.time ? convertTimeTo12HourFormat(stop.time) : null,
+                    paid: false, // Default value
+                });
+            }
+        });
+
+        if (missingFields.length > 0) {
+            alert(`Please fill in all required fields:\n\n${missingFields.join("\n")}`);
+            return;
+        }
+
         const updatedItinerary = {
             day: Number(day),
-            stay: itinerary?.stay || null,
-            experiences: stops.map(stop => ({
-                placeId: stop.placeId || null,
-                name: stop.name,
-                location: stop.address,
-                time: "Morning", // Placeholder - allow users to set this dynamically
-                paid: false, // Default value
-            })),
+            stay: stay,
+            experiences: experiences,
         };
+        console.log(updatedItinerary)
 
         try {
             await updateItineraryForDay(id, day, updatedItinerary, travelMode);
             alert("Itinerary saved successfully!");
+            router.push({
+                pathname: "/overview",
+                query: { id },
+            });
         } catch (error) {
             console.error("Error saving itinerary:", error);
             alert("Failed to save itinerary");
         }
     };
 
+
     return (
-        <Container className="itinerary-planner" style={{ marginTop: "60px" }} onLoad={onLoad} >
-            <div className="hero">
-                <h1>Plan Your Eco-Friendly Adventure</h1>
-                <p>Curate personalized itineraries with sustainable travel options.</p>
-            </div>
+        <>
+            <Container className="itinerary-planner" style={{ marginTop: "60px" }} onLoad={onLoad} >
+                <div className="hero">
+                    <h1>Plan Your Eco-Friendly Adventure</h1>
+                    <p>Curate personalized itineraries with sustainable travel options.</p>
+                </div>
 
-            <Row className="mt-5">
-                <Col md={8}>
-                    <APIProvider apiKey={mapAPI} libraries={["places"]}>
-                        {loadingLocation ? (
-                            <p>Fetching your location...</p>
-                        ) : (
-                            <MapComponent
-                                origin={currentLocation}
-                                stops={stops}
-                                setStops={setStops}
-                                travelMode={travelMode}
+                <Row className="mt-5">
+                    <Col md={8}>
+                        <APIProvider apiKey={mapAPI} libraries={["places"]}>
+                            {loadingLocation ? (
+                                <p>Fetching your location...</p>
+                            ) : (
+                                <MapComponent
+                                    stops={stops}
+                                    setStops={setStops}
+                                    travelMode={travelMode}
+                                    selectedLocation={selectedLocation}
+                                    setSelectedLocation={setSelectedLocation}
+                                    addSelectedLocation={addSelectedLocation}
+                                    setAddSelectedLocation={setAddSelectedLocation}
+                                />
+                            )}
+                        </APIProvider>
+                    </Col>
+
+                    <Col md={4} >
+                        <h4>Itinerary Stops for Day {day}</h4>
+                        <ListGroup className="mb-3 itinerary-sidebar">
+                            {stops.map((stop, index) => (
+                                <ListGroup.Item key={index} className="d-flex flex-column">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <strong>{stop.name || stop.address}</strong>
+                                        <Button onClick={() => handleRemoveStop(index)} variant="outline-danger" size="sm">
+                                            Remove
+                                        </Button>
+                                    </div>
+
+                                    {/* Show Check-in and Check-out Dates for Lodging Type */}
+                                    {(stop.type === "lodging" || stop.checkIn) && (
+                                        <div className="mt-2">
+                                            <Form.Group controlId="checkIn">
+                                                <Form.Label>Check-in Date</Form.Label>
+                                                <Form.Control
+                                                    type="date"
+                                                    value={stop.checkIn ? stop.checkIn.split("T")[0] : ""}
+                                                    onChange={(e) => {
+                                                        // Update the check-in date for the specific stop
+                                                        const updatedStops = [...stops];
+                                                        updatedStops[index].checkIn = e.target.value;
+                                                        setStops(updatedStops);
+                                                    }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="checkOut">
+                                                <Form.Label>Check-out Date</Form.Label>
+                                                <Form.Control
+                                                    type="date"
+                                                    value={stop.checkOut ? stop.checkOut.split("T")[0] : ""}
+                                                    onChange={(e) => {
+                                                        // Update the check-out date for the specific stop
+                                                        const updatedStops = [...stops];
+                                                        updatedStops[index].checkOut = e.target.value;
+                                                        setStops(updatedStops);
+                                                    }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="guests">
+                                                <Form.Label>No of Guests</Form.Label>
+                                                <Form.Control
+                                                    type="integer"
+                                                    value={stop.guests || ""}
+                                                    onChange={(e) => {
+                                                        // Update the check-out date for the specific stop
+                                                        const updatedStops = [...stops];
+                                                        updatedStops[index].guests = e.target.value;
+                                                        setStops(updatedStops);
+                                                    }}
+                                                />
+                                            </Form.Group>
+                                            <Form.Group controlId="preferences">
+                                                <Form.Label>Preferences</Form.Label>
+                                                <Form.Control
+                                                    type="string"
+                                                    value={stop.preferences || ""}
+                                                    onChange={(e) => {
+                                                        // Update the check-out date for the specific stop
+                                                        const updatedStops = [...stops];
+                                                        updatedStops[index].preferences = e.target.value;
+                                                        setStops(updatedStops);
+                                                    }}
+                                                />
+                                            </Form.Group>
+                                        </div>
+                                    )}
+
+                                    {(stop.type != "lodging" && !stop.checkIn) && (
+                                        <div className="mt-2">
+                                            <Form.Group controlId="checkInDate">
+                                                <Form.Label>Time</Form.Label>
+                                                <Form.Control
+                                                    type="time"
+                                                    value={stop.time ? convertTimeTo24HourFormat(stop.time) : ""}
+                                                    onChange={(e) => {
+                                                        // Update the check-in date for the specific stop
+                                                        const updatedStops = [...stops];
+                                                        updatedStops[index].time = e.target.value;
+                                                        setStops(updatedStops);
+                                                    }}
+                                                />
+                                            </Form.Group>
+                                        </div>
+                                    )}
+                                </ListGroup.Item>
+                            ))}
+                        </ListGroup>
+
+                        <Form className="mb-3">
+                            <Form.Control
+                                type="text"
+                                placeholder="Search or add a new stop"
+                                className="mb-2"
+                                ref={inputRef}
+                                value={newStop?.name || newStop?.address || ""}
+                                onChange={(e) => setNewStop({ ...newStop, address: e.target.value })}
                             />
-                        )}
-                    </APIProvider>
-                </Col>
+                            <Button
+                                onClick={handleAddStop}
+                                variant="outline-success"
+                                className="w-100"
+                                disabled={!newStop || (!newStop.name && !newStop.address)}
+                            >
+                                Add Stop
+                            </Button>
+                        </Form>
 
-                <Col md={4}>
-                    <h4>Itinerary Stops</h4>
-                    <ListGroup className="mb-3">
-                        {stops.map((stop, index) => (
-                            <ListGroup.Item key={index} className="d-flex flex-column">
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <strong>{stop.name || stop.address}</strong>
-                                    <Button onClick={() => handleRemoveStop(index)} variant="outline-danger" size="sm">
-                                        Remove
-                                    </Button>
-                                </div>
+                        <h4>Travel Mode</h4>
+                        <div className="d-flex justify-content-between mb-4">
+                            <Button variant={travelMode === "DRIVING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("DRIVING")}><FaCar /> Drive</Button>
+                            <Button variant={travelMode === "BICYCLING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("BICYCLING")}><FaBiking /> Bike</Button>
+                            <Button variant={travelMode === "WALKING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("WALKING")}><FaWalking /> Walk</Button>
+                            <Button variant={travelMode === "TRANSIT" ? "success" : "outline-secondary"} onClick={() => setTravelMode("TRANSIT")}><FaBus /> Public Transport</Button>
+                        </div>
 
-                                {/* Contact & Booking Section - Only show if stops exist */}
-                                {/* {stop.name && (<div className="mt-2">
-                                    <p><strong>Phone:</strong> {stop.phone}</p>
-                                    <p><strong>Website:</strong> <a href={stop.website} target="blank">Website</a></p>
-                                </div>) */}
-
-                                
-                                {/* Pricing & Availability Section */}
-                                {/* <div className="mt-2">
-                                        <h6>Pricing & Availability</h6>
-                                        <p>Standard Pricing: $100</p>
-                                        <p>Availability: Open 9 AM - 5 PM</p>
-                                    </div> */}
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
-
-                    <Form className="mb-3">
-                        <Form.Control
-                            type="text"
-                            placeholder="Search or add a new stop"
-                            className="mb-2"
-                            ref={inputRef}
-                            value={newStop?.name || newStop?.address || ""}
-                            onChange={(e) => setNewStop({ ...newStop, address: e.target.value })}
-                        />
-                        <Button
-                            onClick={handleAddStop}
-                            variant="outline-success"
-                            className="w-100"
-                            disabled={!newStop || (!newStop.name && !newStop.address)}
-                        >
-                            Add Stop
+                        <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
+                            Save Itinerary
                         </Button>
-                    </Form>
-
-                    <h4>Travel Mode</h4>
-                    <div className="d-flex justify-content-between mb-4">
-                        <Button variant={travelMode === "DRIVING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("DRIVING")}><FaCar /> Drive</Button>
-                        <Button variant={travelMode === "BICYCLING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("BICYCLING")}><FaBiking /> Bike</Button>
-                        <Button variant={travelMode === "WALKING" ? "success" : "outline-secondary"} onClick={() => setTravelMode("WALKING")}><FaWalking /> Walk</Button>
-                        <Button variant={travelMode === "TRANSIT" ? "success" : "outline-secondary"} onClick={() => setTravelMode("TRANSIT")}><FaBus /> Public Transport</Button>
-                    </div>
-
-                    <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
-                        Save Itinerary
-                    </Button>
-                </Col>
-            </Row>
-        </Container>
+                    </Col>
+                </Row>
+            </Container>
+            <style>
+            {`
+                .itinerary-sidebar {
+                    max-height: 25vh; /* Full height */
+                    overflow-y: auto; /* Enables scrolling */
+                    padding: 10px;
+                    border-right: 1px solid #ddd; /* Optional: Adds a border to separate from main content */
+                }
+            `}
+            </style>
+        </>
     );
-    // } else {
-    //     return (
-    //         <Container className="text-center mt-5">
-    //             <h1>Trip could not be found</h1>
-    //             <Link href="/">Return to home page</Link>
-    //         </Container>
-    //     );
-    // }
 };
 
 export default ItineraryPlanner;

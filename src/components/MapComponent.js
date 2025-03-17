@@ -1,12 +1,10 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
     GoogleMap,
     useJsApiLoader,
     DirectionsRenderer,
-    InfoWindow,
+    InfoWindowF,
     Marker,
 } from "@react-google-maps/api";
 
@@ -15,13 +13,14 @@ const containerStyle = {
     height: "500px",
 };
 
-const MapComponent = ({ origin, stops, setStops, travelMode }) => {
+const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelectedLocation, addSelectedLocation, setAddSelectedLocation }) => {
     const [directionsState, setDirectionsState] = useState(null);
-    const [selectedLocation, setSelectedLocation] = useState(null); // Stores clicked location details
     const [travelTimes, setTravelTimes] = useState([]);
     const [placesService, setPlacesService] = useState(null);
     const [map, setMap] = useState(null); // Store map instance
-
+    const [origin, setOrigin] = useState(null); // Store origin location (first stop)
+    const [isLoading, setIsLoading] = useState(true); // Loading state for geocoding
+    const [isOriginLoaded, setIsOriginLoaded] = useState(false); // Track if origin is loaded
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
@@ -30,43 +29,45 @@ const MapComponent = ({ origin, stops, setStops, travelMode }) => {
     // Update directionsState whenever stops array changes
     useEffect(() => {
         if (!isLoaded || typeof window === "undefined" || !window.google) return;
-        
-        if (stops.length === 0) {
-            setDirectionsState(null); // Clear directions if no stops
+
+        if (stops.length === 0 || !origin) {
+            setDirectionsState(null); // Clear directions if no stops or origin is not set
             return;
         }
 
         const DirectionsService = new google.maps.DirectionsService();
 
         const finalDestination = stops[stops.length - 1];
-
-        const waypoints = stops.slice(0, -1).map((stop) => ({
+        const waypoints = stops.slice(1, -1).map((stop) => ({
             location: stop.address,
             stopover: true,
         }));
-        DirectionsService.route(
-            {
-                origin,
-                destination: finalDestination.address,
-                waypoints: waypoints,
-                travelMode: google.maps.TravelMode[travelMode], // Use the passed travelMode
-                unitSystem: google.maps.UnitSystem.METRIC,
-            },
-            (result, status) => {
-                if (status === "OK") {
-                    setDirectionsState(result);
-
-                     // Extract durations (travel time) for each leg of the journey
-                     const times = result.routes[0].legs.map((leg) => leg.duration.text);
-                     setTravelTimes(times);
-                } else {
-                    console.error(`Error fetching directions: ${status}`);
+        
+        // Calculate directions after origin is set
+        if(origin.address != finalDestination.address) {
+            DirectionsService.route(
+                {
+                    origin: origin.address,
+                    destination: finalDestination.address,
+                    waypoints: waypoints,
+                    travelMode: google.maps.TravelMode[travelMode], // Use the passed travelMode
+                    unitSystem: google.maps.UnitSystem.METRIC,
+                },
+                (result, status) => {
+                    if (status === "OK") {
+                        setDirectionsState(result);
+    
+                        // Extract durations (travel time) for each leg of the journey
+                        const times = result.routes[0].legs.map((leg) => leg.duration.text);
+                        setTravelTimes(times);
+                    } else {
+                        console.error(`Error fetching directions: ${status}`);
+                    }
                 }
-            }
+            );
+        }
 
-        );
-
-    }, [origin, stops, travelMode, isLoaded]);
+    }, [stops, travelMode, origin, isLoaded]); 
 
     useEffect(() => {
         if (isLoaded && map) {
@@ -75,28 +76,56 @@ const MapComponent = ({ origin, stops, setStops, travelMode }) => {
         }
     }, [isLoaded, map]);
 
+    // Set origin
+    useEffect(() => {
+        if (!isLoaded || !window.google || stops.length === 0) return;
+
+        const firstStop = stops[0];
+
+        const geocoder = new window.google.maps.Geocoder();
+        geocoder.geocode({ address: firstStop.address }, (results, status) => {
+            if (status === "OK" && results[0].geometry) {
+                setOrigin({
+                    address: firstStop.address,
+                    lat: results[0].geometry.location.lat(),
+                    lng: results[0].geometry.location.lng(),
+                });
+                setIsOriginLoaded(true);
+                setIsLoading(false); // Once the origin is set, stop loading
+            } else {
+                console.error("Geocoding failed:", status);
+                setIsLoading(false); // Stop loading even if geocoding fails
+            }
+        });
+    }, [isLoaded, stops]);
+
     const handleMapClick = (event) => {
         event.stop();
         console.log(event.placeId);
 
+        setSelectedLocation(null);
+
         if (event.placeId && placesService) {
             const request = {
                 placeId: event.placeId,
-                fields: ['name', 'formatted_address', 'formatted_phone_number', 'website', 'place_id', 'geometry', 'photo'],
             };
 
             placesService.getDetails(request, (place, status) => {
                 if (status === 'OK') {
+                    console.log("Place:",  place);
                     setSelectedLocation({
                         lat: place.geometry.location.lat(),
                         lng: place.geometry.location.lng(),
                         name: place.name || "Unnamed Place",
+                        placeName: place.name || "Unnamed Place",
                         address: place.formatted_address || "Unknown Address",
                         phone: place.formatted_phone_number || "Not Available",
+                        email: place.formatted_email || "Not Available",
                         placeId: place.place_id,
                         website: place.website || "Not Available",
                         price: place.price_level !== undefined ? `$${place.price_level}` : "N/A",
-                        availability: place.opening_hours ? (place.opening_hours.open_now ? "Open Now" : "Closed") : "N/A"
+                        availability: place.opening_hours ? (place.opening_hours.open_now ? "Open Now" : "Closed") : "N/A",
+                        type: place.types[0]
                     });
                 } else {
                     console.error("Error fetching nearby places:", status);
@@ -122,24 +151,27 @@ const MapComponent = ({ origin, stops, setStops, travelMode }) => {
     };
 
     const handleAddStop = () => {
-        if (!selectedLocation || !selectedLocation.address) return;
-        setStops((prevStops) => [...prevStops, selectedLocation]);
-        setSelectedLocation(null); // Hide InfoWindow after adding stop
+        setAddSelectedLocation(true);
     };
 
-    if (!isLoaded) {
+    // Prevent map rendering if origin is not set or loading is still true
+    if (!isLoaded || isLoading || !isOriginLoaded) {
         return <p>Loading map...</p>;
     }
 
     return (
+        <>
         <GoogleMap
             mapContainerStyle={containerStyle}
-            center={origin}
+            center={origin} 
             zoom={10}
             onClick={handleMapClick}
             onLoad={(map) => setMap(map)}
         >
             {directionsState && <DirectionsRenderer options={{ directions: directionsState }} />}
+
+            <Marker key={0} position={{ lat: origin.lat, lng: origin.lng }} />
+
 
             {/* Show markers for all stops */}
             {stops.map((stop, index) => (
@@ -148,18 +180,21 @@ const MapComponent = ({ origin, stops, setStops, travelMode }) => {
 
             {/* Show InfoWindow when a location is clicked */}
             {selectedLocation && (
-                <InfoWindow
+                <InfoWindowF
                     position={{ lat: selectedLocation.lat, lng: selectedLocation.lng }}
-                    onCloseClick={() => setSelectedLocation(null)}
+                    onCloseClick={() => {
+                        setSelectedLocation(null);
+                        setAddSelectedLocation(false);
+                     }}
                 >
                     <div>
-                        <h6>{selectedLocation.name}</h6>
+                        <h6>{selectedLocation.name || selectedLocation.placeName}</h6>
                         <p><strong>{selectedLocation.address}</strong></p>
                         <a href="#" onClick={handleAddStop} style={{ color: "blue", cursor: "pointer" }}>
                             Add Stop
                         </a>
                     </div>
-                </InfoWindow>
+                </InfoWindowF>
             )}
 
             {/* Display travel times between stops */}
@@ -174,6 +209,7 @@ const MapComponent = ({ origin, stops, setStops, travelMode }) => {
                 </div>
             )}
         </GoogleMap>
+        </>
     );
 };
 
@@ -182,8 +218,13 @@ MapComponent.propTypes = {
         lat: PropTypes.number.isRequired,
         lng: PropTypes.number.isRequired,
     }),
-    stops: PropTypes.arrayOf(PropTypes.string).isRequired,
+    stops: PropTypes.arrayOf(PropTypes.object).isRequired,
     setStops: PropTypes.func.isRequired,
+    travelMode: PropTypes.string.isRequired,
+    selectedLocation: PropTypes.object,
+    setSelectedLocation: PropTypes.func.isRequired,
+    addSelectedLocation : PropTypes.object,
+    setAddSelectedLocation : PropTypes.func,
 };
 
 export default MapComponent;

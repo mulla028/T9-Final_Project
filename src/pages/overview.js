@@ -9,6 +9,7 @@ const ItineraryOverview = () => {
     const { id } = router.query;
     const printRef = useRef(null); // Reference for print content
     const [itineraries, setItineraries] = useState([]);
+    const [itinerariesPrint, setItinerariesPrint] = useState([]);
     const [activeKey, setActiveKey] = useState(null); // State to track open accordion;
 
     const handleToggle = (eventKey) => {
@@ -24,28 +25,30 @@ const ItineraryOverview = () => {
                 const itineraryData = await getItineraries(id);
 
                 if (itineraryData) {
+                    setItinerariesPrint(itineraryData.itinerary); // Save the whole attributes for printing
                     let newItineraries = []; // Temporary array to accumulate stops
                     // Convert itinerary data to stop data from stay
-                    console.log(itineraryData.itinerary);
 
                     itineraryData.itinerary.forEach(itinerary => {
                         var newStops = [];
                         // Get all the experiences and stays
-                        if (itinerary)
-                            newStops.push(itinerary.stay?.placeName.toString());
+                        if (itinerary) {
+                            if (itinerary.stay && itinerary.stay != {}) {
+                                newStops.push(itinerary.stay?.placeName ? itinerary.stay?.placeName : itinerary.stay?.location);
+                            }
 
-                        itinerary.experiences?.forEach(experience => {
-                            newStops.push(experience.name ? experience.name.toString() : experience.location);
-                        });
-
-                        var newItinerary = {
-                            day: itinerary.day,
-                            stops: newStops
+                            itinerary.experiences?.forEach(experience => {
+                                newStops.push(experience.name ? experience.name.toString() : experience.location);
+                            });
+    
+                            var newItinerary = {
+                                day: itinerary.day,
+                                stops: newStops
+                            }
+                            newItineraries.push(newItinerary);
                         }
-                        newItineraries.push(newItinerary);
                     });
                     setItineraries(newItineraries);
-                    console.log(itineraries);
 
                 } else {
                     console.log("No itinerary found");
@@ -69,31 +72,43 @@ const ItineraryOverview = () => {
 
     // Generate HTML for printing
     const generateItineraryHTML = () => {
-        if (!itineraries || itineraries.length === 0) {
+        console.log(itinerariesPrint);
+
+        if (!itinerariesPrint || itinerariesPrint.length === 0) {
             return "<h2>No Itinerary Available</h2>";
         }
+        
+        let html = `<div style="display:flex; align-items:baseline;"><h2 style="font-family: 'Lora', serif; font-weight: 700; font-size: 2.5rem;">DriftWay</h2>
+                    <h3> - Your Itinerary</h3></div>`;
 
-        let html = `<h2 style="font-family: 'Lora', serif; font-weight: 700; font-size: 2.5rem;">DriftWay</h2>
-        `;
-
-        itineraries.forEach((dayPlan) => {
+        itinerariesPrint.forEach((dayPlan) => {
             html += `
-               
                 <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-                    <h3 style="background: #28a745; color: white; padding: 10px; border-radius: 5px;">Day ${dayPlan.day}</h3>
+                    <h3 style="padding: 10px; border-radius: 5px;">Day ${dayPlan.day}</h3>
                     <ul style="list-style-type: none; padding-left: 0;">`;
 
-            // dayPlan.experiences.forEach((stop) => {
-            //     html += `
-            //         <li style="padding: 8px; border-bottom: 1px solid #eee;">
-            //             <strong>${stop.name || stop.placeName}</strong><br>
-            //             <span style="color: #555;">${stop.address ? stop.address : "No address available"}</span>
-            //         </li>`;
-            // });
+            if(dayPlan.stay) {
+                html += `
+                <li style="padding: 8px; border-bottom: 1px solid #eee;">
+                    <strong><b>Stay: </b>${dayPlan.stay.placeName}</strong><br>
+                    <strong><b>Check-in: </b>${dayPlan.stay.checkIn.split("T")[0]}</strong><br>
+                    <strong><b>Check-out: </b>${dayPlan.stay.checkOut.split("T")[0]}</strong><br>
+                    <strong><b>Guests: </b>${dayPlan.stay.guests}</strong><br>
+                    <strong><b>Location: </b>${dayPlan.stay.location}</strong><br>
+                    <strong><b>Phone: </b>${dayPlan.stay.phone}</strong><br>
+                </li>`;
+            } 
 
+            dayPlan.experiences?.forEach((exp) => {
+                html += `
+                <li style="padding: 8px; border-bottom: 1px solid #eee;">
+                    <strong><b>Experience: </b>${exp.name}</strong><br>
+                    <strong><b>Date: </b>${exp.date?.split("T")[0]} ${exp.time?exp.time:null}</strong><br>
+                    <strong><b>Location: </b>${exp.location}</strong><br>
+                </li>`;
+            });
             html += `</ul></div>`;
         });
-
         return html;
     };
 
@@ -182,6 +197,7 @@ const ItineraryOverview = () => {
                 @media print {
                     .print-only {
                         display: block !important; /* Show only when printing */
+                        pageBreakBefore: 'always',
                     }
                 }
                     

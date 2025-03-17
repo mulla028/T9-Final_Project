@@ -67,8 +67,7 @@ app.post('/api/itinerary', async (req, res) => {
   const { id, day } = req.body; // You can destructure both at once
 
   try {
-      const itinerary = await Users.getItinerary(id, day);
-
+      const itinerary = await Users.getItineraryForDay(id, day);
       if (itinerary) {
           // Successfully found the itinerary
           res.send({ itinerary });
@@ -88,7 +87,6 @@ app.post('/api/itineraries', async (req, res) => {
 
   try {
       const itinerary = await Users.getItineraries(id);
-
       if (itinerary) {
           // Successfully found the itinerary
           res.send({ itinerary });
