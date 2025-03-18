@@ -109,6 +109,7 @@ const ItineraryOverview = () => {
             });
             html += `</ul></div>`;
         });
+        console.log(html);
         return html;
     };
 
@@ -150,7 +151,7 @@ const ItineraryOverview = () => {
             </Navbar>
 
             <Container className="itinerary-planner" style={{ marginTop: '60px' }}>
-                <div className="hero">
+                <div className="hero" style={{ marginBottom: '20px' }}>
                     <h2 className="text-center mb-4">Your Itinerary Overview</h2>
                     <p>You can select a day to add or remove your experiences and stays.</p>
                 </div>
@@ -195,7 +196,7 @@ const ItineraryOverview = () => {
                 />
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
-                    <Button variant="success p-2 px-2" onClick={handlePrint}>Download Itinerary</Button>
+                    <Button variant="success p-2 p-2" onClick={handlePrint}>Download Itinerary</Button>
                     <Button variant="primary p-2 px-2" onClick={handleShare}>Share Itinerary</Button>
                 </div>
             </Container>
@@ -240,7 +241,7 @@ const ItineraryOverview = () => {
 
             <style>{`
                 @media print {
-                    .print-only { display: block; }
+                    .print-only { display: block !important; }
                 }
                 .print-only { display: none; }
             `}</style>
