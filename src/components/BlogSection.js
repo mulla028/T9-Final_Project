@@ -39,7 +39,7 @@ const BlogSection = () => {
                                         className='read-more-button'
                                         href={post.link}
                                         target="_blank"
-                                        rel="noopener noreferrer" // For security
+                                        rel="noopener noreferrer"
                                     >
                                         Read More
                                     </Button>
@@ -51,7 +51,9 @@ const BlogSection = () => {
                 <div className="text-center">
                     <Button
                         variant="outline-dark"
-                        href="#blog-section"
+                        href="https://www.lonelyplanet.com/sitemaps/articles/slow-travel"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
                             padding: '12px 30px',
                             borderRadius: '30px',

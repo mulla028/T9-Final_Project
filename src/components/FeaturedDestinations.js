@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
 const FeaturedDestinations = () => {
-    const destinations = [
+    const destinationsData = [
         {
             image: 'https://images.unsplash.com/photo-1527430203327-e97f64c96a2c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             title: 'Bali, Indonesia',
@@ -33,59 +33,54 @@ const FeaturedDestinations = () => {
             title: 'Patagonia, Argentina',
             description: 'Embark on a journey through the untouched wilderness.',
             link: '#'
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            title: 'Tuscany, Italy',
-            description: 'Explore scenic vineyards and sustainable farmhouses.',
-            link: '#'
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            title: 'Tuscany, Italy',
-            description: 'Explore scenic vineyards and sustainable farmhouses.',
-            link: '#'
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            title: 'Tuscany, Italy',
-            description: 'Explore scenic vineyards and sustainable farmhouses.',
-            link: '#'
-        },
+        }
     ];
 
-    const [currentIndex, setCurrentIndex] = useState(0);
-
+    const [destinations, setDestinations] = useState(destinationsData);
+    
+    // Moves the first card to the end (Right Click)
     const handleNext = () => {
-        if (currentIndex < destinations.length - 4) setCurrentIndex(currentIndex + 4);
+        setDestinations((prevDestinations) => {
+            const updatedDestinations = [...prevDestinations];
+            const firstItem = updatedDestinations.shift(); // Remove first item
+            updatedDestinations.push(firstItem); // Add it to the end
+            return updatedDestinations;
+        });
     };
 
+    // Moves the last card to the front (Left Click)
     const handlePrev = () => {
-        if (currentIndex > 0) setCurrentIndex(currentIndex - 4);
+        setDestinations((prevDestinations) => {
+            const updatedDestinations = [...prevDestinations];
+            const lastItem = updatedDestinations.pop(); // Remove last item
+            updatedDestinations.unshift(lastItem); // Add it to the front
+            return updatedDestinations;
+        });
     };
 
     return (
-        <div className="featured-destinations" style={{ padding: '60px 0', position: 'relative' }}>
+        <div className="featured-destinations" style={{ padding: '60px 0', position: 'relative', overflow: 'hidden' }}>
             <Container>
                 <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
-                <Row className="destination-carousel">
-
-                    {/* Left Arrow: Show only if not at the first card */}
-                    {currentIndex > 0 && (
-                        <Button variant="outline-secondary" className="carousel-control prev" onClick={handlePrev}>
-                            <FaArrowLeft />
-                        </Button>
-                    )}
+                <Row className="destination-carousel align-items-center">
+                    
+                    {/* Left Arrow (Always Visible) */}
+                    <Button variant="outline-secondary" className="carousel-control prev" onClick={handlePrev}>
+                        <FaArrowLeft />
+                    </Button>
 
                     {/* Destination Cards */}
-                    <div className="carousel-wrapper">
+                    <div className="carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
                         <Row
                             className="carousel-row"
                             style={{
-                                transform: `translateX(-${(currentIndex / 4) * 100}%)`,
+                                display: 'flex',
+                                transition: 'transform 0.5s ease-in-out', // ✅ Only Added Smooth Movement
+                                transform: `translateX(-0%)`, // ✅ Placeholder to ensure transform is present
+                                width: '100%'
                             }}>
-                            {destinations.map((destination, index) => (
-                                <Col md={3} key={index} className="mb-4">
+                            {destinations.slice(0, 4).map((destination, i) => (
+                                <Col md={3} key={i} className="mb-4">
                                     <Card className="destination-card">
                                         <Card.Img variant="top" src={destination.image} />
                                         <Card.Body>
@@ -99,12 +94,10 @@ const FeaturedDestinations = () => {
                         </Row>
                     </div>
 
-                    {/* Right Arrow: Show only if not at the last card */}
-                    {currentIndex < destinations.length - 4 && (
-                        <Button variant="outline-secondary" className="carousel-control next" onClick={handleNext}>
-                            <FaArrowRight />
-                        </Button>
-                    )}
+                    {/* Right Arrow (Always Visible) */}
+                    <Button variant="outline-secondary" className="carousel-control next" onClick={handleNext}>
+                        <FaArrowRight />
+                    </Button>
                 </Row>
             </Container>
         </div>
