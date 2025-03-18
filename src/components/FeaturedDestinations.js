@@ -5,34 +5,34 @@ import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 const FeaturedDestinations = () => {
     const destinationsData = [
         {
-            image: 'https://images.unsplash.com/photo-1527430203327-e97f64c96a2c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            image: 'https://images.unsplash.com/photo-1527430203327-e97f64c96a2c',
             title: 'Bali, Indonesia',
             description: 'Connect with local artisans and stay at eco-friendly homestays.',
-            link: '#'
+            link: 'https://www.baliecostay.com/'
         },
         {
-            image: 'https://images.unsplash.com/photo-1723309032716-834b0b9fd7d8?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            image: 'https://images.unsplash.com/photo-1723309032716-834b0b9fd7d8',
             title: 'Kyoto, Japan',
             description: 'Immerse yourself in serene temples and enjoy traditional tea ceremonies.',
-            link: '#'
+            link: 'https://www.byfood.com/kyoto-tea-ceremony'
         },
         {
-            image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa',
             title: 'Tuscany, Italy',
             description: 'Explore scenic vineyards and sustainable farmhouses.',
-            link: '#'
+            link: 'https://www.esperienza.org/lp-hiking-tours?gad_source=1&gclid=Cj0KCQjws-S-BhD2ARIsALssG0ZwxNzjzPlP7MWFAqZopt83veHhf0FXHC7ioariWyvztJObB6EccJwaAsK4EALw_wcB'
         },
         {
-            image: 'https://images.unsplash.com/photo-1668544732944-ac3f384f8e5f?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            image: 'https://images.unsplash.com/photo-1668544732944-ac3f384f8e5f',
             title: 'Costa Rica',
             description: 'Stay at eco-lodges and explore the rich biodiversity of rainforests.',
-            link: '#'
+            link: 'https://ecolodgesanywhere.com/eco-lodges-costa-rica/'
         },
         {
-            image: 'https://images.unsplash.com/photo-1612611155301-ac3e1734c91c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            image: 'https://images.unsplash.com/photo-1612611155301-ac3e1734c91c',
             title: 'Patagonia, Argentina',
             description: 'Embark on a journey through the untouched wilderness.',
-            link: '#'
+            link: 'https://www.unwildplanet.com/blog/first-timer%27s-guide-to-patagonia'
         }
     ];
 
@@ -75,8 +75,8 @@ const FeaturedDestinations = () => {
                             className="carousel-row"
                             style={{
                                 display: 'flex',
-                                transition: 'transform 0.5s ease-in-out', // ✅ Only Added Smooth Movement
-                                transform: `translateX(-0%)`, // ✅ Placeholder to ensure transform is present
+                                transition: 'transform 0.5s ease-in-out',
+                                transform: `translateX(-0%)`,
                                 width: '100%'
                             }}>
                             {destinations.slice(0, 4).map((destination, i) => (
@@ -86,7 +86,18 @@ const FeaturedDestinations = () => {
                                         <Card.Body>
                                             <Card.Title>{destination.title}</Card.Title>
                                             <Card.Text>{destination.description}</Card.Text>
-                                            <Button className='explore-button' href={destination.link}>Explore</Button>
+                                            
+                                            {/* ✅ Open in new tab only if link is valid */}
+                                            {destination.link && destination.link !== "#" ? (
+                                                <Button 
+                                                    className='explore-button' 
+                                                    onClick={() => window.open(destination.link, '_blank')}
+                                                >
+                                                    Explore
+                                                </Button>
+                                            ) : (
+                                                <Button className='explore-button' disabled>Explore</Button>
+                                            )}
                                         </Card.Body>
                                     </Card>
                                 </Col>

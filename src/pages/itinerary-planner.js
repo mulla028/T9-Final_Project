@@ -1,131 +1,63 @@
-"use client";
 import { FaCar, FaBiking, FaWalking, FaBus } from "react-icons/fa";
-import { useRouter } from 'next/router'
-import { Container, Row, Col, Card, Button, Form, ListGroup, Navbar, Stack } from "react-bootstrap";
+import { useRouter } from "next/router";
+import { Container, Row, Col, Button, Form, ListGroup } from "react-bootstrap";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import MapComponent from "@/components/MapComponent";
 import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { getItineraryForDay, updateItineraryForDay } from "@/services";
 
 const mapAPI = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 const ItineraryPlanner = () => {
     const router = useRouter();
-    const { id } = router.query;
-    const { day } = router.query;
+    const { id, day } = router.query;
 
-
-    const [stops, setStops] = useState([{}]);
-    const [itinerary, setItinerary] = useState(null);
-
+    const [stops, setStops] = useState([]);
     const [newStop, setNewStop] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [loadingLocation, setLoadingLocation] = useState(true);
-    const [googleLoaded, setGoogleLoaded] = useState(false);
-    const [travelMode, setTravelMode] = useState("DRIVING"); // Track selected travel mode
+    const [travelMode, setTravelMode] = useState("DRIVING");
 
     const inputRef = useRef(null);
-
-    const onLoad = async (e) => {
-        e.preventDefault();
-
-    };
-
-    useEffect(() => {
-        if (!id || !day) return;
-
-        // Fetch the itinerary for the specific user and day
-        const fetchItinerary = async () => {
-            try {
-                const itineraryData = await getItineraryForDay(id, day);
-                //console.log("Fetched itinerary:", itineraryData); // Debug log
-                if (itineraryData) {
-                    setItinerary(itineraryData); // Save the full itinerary
-
-                    const mapTravelMode = (mode) => {
-                        const modeMap = {
-                            "drive" : "DRIVING",
-                            "bike" : "BICYCLING",
-                            "walk" :  "WALKING",
-                            "public transport" : "TRANSIT"
-                        };
-                        return modeMap[mode] || "DRIVING"; // Default to "drive" if the mode is unrecognized
-                      };
-
-                    const mappedMode = mapTravelMode(itineraryData.itinerary.transport.mode);
-                    setTravelMode(mappedMode);
-                    let newStops = []; // Temporary array to accumulate stops
-
-                    // Convert itinerary data to stop data from stay
-                    itineraryData.itinerary.stay?.forEach(itinerary => {
-                        const newStop = {
-                            name: itinerary.name,
-                            address: itinerary.location,
-                            placeId: itinerary.placeId
-                        };
-                        newStops.push(newStop);
-                    });
-
-                    // Add experiences to the stops
-                    itineraryData.itinerary.experiences?.forEach(itinerary => {
-                        
-                        const newStop = {
-                            name: itinerary.name,
-                            address: itinerary.location,
-                            placeId: itinerary.placeId
-                        };
-                        newStops.push(newStop);
-                    });
-
-
-                   // console.log("Stops to set:", newStops); // Debug log
-                    setStops(newStops); // Set stops with all accumulated stops
-                } else {
-                    console.log("No itinerary found");
-                }
-            } catch (error) {
-                console.error("Error fetching itinerary:", error);
-            }
-        };
-
-        fetchItinerary();
-    }, [id, day]);
-
-    useEffect(() => {
-        const checkGoogle = setInterval(() => {
-            if (window.google && window.google.maps && window.google.maps.places) {
-                setGoogleLoaded(true);
-                clearInterval(checkGoogle);
-            }
-        }, 500);
-
-        return () => clearInterval(checkGoogle);
-    }, []);
 
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    const { latitude, longitude } = position.coords;
-                    setCurrentLocation({ lat: latitude, lng: longitude });
+                    setCurrentLocation({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    });
                     setLoadingLocation(false);
                 },
-                (error) => {
-                    console.error("Error getting location:", error);
-                    setCurrentLocation({ lat: 40.7128, lng: -74.0060 }); // Default to New York
+                () => {
+                    setCurrentLocation({ lat: 40.7128, lng: -74.0060 });
                     setLoadingLocation(false);
                 }
             );
         } else {
-            console.error("Geolocation not supported");
             setCurrentLocation({ lat: 40.7128, lng: -74.0060 });
             setLoadingLocation(false);
         }
     }, []);
 
     useEffect(() => {
-        if (googleLoaded && inputRef.current) {
+        const savedStop = localStorage.getItem("newStop");
+        if (savedStop) {
+            const parsedStop = JSON.parse(savedStop);
+
+            setStops(prevStops => {
+                if (!prevStops.some(stop => stop.address === parsedStop.address)) {
+                    return [...prevStops, parsedStop];
+                }
+                return prevStops;
+            });
+
+            localStorage.removeItem("newStop");
+        }
+    }, []);
+
+    useEffect(() => {
+        if (window.google && window.google.maps && inputRef.current) {
             const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current);
 
             autocomplete.addListener("place_changed", () => {
@@ -138,7 +70,7 @@ const ItineraryPlanner = () => {
                 }
             });
         }
-    }, [googleLoaded]);
+    }, []);
 
     const handleAddStop = () => {
         if (!newStop || !newStop.address) return;
@@ -150,32 +82,8 @@ const ItineraryPlanner = () => {
         setStops(stops.filter((_, i) => i !== index));
     };
 
-    const handleSaveItinerary = async () => {
-        if (!id || !day) return;
-
-        const updatedItinerary = {
-            day: Number(day),
-            stay: itinerary?.stay || null,
-            experiences: stops.map(stop => ({
-                placeId: stop.placeId || null,
-                name: stop.name,
-                location: stop.address,
-                time: "Morning", // Placeholder - allow users to set this dynamically
-                paid: false, // Default value
-            })),
-        };
-
-        try {
-            await updateItineraryForDay(id, day, updatedItinerary, travelMode);
-            alert("Itinerary saved successfully!");
-        } catch (error) {
-            console.error("Error saving itinerary:", error);
-            alert("Failed to save itinerary");
-        }
-    };
-
     return (
-        <Container className="itinerary-planner" style={{ marginTop: "60px" }} onLoad={onLoad} >
+        <Container className="itinerary-planner" style={{ marginTop: "60px" }}>
             <div className="hero">
                 <h1>Plan Your Eco-Friendly Adventure</h1>
                 <p>Curate personalized itineraries with sustainable travel options.</p>
@@ -208,25 +116,11 @@ const ItineraryPlanner = () => {
                                         Remove
                                     </Button>
                                 </div>
-
-                                {/* Contact & Booking Section - Only show if stops exist */}
-                                {/* {stop.name && (<div className="mt-2">
-                                    <p><strong>Phone:</strong> {stop.phone}</p>
-                                    <p><strong>Website:</strong> <a href={stop.website} target="blank">Website</a></p>
-                                </div>) */}
-
-                                
-                                {/* Pricing & Availability Section */}
-                                {/* <div className="mt-2">
-                                        <h6>Pricing & Availability</h6>
-                                        <p>Standard Pricing: $100</p>
-                                        <p>Availability: Open 9 AM - 5 PM</p>
-                                    </div> */}
                             </ListGroup.Item>
                         ))}
                     </ListGroup>
 
-                    <Form className="mb-3">
+                    <Form className="mb-3" onSubmit={(e) => e.preventDefault()}>
                         <Form.Control
                             type="text"
                             placeholder="Search or add a new stop"
@@ -253,21 +147,13 @@ const ItineraryPlanner = () => {
                         <Button variant={travelMode === "TRANSIT" ? "success" : "outline-secondary"} onClick={() => setTravelMode("TRANSIT")}><FaBus /> Public Transport</Button>
                     </div>
 
-                    <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
+                    <Button variant="primary" className="w-100">
                         Save Itinerary
                     </Button>
                 </Col>
             </Row>
         </Container>
     );
-    // } else {
-    //     return (
-    //         <Container className="text-center mt-5">
-    //             <h1>Trip could not be found</h1>
-    //             <Link href="/">Return to home page</Link>
-    //         </Container>
-    //     );
-    // }
 };
 
 export default ItineraryPlanner;

@@ -1,6 +1,12 @@
 # Changelog  
 Every sprint's progress relflected here.
 
+## Sprint 3 (Sp-3)
+
+### redirection of the itinerary-planner
+- Users can go to the itinerary-planner page after login otherwise it will go to the login page
+- After users confirm booking it will go to the itinerary-planner page and save the booking address as a stop in the itinerary-planner page
+
 ## Sprint 2 (Sp-2)  
 
 ### confirm-booking
