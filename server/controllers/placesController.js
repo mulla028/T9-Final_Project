@@ -255,6 +255,7 @@ exports.getNearbyAttractions = async (req, res) => {
         await redisClient.set(cacheKey, JSON.stringify(attractions), { EX: 43200 });
 
         console.log("Serving from API...");
+        res.json(attractions);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch attractions" });
     }
@@ -268,20 +269,30 @@ exports.getLocalExperiences = async (req, res) => {
             return res.status(400).json({ error: "Location is required" });
         }
 
+        // Check cache first
+        const cacheKey = `localExperiences:${location}:${category}:${sortBy}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            console.log("Serving from cache...");
+            return res.json(JSON.parse(cachedData));
+        }
+
         // Define curated categories
-        let placeTypes = ["point_of_interest", "tourist_attraction", "establishment"];
+        let placeTypes = [];
         if (category === "Workshops") {
-            placeTypes = ["art_gallery", "university", "point_of_interest"];
+            placeTypes = ["art_gallery", "university", "point_of_interest", "school", "cultural_center"];
         } else if (category === "Cultural") {
-            placeTypes = ["museum", "church", "historical_landmark"];
+            placeTypes = ["museum", "church", "historical_landmark", "synagogue", "hindu_temple", "mosque"];
         } else if (category === "Eco-Friendly") {
-            placeTypes = ["park", "nature_reserve", "farm"];
+            placeTypes = ["park", "nature_reserve", "farm", "botanical_garden", "wildlife_park"];
         } else if (category === "Dining") {
-            placeTypes = ["restaurant", "cafe", "bakery"];
+            placeTypes = ["restaurant", "cafe", "bakery", "farmers_market", "vegan_restaurant"];
         } else if (category === "Adventure") {
-            placeTypes = ["hiking_trail", "campground", "ski_resort"];
+            placeTypes = ["hiking_trail", "campground", "ski_resort", "climbing_area", "rafting"];
         } else if (category === "Tours") {
-            placeTypes = ["tourist_attraction", "zoo", "aquarium"];
+            placeTypes = ["tourist_attraction", "zoo", "aquarium", "winery", "brewery", "boat_tour"];
+        } else {
+            placeTypes = ["point_of_interest", "tourist_attraction", "establishment"]; // Default
         }
 
         const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(location)}&type=${placeTypes.join("|")}&key=${apiKey}`;
@@ -323,6 +334,10 @@ exports.getLocalExperiences = async (req, res) => {
             experiences.sort((a, b) => b.userRatings - a.userRatings);
         }
 
+        // Cache results for 12 hours
+        await redisClient.set(cacheKey, JSON.stringify(experiences), { EX: 43200 });
+
+        console.log("Serving from API...");
         res.json(experiences);
     } catch (error) {
         console.error("Error fetching local experiences:", error);
