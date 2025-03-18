@@ -208,6 +208,17 @@ export async function fetchNearbyAttractions(location) {
     }
 }
 
+export async function fetchExperiences(location, category, sortBy) {
+    const res = await my_fetch(`${API_BASE_URL}/places/experiences?location=${encodeURIComponent(location)}&category=${category}&sortBy=${sortBy}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
 export async function createOrUpdateTip(url, method, tip) {
     await my_fetch(url, {
         method: method,
