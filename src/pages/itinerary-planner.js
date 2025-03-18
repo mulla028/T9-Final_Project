@@ -86,7 +86,6 @@ const ItineraryPlanner = () => {
                                 checkOut: stay.checkOut,
                                 guests: stay.guests,
                                 preferences: stay.preferences,
-
                             });
                             addedPlaces.add(key);
                         }
@@ -287,7 +286,7 @@ const ItineraryPlanner = () => {
                     paid: false, // Default value
                 };
             } else {
-                if (!stop.name || !stop.address || !stop.time) {
+                if (!stop.address || !stop.time) {
                     missingFields.push(`Experience stop ${index + 1} is missing required details.`);
                 }
                 experiences.push({
