@@ -8,7 +8,6 @@ const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const tipRoutes = require('./routes/tipRoutes');
-const tipRoutes = require('./routes/tipRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
@@ -69,7 +68,6 @@ app.get('/api/visitors', (req, res) => {
 // Get the user itinerary details for a specific day
 app.post('/api/itinerary', async (req, res) => {
     const { id, day } = req.body; // You can destructure both at once
-    const { id, day } = req.body; // You can destructure both at once
 
     try {
         const itinerary = await Users.getItineraryForDay(id, day);
@@ -104,7 +102,6 @@ app.post('/api/itinerary', async (req, res) => {
 // Set the user itinerary details for a specific day, including transport
 app.post('/api/setItinerary', async (req, res) => {
     const { id, day, newItinerary, transportMode } = req.body;
-    const { id, day, newItinerary, transportMode } = req.body;
 
     // Map the frontend travel mode values to match the schema
     const mapTravelMode = (mode) => {
@@ -116,18 +113,7 @@ app.post('/api/setItinerary', async (req, res) => {
         };
         return modeMap[mode] || "drive"; // Default to "drive" if the mode is unrecognized
     };
-    // Map the frontend travel mode values to match the schema
-    const mapTravelMode = (mode) => {
-        const modeMap = {
-            "DRIVING": "drive",
-            "BICYCLING": "bike",
-            "WALKING": "walk",
-            "TRANSIT": "public transport"
-        };
-        return modeMap[mode] || "drive"; // Default to "drive" if the mode is unrecognized
-    };
 
-    const mappedMode = mapTravelMode(transportMode);
     const mappedMode = mapTravelMode(transportMode);
 
     try {

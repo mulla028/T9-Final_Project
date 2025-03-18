@@ -284,15 +284,10 @@ const BookingDetails = () => {
             {/* Pricing & Availability / Package Toggle (only if there's a price) */}
             {hasPrice && (
               <ToggleButtonGroup
-
                 type="radio"
-
                 name="bookingMode"
-
                 defaultValue={0}
-
                 onChange={(val) => setIsPackageMode(val === 1)}
-
                 className="d-flex justify-content-center mb-4"
               >
                 <ToggleButton
