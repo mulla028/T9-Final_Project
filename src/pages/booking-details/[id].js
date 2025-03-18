@@ -20,6 +20,7 @@ import { fetchPlaceDetails, fetchNearbyAttractions } from "@/services";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import BookingModal from "@/components/BookingModal";
 import TipsDisplay from "@/components/TipsDisplay";
+import TipsDisplay from "@/components/TipsDisplay";
 
 // Load Google Maps dynamically
 const Map = dynamic(() => import("@/components/GoogleMap"), { ssr: false });

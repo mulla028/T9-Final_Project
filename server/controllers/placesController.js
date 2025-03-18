@@ -1,6 +1,7 @@
 // controllers/placesController.js
 const redisClient = require('../config/redis');
 const Tip = require('../models/Tip');
+const Tip = require('../models/Tip');
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -191,6 +192,20 @@ exports.getPlaceDetails = async (req, res) => {
             reservable: result.reservable || ["lodging", "restaurant", "tourist_attraction"].some(type => result.types.includes(type)),
             types: result.types
         };
+
+        // 🌱 Fetch Relevant Eco-Friendly Tips  
+        const relevantTips = await Tip.find({
+            $or: [
+                { category: { $in: result.types } }, // Match place types (e.g., "hotel", "park")
+                { category: locality }, // Match city
+                { category: country }, // Match country
+                { category: "general" } // Include general tips as a fallback
+            ]
+        });
+
+        placeDetails.ecoTips = relevantTips.map(tip => tip.text);
+
+        console.log("Eco-Tips:", placeDetails.ecoTips);
 
         // 🌱 Fetch Relevant Eco-Friendly Tips  
         const relevantTips = await Tip.find({
