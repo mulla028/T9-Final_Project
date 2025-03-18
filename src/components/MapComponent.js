@@ -13,7 +13,7 @@ const containerStyle = {
     height: "500px",
 };
 
-const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelectedLocation, addSelectedLocation, setAddSelectedLocation }) => {
+const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelectedLocation, addSelectedLocation, setAddSelectedLocation, updateTravelDistance }) => {
     const [directionsState, setDirectionsState] = useState(null);
     const [travelTimes, setTravelTimes] = useState([]);
     const [travelDistance, setTravelDistance] = useState([]);
@@ -62,12 +62,17 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
                         const times = result.routes[0].legs.map((leg) => leg.duration.text);
                         // Calculate distance
                         result.routes[0].legs.forEach(leg => {
-
                             routeDist += leg.distance.value
                         });
                         var totalDist = Math.round(routeDist /1000)
                         setTravelTimes(times);
-                        setTravelDistance(routeDist);
+                        setTravelDistance(totalDist);
+                        
+                        // Pass the travel distance to the parent component
+                        if (updateTravelDistance) {
+                            updateTravelDistance(totalDist);
+                        }
+                        
                         console.log("Distance: ", totalDist);
                     } else {
                         console.error(`Error fetching directions: ${status}`);
@@ -76,7 +81,7 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
             );
         }
 
-    }, [stops, travelMode, origin, isLoaded]); 
+    }, [stops, travelMode, origin, isLoaded, updateTravelDistance]); 
 
     useEffect(() => {
         if (isLoaded && map) {
@@ -209,11 +214,13 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
                 </InfoWindowF>
             )}
 
-            {/* Display travel times between stops */}
+            {/* Display travel times and distance */}
             {travelTimes.length > 0 && (
-                <div style={{ position: "absolute", top: "10px", left: "10px", background: "white", padding: "10px", zIndex: 10 }}>
-                    <h4>Estimated Travel Times:</h4>
-                    <ul>
+                <div style={{ position: "absolute", top: "10px", left: "10px", background: "white", padding: "15px", zIndex: 10, borderRadius: "8px", boxShadow: "0 2px 6px rgba(0,0,0,0.2)" }}>
+                    <h5 style={{ marginTop: 0 }}>Trip Summary</h5>
+                    <p><strong>Total Distance:</strong> {travelDistance} km</p>
+                    <h6>Estimated Travel Times:</h6>
+                    <ul style={{ paddingLeft: "20px", margin: "5px 0" }}>
                         {travelTimes.map((time, index) => (
                             <li key={index}>{`Stop ${index + 1} to Stop ${index + 2}: ${time}`}</li>
                         ))}
@@ -227,16 +234,17 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
 
 MapComponent.propTypes = {
     origin: PropTypes.shape({
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired,
+        lat: PropTypes.number,
+        lng: PropTypes.number,
     }),
     stops: PropTypes.arrayOf(PropTypes.object).isRequired,
     setStops: PropTypes.func.isRequired,
     travelMode: PropTypes.string.isRequired,
     selectedLocation: PropTypes.object,
     setSelectedLocation: PropTypes.func.isRequired,
-    addSelectedLocation : PropTypes.object,
-    setAddSelectedLocation : PropTypes.func,
+    addSelectedLocation: PropTypes.bool,
+    setAddSelectedLocation: PropTypes.func.isRequired,
+    updateTravelDistance: PropTypes.func
 };
 
 export default MapComponent;
