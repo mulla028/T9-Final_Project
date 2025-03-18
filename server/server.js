@@ -8,7 +8,6 @@ const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const tipRoutes = require('./routes/tipRoutes');
-const tipRoutes = require('./routes/tipRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
