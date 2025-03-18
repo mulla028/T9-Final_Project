@@ -84,7 +84,10 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
 
         const geocoder = new window.google.maps.Geocoder();
         geocoder.geocode({ address: firstStop.address }, (results, status) => {
+            console.log("First address is: ", firstStop.address);
             if (status === "OK" && results[0].geometry) {
+            console.log("geometry: ", results[0].geometry);
+
                 setOrigin({
                     address: firstStop.address,
                     lat: results[0].geometry.location.lat(),

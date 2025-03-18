@@ -1,59 +1,64 @@
-import { Container, Row, Col, Card, Button, ListGroup, Navbar, Nav, Accordion } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, ListGroup, Navbar, Accordion, Modal, Form } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { getItineraries } from '@/services';
 import React, { useState, useEffect, useRef } from "react";
 import { useReactToPrint } from "react-to-print";
+import { FacebookShareButton, FacebookIcon } from 'next-share';
+import { FaWhatsapp, FaFacebookSquare } from 'react-icons/fa';
+import { GoLink } from "react-icons/go";
+import { BiSolidSend } from "react-icons/bi";
 
 const ItineraryOverview = () => {
     const router = useRouter();
     const { id } = router.query;
-    const printRef = useRef(null); // Reference for print content
+    const printRef = useRef(null);
     const [itineraries, setItineraries] = useState([]);
     const [itinerariesPrint, setItinerariesPrint] = useState([]);
-    const [activeKey, setActiveKey] = useState(null); // State to track open accordion;
+    const [activeKey, setActiveKey] = useState(null);
+    const [showModal, setShowModal] = useState(false);  // Modal state
+    const [email, setEmail] = useState(""); // Email input
+    const [shareLink, setShareLink] = useState("");
+    const [copied, setCopied] = useState(false);  // State for "Copied!" message
 
     const handleToggle = (eventKey) => {
-        setActiveKey(activeKey === eventKey ? null : eventKey); // Toggle between open and closed
+        setActiveKey(activeKey === eventKey ? null : eventKey);
     };
 
     useEffect(() => {
         if (!id) return;
 
-        // Fetch the itineraries for the specific user
         const fetchItinerary = async () => {
             try {
                 const itineraryData = await getItineraries(id);
-
                 if (itineraryData) {
-                    setItinerariesPrint(itineraryData.itinerary); // Save the whole attributes for printing
-                    let newItineraries = []; // Temporary array to accumulate stops
-                    // Convert itinerary data to stop data from stay
+                    setItinerariesPrint(itineraryData.itinerary);
+                    let newItineraries = [];
 
                     itineraryData.itinerary.forEach(itinerary => {
                         var newStops = [];
-                        // Get all the experiences and stays
                         if (itinerary) {
                             if (itinerary.stay && itinerary.stay != {}) {
-                                newStops.push(itinerary.stay?.placeName ? itinerary.stay?.placeName : itinerary.stay?.location);
+                                newStops.push(itinerary.stay?.placeName || itinerary.stay?.location);
                             }
 
-                            itinerary.experiences?.forEach(experience => {
-                                newStops.push(experience.name ? experience.name.toString() : experience.location);
+                            itinerary.experiences?.forEach(exp => {
+                                newStops.push(exp.name || exp.location);
                             });
-    
-                            var newItinerary = {
+
+                            newItineraries.push({
                                 day: itinerary.day,
                                 stops: newStops
-                            }
-                            newItineraries.push(newItinerary);
+                            });
                         }
                     });
                     setItineraries(newItineraries);
 
+                    // Create shareable link
+                    const link = `${window.location.origin}/itinerary/${id}`;
+                    setShareLink(link);
                 } else {
                     console.log("No itinerary found");
                 }
-
             } catch (error) {
                 console.error("Error fetching itinerary:", error);
             }
@@ -62,22 +67,18 @@ const ItineraryOverview = () => {
         fetchItinerary();
     }, [id]);
 
-    // Function to navigate to the itinerary planner with the day query
     const handleEditDay = (day) => {
         router.push({
             pathname: "/itinerary-planner",
-            query: { id, day }, // Pass both id and day as query parameters
+            query: { id, day },
         });
     };
 
-    // Generate HTML for printing
     const generateItineraryHTML = () => {
-        console.log(itinerariesPrint);
-
         if (!itinerariesPrint || itinerariesPrint.length === 0) {
             return "<h2>No Itinerary Available</h2>";
         }
-        
+
         let html = `<div style="display:flex; align-items:baseline;"><h2 style="font-family: 'Lora', serif; font-weight: 700; font-size: 2.5rem;">DriftWay</h2>
                     <h3> - Your Itinerary</h3></div>`;
 
@@ -87,24 +88,23 @@ const ItineraryOverview = () => {
                     <h3 style="padding: 10px; border-radius: 5px;">Day ${dayPlan.day}</h3>
                     <ul style="list-style-type: none; padding-left: 0;">`;
 
-            if(dayPlan.stay) {
+            if (dayPlan.stay) {
                 html += `
                 <li style="padding: 8px; border-bottom: 1px solid #eee;">
-                    <strong><b>Stay: </b>${dayPlan.stay.placeName}</strong><br>
-                    <strong><b>Check-in: </b>${dayPlan.stay.checkIn.split("T")[0]}</strong><br>
-                    <strong><b>Check-out: </b>${dayPlan.stay.checkOut.split("T")[0]}</strong><br>
-                    <strong><b>Guests: </b>${dayPlan.stay.guests}</strong><br>
-                    <strong><b>Location: </b>${dayPlan.stay.location}</strong><br>
-                    <strong><b>Phone: </b>${dayPlan.stay.phone}</strong><br>
+                    <strong>Stay: </strong>${dayPlan.stay.placeName}<br>
+                    <strong>Check-in: </strong>${dayPlan.stay.checkIn?.split("T")[0]}<br>
+                    <strong>Check-out: </strong>${dayPlan.stay.checkOut?.split("T")[0]}<br>
+                    <strong>Guests: </strong>${dayPlan.stay.guests}<br>
+                    <strong>Location: </strong>${dayPlan.stay.location}<br>
                 </li>`;
-            } 
+            }
 
             dayPlan.experiences?.forEach((exp) => {
                 html += `
                 <li style="padding: 8px; border-bottom: 1px solid #eee;">
-                    <strong><b>Experience: </b>${exp.name}</strong><br>
-                    <strong><b>Date: </b>${exp.date?.split("T")[0]} ${exp.time?exp.time:null}</strong><br>
-                    <strong><b>Location: </b>${exp.location}</strong><br>
+                    <strong>Experience: </strong>${exp.name}<br>
+                    <strong>Date: </strong>${exp.date?.split("T")[0]} ${exp.time || ''}<br>
+                    <strong>Location: </strong>${exp.location}<br>
                 </li>`;
             });
             html += `</ul></div>`;
@@ -112,11 +112,33 @@ const ItineraryOverview = () => {
         return html;
     };
 
-    // Function to trigger print/download
     const handlePrint = useReactToPrint({
         documentTitle: "Itinerary Overview",
         contentRef: printRef,
     });
+
+    const handleShare = () => {
+        setShowModal(true);
+    };
+
+    const handleSendEmail = () => {
+        if (email) {
+            window.location.href = `mailto:${email}?subject=Shared Itinerary&body=Check out my itinerary: ${shareLink}`;
+        }
+    };
+
+    const handleShareWhatsApp = () => {
+        window.open(`https://wa.me/?text=Check out my DriftWay itinerary: ${shareLink}`, '_blank');
+    };
+
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(shareLink)
+            .then(() => {
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);  // Hide message after 2 seconds
+            })
+            .catch(err => console.error("Failed to copy:", err));
+    };
 
     return (
         <>
@@ -128,29 +150,18 @@ const ItineraryOverview = () => {
             </Navbar>
 
             <Container className="itinerary-planner" style={{ marginTop: '60px' }}>
-                <div className="hero" >
+                <div className="hero">
                     <h2 className="text-center mb-4">Your Itinerary Overview</h2>
                     <p>You can select a day to add or remove your experiences and stays.</p>
                 </div>
-                <br />
 
                 {itineraries.length > 0 ? (
                     <Accordion activeKey={activeKey}>
                         <Row>
                             {itineraries.map((dayPlan, index) => (
-                                <Col md={6} key={index} className="mb-3"> {/* Two-column layout */}
+                                <Col md={6} key={index} className="mb-3">
                                     <Accordion.Item eventKey={index.toString()}>
-                                        <Accordion.Header
-                                            onClick={() => handleToggle(index.toString())}
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                fontWeight: "bold",
-                                                height: "50px",
-                                                width: "100%",
-                                            }}
-                                        >
+                                        <Accordion.Header onClick={() => handleToggle(index.toString())}>
                                             Day {dayPlan.day}
                                         </Accordion.Header>
                                         <Accordion.Body>
@@ -176,36 +187,63 @@ const ItineraryOverview = () => {
                     <p className="text-center">Loading itinerary...</p>
                 )}
 
-                {/* Generate pdf for download */}
                 <div
                     ref={printRef}
-                    style={{ padding: "20px", margin: "20px", backgroundColor: "white" }} 
+                    style={{ padding: "20px", margin: "20px", backgroundColor: "white" }}
                     className="print-only"
                     dangerouslySetInnerHTML={{ __html: generateItineraryHTML() }}
                 />
 
-                {/* Share & Download Options */}
-                <div className="text-center mt-5">
-                    <Button variant="success" className="mr-3" onClick={handlePrint}>Download Itinerary</Button>
-                    <Button variant="primary">Share Itinerary</Button>
+                <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
+                    <Button variant="success p-2 px-2" onClick={handlePrint}>Download Itinerary</Button>
+                    <Button variant="primary p-2 px-2" onClick={handleShare}>Share Itinerary</Button>
                 </div>
             </Container>
 
-            {/* Hide pdf content only for print */}
-            <style>
-                {`
+            {/* Share Modal */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Share Itinerary</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group>
+                        <Form.Control
+                            type="email"
+                            placeholder="Enter recipient's email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </Form.Group>
+                    <div className="d-flex flex-wrap  gap-3 mt-3">
+                        <Button variant="primary" onClick={handleSendEmail}>Email <BiSolidSend /></Button>
+                        <Button variant="success" onClick={handleShareWhatsApp}>
+                            <FaWhatsapp />
+                        </Button>
+                        <Button>
+                            <FacebookShareButton
+                                url="https://your-website.com/your-page"
+                                quote="Hey I am having an eco conscious vacation!"
+                                hashtag="#driftway #ecomindfultravelling"
+                            >
+                                <FaFacebookSquare className="mr-2" />
+                            </FacebookShareButton>
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleCopyLink}
+                        >
+                            <GoLink /> {copied ? "Copied!" : "Copy Link"}
+                        </Button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+            <style>{`
                 @media print {
-                    .print-only {
-                        display: block !important; /* Show only when printing */
-                        pageBreakBefore: 'always',
-                    }
+                    .print-only { display: block; }
                 }
-                    
-                .print-only {
-                    display: none; /* Hide by default */
-                }
-            `}
-            </style>
+                .print-only { display: none; }
+            `}</style>
         </>
     );
 };

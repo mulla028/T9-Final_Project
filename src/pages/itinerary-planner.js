@@ -44,8 +44,6 @@ const ItineraryPlanner = () => {
             try {
                 const itineraryData = await getItineraryForDay(id, day);
                 if (itineraryData) {
-                    console.log("Fetched itinerary:", itineraryData);
-
                     setItinerary(itineraryData);
                     const newStops = [];
                     const addedPlaces = new Set();
@@ -69,9 +67,7 @@ const ItineraryPlanner = () => {
                                 break;
 
                         }
-                        console.log(itineraryData.itinerary.transport.mode);
                     }
-
 
                     // Process Stay as a Stop (if it exists)
                     if (itineraryData.itinerary.stay) {
@@ -80,7 +76,7 @@ const ItineraryPlanner = () => {
                         if (!addedPlaces.has(key)) {
                             newStops.push({
                                 name: stay.placeName || "Stay Location",
-                                address: stay.location,
+                                address: stay.location || stay.address,
                                 placeId: stay.placeId,
                                 checkIn: stay.checkIn,
                                 checkOut: stay.checkOut,
@@ -105,13 +101,9 @@ const ItineraryPlanner = () => {
                         }
                     });
 
-                    console.log("Final processed stops:", newStops); // Debugging
-
                     setStops(newStops);
 
-
                 } else {
-                    console.log("No itinerary found");
                     setLoadingLocation(false);
                 }
             } catch (error) {
@@ -138,8 +130,6 @@ const ItineraryPlanner = () => {
         // **Set Default Map Location to First Stop**
         if (stops.length > 0 && window.google && window.google.maps) {
             const firstStop = stops[0];
-            console.log("First stop for map:", firstStop);
-
             const geocoder = new window.google.maps.Geocoder();
             geocoder.geocode({ address: firstStop.address }, (results, status) => {
                 if (status === "OK" && results[0].geometry) {
@@ -159,11 +149,6 @@ const ItineraryPlanner = () => {
     }, []);
 
     useEffect(() => {
-        console.log("Stops have changed:", stops);
-        // You can add any logic here to react to the change in stops
-    }, [stops]);
-
-    useEffect(() => {
         if (googleLoaded && inputRef.current) {
             const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current);
 
@@ -171,8 +156,16 @@ const ItineraryPlanner = () => {
                 const place = autocomplete.getPlace();
                 if (place.geometry && place.formatted_address) {
                     setNewStop({
-                        name: place.name || "Not Available",
-                        address: place.formatted_address
+                        name: place.name || "Unnamed Place",
+                        placeName: place.name || "Unnamed Place",
+                        address: place.formatted_address || "Unknown Address",
+                        phone: place.formatted_phone_number || "Not Available",
+                        email: place.formatted_email || "Not Available",
+                        placeId: place.place_id,
+                        website: place.website || "Not Available",
+                        price: place.price_level !== undefined ? `$${place.price_level}` : "N/A",
+                        availability: place.opening_hours ? (place.opening_hours.open_now ? "Open Now" : "Closed") : "N/A",
+                        type: place.types[0]
                     });
                 }
             });
@@ -309,7 +302,6 @@ const ItineraryPlanner = () => {
             stay: stay,
             experiences: experiences,
         };
-        console.log(updatedItinerary)
 
         try {
             await updateItineraryForDay(id, day, updatedItinerary, travelMode);
@@ -456,7 +448,8 @@ const ItineraryPlanner = () => {
                                 className="mb-2"
                                 ref={inputRef}
                                 value={newStop?.name || newStop?.address || ""}
-                                onChange={(e) => setNewStop({ ...newStop, address: e.target.value })}
+                                onChange={(e) => setNewStop({ ...newStop, 
+                                    address: e.target.value })}
                             />
                             <Button
                                 onClick={handleAddStop}
