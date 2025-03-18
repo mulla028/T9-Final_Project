@@ -207,20 +207,6 @@ exports.getPlaceDetails = async (req, res) => {
 
         console.log("Eco-Tips:", placeDetails.ecoTips);
 
-        // 🌱 Fetch Relevant Eco-Friendly Tips  
-        const relevantTips = await Tip.find({
-            $or: [
-                { category: { $in: result.types } }, // Match place types (e.g., "hotel", "park")
-                { category: locality }, // Match city
-                { category: country }, // Match country
-                { category: "general" } // Include general tips as a fallback
-            ]
-        });
-
-        placeDetails.ecoTips = relevantTips.map(tip => tip.text);
-
-        console.log("Eco-Tips:", placeDetails.ecoTips);
-
         // STORE IN CACHE WITH TIMESTAMP
         const cacheData = { data: placeDetails, timestamp: Date.now() };
         await redisClient.set(place_id, JSON.stringify(cacheData));
