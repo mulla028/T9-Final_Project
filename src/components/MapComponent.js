@@ -57,12 +57,18 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
                 (result, status) => {
                     if (status === "OK") {
                         setDirectionsState(result);
-    
+                        var routeDist = 0;
                         // Extract durations (travel time) for each leg of the journey
                         const times = result.routes[0].legs.map((leg) => leg.duration.text);
-                        const distance = result.routes[0].legs.map((leg) => leg.distance.text);
+                        // Calculate distance
+                        result.routes[0].legs.forEach(leg => {
+
+                            routeDist += leg.distance.value
+                        });
+                        var totalDist = Math.round(routeDist /1000)
                         setTravelTimes(times);
-                        setTravelDistance(distance);
+                        setTravelDistance(routeDist);
+                        console.log("Distance: ", totalDist);
                     } else {
                         console.error(`Error fetching directions: ${status}`);
                     }
@@ -206,7 +212,7 @@ const MapComponent = ({ stops, setStops, travelMode, selectedLocation, setSelect
             {/* Display travel times between stops */}
             {travelTimes.length > 0 && (
                 <div style={{ position: "absolute", top: "10px", left: "10px", background: "white", padding: "10px", zIndex: 10 }}>
-                    <h4>Estimated Travel Times/Distance:</h4>
+                    <h4>Estimated Travel Times:</h4>
                     <ul>
                         {travelTimes.map((time, index) => (
                             <li key={index}>{`Stop ${index + 1} to Stop ${index + 2}: ${time}`}</li>
