@@ -260,3 +260,72 @@ exports.getNearbyAttractions = async (req, res) => {
     }
 };
 
+exports.getLocalExperiences = async (req, res) => {
+    try {
+        const { location, category, sortBy } = req.query;
+
+        if (!location) {
+            return res.status(400).json({ error: "Location is required" });
+        }
+
+        // Define curated categories
+        let placeTypes = ["point_of_interest", "tourist_attraction", "establishment"];
+        if (category === "Workshops") {
+            placeTypes = ["art_gallery", "university", "point_of_interest"];
+        } else if (category === "Cultural") {
+            placeTypes = ["museum", "church", "historical_landmark"];
+        } else if (category === "Eco-Friendly") {
+            placeTypes = ["park", "nature_reserve", "farm"];
+        } else if (category === "Dining") {
+            placeTypes = ["restaurant", "cafe", "bakery"];
+        } else if (category === "Adventure") {
+            placeTypes = ["hiking_trail", "campground", "ski_resort"];
+        } else if (category === "Tours") {
+            placeTypes = ["tourist_attraction", "zoo", "aquarium"];
+        }
+
+        const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(location)}&type=${placeTypes.join("|")}&key=${apiKey}`;
+        const searchResponse = await fetch(searchUrl);
+        const searchData = await searchResponse.json();
+
+        if (!searchData.results || searchData.results.length === 0) {
+            return res.json([]);
+        }
+
+        // Fetch place details for each experience
+        let experiences = await Promise.all(
+            searchData.results.slice(0, 20).map(async (place) => {
+                const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,photos,rating,user_ratings_total,editorial_summary,price_level&key=${apiKey}`;
+                const detailsResponse = await fetch(detailsUrl);
+                const detailsData = await detailsResponse.json();
+
+                return {
+                    id: place.place_id,
+                    name: detailsData.result.name,
+                    address: detailsData.result.formatted_address,
+                    description: detailsData.result.editorial_summary?.overview || "No description available.",
+                    rating: detailsData.result.rating || "No Rating",
+                    userRatings: detailsData.result.user_ratings_total || 0,
+                    priceLevel: detailsData.result.price_level || "N/A",
+                    image: detailsData.result.photos
+                        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${detailsData.result.photos[0].photo_reference}&key=${apiKey}`
+                        : "/images/default-experience.jpg"
+                };
+            })
+        );
+
+        // **Sorting Logic**
+        if (sortBy === "Price") {
+            experiences.sort((a, b) => (a.priceLevel === "N/A" ? 1 : a.priceLevel - b.priceLevel));
+        } else if (sortBy === "Rating") {
+            experiences.sort((a, b) => b.rating - a.rating);
+        } else if (sortBy === "Popularity") {
+            experiences.sort((a, b) => b.userRatings - a.userRatings);
+        }
+
+        res.json(experiences);
+    } catch (error) {
+        console.error("Error fetching local experiences:", error);
+        res.status(500).json({ error: "Error fetching local experiences" });
+    }
+};
