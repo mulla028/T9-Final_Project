@@ -51,7 +51,7 @@ const ItineraryPlanner = () => {
                     const addedPlaces = new Set();
 
                     // Set the travel mode based on fetched itinerary
-                    if (itineraryData.itinerary.transport.mode) {
+                    if (itineraryData.itinerary.transport?.mode) {
                         switch (itineraryData.itinerary.transport.mode) {
                             case "drive":
                                 setTravelMode("DRIVING");
@@ -265,7 +265,7 @@ const ItineraryPlanner = () => {
         let missingFields = [];
 
         stops.forEach((stop, index) => {
-            if (stop.type === "lodging") {
+            if (stop.type === "lodging" || stop.checkIn) {
                 if (!stop.checkIn || !stop.checkOut || !stop.guests) {
                     missingFields.push(`Lodging stop ${index + 1} is missing checkin date`);
                 }
@@ -325,6 +325,12 @@ const ItineraryPlanner = () => {
         }
     };
 
+    const goBack = async () => {
+        router.push({
+            pathname: "/overview",
+            query: { id },
+        });
+    };
 
     return (
         <>
@@ -471,14 +477,21 @@ const ItineraryPlanner = () => {
                             <Button variant={travelMode === "TRANSIT" ? "success" : "outline-secondary"} onClick={() => setTravelMode("TRANSIT")}><FaBus /> Public Transport</Button>
                         </div>
 
-                        <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
-                            Save Itinerary
+                        <div className="text-center mt-5">
+                            <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
+                                Save Itinerary
+                            </Button>
+                        </div>
+
+                        <Button variant="outline-primary"
+                            className="mt-3 w-100" onClick={goBack}>
+                            Go Back
                         </Button>
                     </Col>
                 </Row>
             </Container>
             <style>
-            {`
+                {`
                 .itinerary-sidebar {
                     max-height: 25vh; /* Full height */
                     overflow-y: auto; /* Enables scrolling */
