@@ -67,10 +67,10 @@ const FeaturedDestinations = () => {
             <Container>
                 <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-
+      
                     {/* 左箭头 */}
-                    <Button
-                        variant="outline-secondary"
+                    <Button 
+                        variant="outline-secondary" 
                         className="carousel-control prev"
                         onClick={handlePrev}
                         style={{ position: 'absolute', left: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}
@@ -80,7 +80,7 @@ const FeaturedDestinations = () => {
 
                     {/* 轮播容器 */}
                     <div className="carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
-                        <Row
+                        <Row 
                             ref={carouselRef}
                             className="carousel-row"
                             style={{
@@ -105,8 +105,8 @@ const FeaturedDestinations = () => {
                     </div>
 
                     {/* 右箭头 */}
-                    <Button
-                        variant="outline-secondary"
+                    <Button 
+                        variant="outline-secondary" 
                         className="carousel-control next"
                         onClick={handleNext}
                         style={{ position: 'absolute', right: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}

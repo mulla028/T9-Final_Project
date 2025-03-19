@@ -102,9 +102,9 @@ export default function BookingModal({
   const handleConfirmBooking = async () => {
     const isValid = validate();
     const isFormValid = validateForm();
-
+  
     if (!isValid && !isFormValid) return;
-
+  
     const bookingPayload = {
       email: localStorage.getItem("email"),
     };
@@ -134,7 +134,7 @@ export default function BookingModal({
         },
       ];
     }
-
+  
     try {
       console.log("Sending request to:", "http://localhost:8080/api/bookings/add");
       console.log("Request payload:", bookingPayload);
@@ -154,12 +154,12 @@ export default function BookingModal({
         alert(errorData.message || "Failed to save booking.");
         return;
       }
-
+  
       const data = await response.json();
       localStorage.setItem("newStop", JSON.stringify({
         name: bookingPayload.placeName,
         address: bookingPayload.location
-      }));
+    }));
       alert("The reservation was successfully registered!");
       window.location.href = "/overview";
     } catch (error) {
@@ -180,7 +180,6 @@ export default function BookingModal({
           bookingData &&
           (bookingData.model == "isPackageMode" ||
             bookingData.model == "hasPrice" ||
-            bookingData.model == "isPackageMode&&hasPrice" ? (
             <>
               <h4 className="mb-4">{placeDetails.name}</h4>
 
@@ -315,8 +314,8 @@ export default function BookingModal({
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                     placeholderText="Time"
-                    className={`date-picker ${errors.time ? "border border-danger" : ""
-                      }`}
+                    className={`date-picker ${errors.time ? "border border-danger" : ""}`}
+
                     icon={<FaClock className="search-icon" />}
                     value={time}
                     isInvalid={!!errors.time}

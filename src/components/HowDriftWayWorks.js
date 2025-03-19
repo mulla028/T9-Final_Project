@@ -11,7 +11,7 @@ const HowDriftWayWorks = () => {
         const destination = authState ? "/overview" : "/signup"; // ✅ No result needed
         router.push(destination);
     };
-
+    
     return (
         <div className="how-it-works" style={{ padding: '60px 0' }}>
             <Container>

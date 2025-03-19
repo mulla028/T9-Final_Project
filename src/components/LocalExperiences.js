@@ -74,9 +74,9 @@ const LocalExperiences = () => {
             <Container>
                 <h2 className="text-center mb-4">Local Experience for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-
-                    <Button
-                        variant="outline-secondary"
+             
+                    <Button 
+                        variant="outline-secondary" 
                         className="carousel-control prev"
                         onClick={handlePrev}
                         style={{ position: 'absolute', left: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}
@@ -85,7 +85,7 @@ const LocalExperiences = () => {
                     </Button>
 
                     <div className="carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
-                        <Row
+                        <Row 
                             ref={carouselRef}
                             className="carousel-row"
                             style={{
@@ -108,8 +108,8 @@ const LocalExperiences = () => {
                         </Row>
                     </div>
 
-                    <Button
-                        variant="outline-secondary"
+                    <Button 
+                        variant="outline-secondary" 
                         className="carousel-control next"
                         onClick={handleNext}
                         style={{ position: 'absolute', right: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}
@@ -120,6 +120,7 @@ const LocalExperiences = () => {
                     <Button className='explore-button' onClick={handleButtonClick} style={{ background: 'green', border: 'none', borderRadius: '40px', padding: '8px 16px', width: '40%', height: '60px', textAlign: 'center' }}>
                         Start Your Local Experiences
                     </Button>
+
                 </Row>
             </Container>
         </div>
