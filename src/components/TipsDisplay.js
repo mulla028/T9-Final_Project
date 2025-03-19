@@ -22,7 +22,7 @@ const TipsDisplay = ({ tips }) => {
             {/* Collapsible Section for More Tips */}
             <Collapse in={expanded}>
                 <div className="mt-2">
-                    {tips.slice(visibleCount).map((tip, index) => (
+                    {tips?.slice(visibleCount).map((tip, index) => (
                         <Card key={index} className="mb-2 p-2 shadow-sm">
                             <Card.Body>{tip}</Card.Body>
                         </Card>
