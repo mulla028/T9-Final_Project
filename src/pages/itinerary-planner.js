@@ -1,5 +1,5 @@
 "use client";
-import { FaCar, FaBiking, FaWalking, FaBus } from "react-icons/fa";
+import { FaCar, FaBiking, FaWalking, FaBus, FaLeaf } from "react-icons/fa";
 import { useRouter } from 'next/router';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Navbar, Stack } from "react-bootstrap";
 import { APIProvider } from "@vis.gl/react-google-maps";
@@ -29,6 +29,7 @@ const ItineraryPlanner = () => {
     const [checkInDate, setCheckInDate] = useState(null);
     const [checkOutDate, setCheckOutDate] = useState(null);
     const [showCheckin, setshowCheckin] = useState(false);
+    const [travelDistance, setTravelDistance] = useState(0);
 
     const inputRef = useRef(null);
 
@@ -323,6 +324,41 @@ const ItineraryPlanner = () => {
         });
     };
 
+    const viewImpactDashboard = () => {
+        // Map travel mode to the format expected by the impact dashboard
+        let impactMode = "car";
+        switch (travelMode) {
+            case "DRIVING":
+                impactMode = "car";
+                break;
+            case "BICYCLING":
+                impactMode = "bike";
+                break;
+            case "WALKING":
+                impactMode = "walk";
+                break;
+            case "TRANSIT":
+                impactMode = "public";
+                break;
+            default:
+                impactMode = "car";
+        }
+
+        router.push({
+            pathname: "/impact-dashboard",
+            query: { 
+                id: id,
+                day: day,
+                distance: travelDistance || 0,
+                mode: impactMode
+            }
+        });
+    };
+    
+    const updateTravelDistance = (distance) => {
+        setTravelDistance(distance);
+    };
+
     return (
         <>
             <Container className="itinerary-planner" style={{ marginTop: "60px" }} onLoad={onLoad} >
@@ -345,6 +381,7 @@ const ItineraryPlanner = () => {
                                     setSelectedLocation={setSelectedLocation}
                                     addSelectedLocation={addSelectedLocation}
                                     setAddSelectedLocation={setAddSelectedLocation}
+                                    updateTravelDistance={updateTravelDistance}
                                 />
                             )}
                         </APIProvider>
@@ -469,7 +506,18 @@ const ItineraryPlanner = () => {
                             <Button variant={travelMode === "TRANSIT" ? "success" : "outline-secondary"} onClick={() => setTravelMode("TRANSIT")}><FaBus /> Public Transport</Button>
                         </div>
 
-                        <div className="text-center mt-5">
+                        <div className="text-center mt-4">
+                            <Button 
+                                variant="success" 
+                                className="w-100 mb-3" 
+                                onClick={viewImpactDashboard}
+                                disabled={stops.length < 2 || travelDistance <= 0}
+                            >
+                                <FaLeaf className="me-2" /> View Environmental Impact
+                            </Button>
+                        </div>
+
+                        <div className="text-center mt-2">
                             <Button variant="primary" className="w-100" onClick={handleSaveItinerary}>
                                 Save Itinerary
                             </Button>
