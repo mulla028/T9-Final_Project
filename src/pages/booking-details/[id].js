@@ -612,7 +612,7 @@ const BookingDetails = () => {
       <Row className="mt-5" id="reviews">
         <Col>
           <h4>User Reviews</h4>
-          {placeDetails.reviews.length > 0 ? placeDetails.reviews.map((review, index) => (
+          {placeDetails?.reviews?.length > 0 ? placeDetails.reviews.map((review, index) => (
             <Card className="mb-3 p-3 shadow-sm" key={index}>
               <Card.Body>
                 <Card.Title>{review.author_name}</Card.Title>
