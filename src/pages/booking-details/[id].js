@@ -41,9 +41,10 @@ const BookingDetails = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [visitDate, setVisitDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
-  const [travelStyle, setTravelStyle] = useState();
+  const [travelStyle, setTravelStyle] = useState("");
   const [startDate, endDate] = dateRange;
-  const [hasPrice, setHasPrice] = useState();
+  const [isEcoStay, setIsEcoStay] = useState(false);
+  // const [hasPrice, setHasPrice] = useState();
 
   useEffect(() => {
     if (id) {
@@ -62,7 +63,7 @@ const BookingDetails = () => {
   }, [id, localStorage.getItem(travelStyle)]);
 
   useEffect(() => {
-    setHasPrice(travelStyle === "Eco-Stays");
+    setIsEcoStay(travelStyle === "Eco-Stays");
   }, [travelStyle]);
 
   useEffect(() => {
@@ -124,20 +125,29 @@ const BookingDetails = () => {
   };
 
   const validateInputs = () => {
-    let newErrors = { guests: "", startDate: "", endDate: "" };
+    let newErrors = { guests: "", startDate: "", endDate: "", visitDate: "" };
 
     if (guests < 1 || guests > 5) {
       newErrors.guests = "Guests must be between 1 and 5.";
     }
-    if (!startDate) {
-      newErrors.startDate = "Start date is required.";
-    } else if (new Date(startDate) < new Date(today)) {
-      newErrors.startDate = "Start date cannot be before today.";
-    }
-    if (endDate && !endDate) {
-      newErrors.endDate = "End date is required.";
-    } else if (endDate && new Date(endDate) < new Date(startDate)) {
-      newErrors.endDate = "End date cannot be before start date.";
+    if (isEcoStay) {
+      if (!startDate) {
+        newErrors.startDate = "Start date is required.";
+      } else if (new Date(startDate) < new Date(today)) {
+        newErrors.startDate = "Start date cannot be before today.";
+      }
+      if (!endDate) {
+        newErrors.endDate = "End date is required.";
+      } else if (endDate && new Date(endDate) < new Date(startDate)) {
+        newErrors.endDate = "End date cannot be before start date.";
+      }
+    } else {
+      // Validate visitDate for non-Eco Stay
+      if (!visitDate) {
+        newErrors.visitDate = "Visit date is required.";
+      } else if (new Date(visitDate) < new Date(today)) {
+        newErrors.visitDate = "Visit date cannot be before today.";
+      }
     }
 
     setErrors(newErrors);
@@ -166,7 +176,7 @@ const BookingDetails = () => {
   const priceIndicator = priceData
     ? `$${priceData.price} (${priceData.label})`
     : "N/A";
-  // const hasPrice = priceIndicator !== "N/A" ? true : false;
+  const hasPrice = placeDetails?.customPrice?.price > 0;
 
   /** Custom Booking Packages */
   const packages = [
@@ -196,14 +206,22 @@ const BookingDetails = () => {
             ?.price || 0,
         model: "isPackageMode&&hasPrice",
       };
-    } else if (hasPrice) {
+    } else if (hasPrice && isEcoStay) {
       return {
         startDate,
         endDate,
         guests,
         preferences,
         price: priceData?.price || 0,
-        model: "hasPrice",
+        model: "hasPrice&&isEcoStay",
+      };
+    } else if (hasPrice && !isEcoStay) {
+      return {
+        startDate: visitDate,
+        guests,
+        preferences,
+        price: priceData?.price || 0,
+        model: "hasPrice&&!isEcoStay",
       };
     } else {
       return {
@@ -329,24 +347,48 @@ const BookingDetails = () => {
                   <strong>Price Level:</strong> {priceIndicator}
                 </p>
 
+
                 <Form>
+
                   {/* Date Range Picker */}
-                  <Form.Group className="mb-3">
-                    <DatePicker
-                      showIcon
-                      selected={startDate}
-                      onChange={(update) => setDateRange(update)}
-                      startDate={startDate}
-                      endDate={endDate}
-                      selectsRange
-                      minDate={new Date()}
-                      dateFormat="MMM d, yyyy"
-                      placeholderText="Select Dates"
-                      wrapperClassName="d-flex justify-content-between align-items-center"
-                      className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
-                      icon={<FaCalendarAlt className="search-icon" />}
-                    />
-                  </Form.Group>
+                  {isBookable && isEcoStay ? (
+                    < Form.Group className="mb-3">
+                      <DatePicker
+                        showIcon
+                        selected={startDate}
+                        onChange={(update) => setDateRange(update)}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectsRange
+                        minDate={new Date()}
+                        dateFormat="MMM d, yyyy"
+                        placeholderText="Select Dates"
+                        wrapperClassName="d-flex justify-content-between align-items-center"
+                        className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
+                        icon={<FaCalendarAlt className="search-icon" />}
+                      />
+                    </Form.Group>
+                  ) : (
+                    <Form.Group controlId="visitDate" className="mb-3">
+                      <DatePicker
+                        showIcon
+                        selected={visitDate}
+                        onChange={(date) => {
+                          setVisitDate(date);
+                          setErrors((prev) => ({ ...prev, visitDate: "" }));
+                        }}
+                        minDate={new Date()}
+                        dateFormat="MMM d, yyyy"
+                        placeholderText="Visit Date"
+                        wrapperClassName="d-flex justify-content-between align-items-center"
+                        className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
+                        icon={<FaCalendarAlt className="search-icon" />}
+                      />
+                      {errors.visitDate && (
+                        <div className="text-danger mt-1">{errors.visitDate}</div>
+                      )}
+                    </Form.Group>
+                  )}
 
                   {isBookable ? (
                     <>
@@ -515,7 +557,7 @@ const BookingDetails = () => {
                       setErrors((prev) => ({ ...prev, visitDate: "" }));
                     }}
                     minDate={new Date()}
-                    dateFormat="yyyy/MM/dd"
+                    dateFormat="MMM d, yyyy"
                     placeholderText="Visit Date"
                     wrapperClassName="d-flex justify-content-between align-items-center"
                     className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
@@ -627,10 +669,10 @@ const BookingDetails = () => {
         show={showConfirmation}
         handleClose={handleClose}
         placeDetails={placeDetails}
-        bookingData={getBookingData}
+        bookingData={getBookingData()}
         onConfirm={handleConfirmBooking}
       />
-    </Container>
+    </Container >
   );
 };
 

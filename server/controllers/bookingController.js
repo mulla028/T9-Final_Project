@@ -5,6 +5,7 @@ const addBooking = async (req, res) => {
   console.log(req.body);
   try {
     const {
+      place_id,
       placeName,
       location,
       checkIn,
@@ -38,6 +39,7 @@ const addBooking = async (req, res) => {
 
     if (placeName && checkIn && checkOut && guests) {
       newBooking.stay = {
+        placeId: place_id,
         placeName,
         location,
         checkIn,
@@ -52,10 +54,13 @@ const addBooking = async (req, res) => {
 
     if (experiences && experiences.length > 0) {
       newBooking.experiences = experiences.map((exp) => ({
+        placeId: exp.placeId,
         name: exp.name,
         location: exp.location || null,
         time: exp.time,
+        paid: exp.paid || false,
         date: exp.date,
+
       }));
     }
 
@@ -77,6 +82,7 @@ const addBooking = async (req, res) => {
     await user.save();
 
     res.status(201).json({
+      id: user._id,
       message: "Reservation successfully added!",
       itinerary: user.itinerary,
     });

@@ -31,7 +31,7 @@ const TipsDisplay = ({ tips }) => {
             </Collapse>
 
             {/* Show More / Show Less Button */}
-            {tips.length > visibleCount && (
+            {tips?.length > visibleCount && (
                 <Button
                     variant="outline-success"
                     className="mt-2"
