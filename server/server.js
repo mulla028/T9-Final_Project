@@ -8,7 +8,6 @@ const User = require('./routes/userRoute');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const tipRoutes = require('./routes/tipRoutes');
-const tipRoutes = require('./routes/tipRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
@@ -22,9 +21,6 @@ connectDB();
 
 // Middleware
 app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
-app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
-app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
-app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
 app.use(express.json());
 app.use(passport.initialize());
 
@@ -33,7 +29,6 @@ app.use('/api/auth', auth);
 app.use('/api/Users', User);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
-app.use('/api/tips', tipRoutes);
 app.use('/api/tips', tipRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/carbon', carbonRoutes);
