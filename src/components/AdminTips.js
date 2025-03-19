@@ -42,7 +42,7 @@ const AdminTips = () => {
     return (
         <div className="p-4">
             <h2>Eco-Friendly Tips Management</h2>
-            <Button onClick={() => setShowModal(true)}>+ Add Tip</Button>
+            <Button onClick={() => { setEditingTip(null); setNewTip({ text: "", category: "general" }); setShowModal(true) }}>+ Add Tip</Button>
 
             {/* Tips Table */}
             <Table striped bordered hover className="mt-3">

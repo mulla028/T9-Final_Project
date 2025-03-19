@@ -137,7 +137,7 @@ export async function getItineraryForDay(id, day) {
 export async function getItineraries(id) {
     const res = await my_fetch(`${API_BASE_URL}/itineraries`, {
         method: "POST",
-        body: JSON.stringify({id}),
+        body: JSON.stringify({ id }),
     });
 
     const data = await res.json();
@@ -217,19 +217,6 @@ export async function fetchExperiences(location, category, sortBy) {
     } else {
         throw new Error(data.error);
     }
-}
-
-export async function createOrUpdateTip(url, method, tip) {
-    await my_fetch(url, {
-        method: method,
-        body: JSON.stringify(tip),
-    });
-}
-
-export async function deleteTip(id) {
-    await my_fetch(`${API_BASE_URL}/tips/${id}`, {
-        method: "DELETE",
-    });
 }
 
 export async function createOrUpdateTip(url, method, tip) {
