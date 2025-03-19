@@ -1,7 +1,17 @@
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FaMapMarkerAlt, FaCalendarAlt, FaStore, FaLeaf } from 'react-icons/fa';
+import { isAuthenticated } from '@/services';
+import { useRouter } from 'next/router';
 
 const HowDriftWayWorks = () => {
+    const router = useRouter();
+
+    const handleButtonClick = () => {
+        const authState = isAuthenticated();
+        const destination = authState ? "/overview" : "/signup"; // ✅ No result needed
+        router.push(destination);
+    };
+
     return (
         <div className="how-it-works" style={{ padding: '60px 0' }}>
             <Container>
@@ -32,7 +42,7 @@ const HowDriftWayWorks = () => {
                     <Button
                         variant="primary"
                         size="lg"
-                        href="/booking"
+                        onClick={handleButtonClick} // ✅ Uses the same logic as SearchResults
                         style={{
                             padding: '12px 30px',
                             borderRadius: '30px',
@@ -41,12 +51,8 @@ const HowDriftWayWorks = () => {
                             boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
                             transition: 'transform 0.3s ease',
                         }}
-                        onMouseEnter={(e) =>
-                            (e.currentTarget.style.transform = 'scale(1.1)')
-                        }
-                        onMouseLeave={(e) =>
-                            (e.currentTarget.style.transform = 'scale(1)')
-                        }
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                     >
                         Start Planning Your Trip
                     </Button>

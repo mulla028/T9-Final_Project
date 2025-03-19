@@ -6,13 +6,14 @@ import SearchResults from '@/components/SearchResults';
 import WhySlowTravel from '@/components/WhySlowTravel';
 import HowDriftWayWorks from '../components/HowDriftWayWorks';
 import FeaturedDestinations from '../components/FeaturedDestinations';
+import LocalExperience from '../components/LocalExperiences';
 import Testimonials from '../components/Testimonials';
 import EcoPartners from '../components/EcoPartners';
 import BlogSection from '../components/BlogSection';
 import Footer from '../components/Footer';
 
 export default function Home() {
-  const [searchResults, setSearchResults] = useState([]); 
+  const [searchResults, setSearchResults] = useState([]);
   const searchResultsRef = useRef(null); // Reference for search results
 
   useEffect(() => {
@@ -37,6 +38,7 @@ export default function Home() {
       <WhySlowTravel />
       <HowDriftWayWorks />
       <FeaturedDestinations />
+      <LocalExperience />
       <Testimonials />
       <EcoPartners />
       <BlogSection />
