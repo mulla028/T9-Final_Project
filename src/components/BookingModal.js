@@ -119,11 +119,21 @@ export default function BookingModal({
       bookingPayload.guests = guests;
       bookingPayload.phone = placeDetails.phone;
       bookingPayload.package = bookingData.packageType;
-      bookingPayload.preferences = bookingData.preferences;
-      bookingPayload.totalPrice =
-        bookingData.price == 0
-          ? customPackagePrice * (guests || 1)
-          : bookingData.price * (guests || 1);
+      bookingPayload.preferences =bookingData.preferences;
+      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * 
+        Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+              (1000 * 60 * 60 * 24),
+            1,
+          )
+          : bookingData.price *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+              (1000 * 60 * 60 * 24),
+            1,
+          )
     } else {
       bookingPayload.experiences = [
         {
@@ -161,7 +171,7 @@ export default function BookingModal({
         address: bookingPayload.location
     }));
       alert("The reservation was successfully registered!");
-      window.location.href = "/overview";
+      window.location.href = "/overview?id=678eec356a8adc4fd20b1480";
     } catch (error) {
       console.error("Error saving reservation:", error);
       alert("Error saving reservation!");
@@ -179,7 +189,8 @@ export default function BookingModal({
         {placeDetails &&
           bookingData &&
           (bookingData.model == "isPackageMode" ||
-            bookingData.model == "hasPrice" ||
+            bookingData.model == "hasPrice" || 
+            bookingData.model == "isPackageMode&&hasPrice" ? (
             <>
               <h4 className="mb-4">{placeDetails.name}</h4>
 
@@ -246,17 +257,30 @@ export default function BookingModal({
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {bookingData.price * (guests || 1)}
+                        {bookingData.price * 
+                          Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                              (1000 * 60 * 60 * 24),
+                            1,
+                          )}
                       </div>
                     </>
-                  ) : (
+                  ): (
                     <>
                       <div className="mb-2">
                         <strong>Base Price:</strong> ${customPackagePrice}
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {customPackagePrice * (guests || 1)}
+                        {customPackagePrice * 
+                         Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                              (1000 * 60 * 60 * 24),
+                            1,
+                          )}
+
                       </div>
                     </>
                   )}
