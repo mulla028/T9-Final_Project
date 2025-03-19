@@ -6,13 +6,13 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const LocalExperiences = () => {
-     const router = useRouter();
-    
-        const handleButtonClick = () => {
-            const authState = isAuthenticated();
-            const destination = authState ? "/local-experiences" : "/signup"; // ✅ No result needed
-            router.push(destination);
-        };
+    const router = useRouter();
+
+    const handleButtonClick = () => {
+        const authState = isAuthenticated();
+        const destination = authState ? "/local-experiences" : "/signup"; // ✅ No result needed
+        router.push(destination);
+    };
 
     const destinationsData = [
         { image: 'https://d1s09xku4jkn9v.cloudfront.net/uploads/2017/09/4c.jpg', title: 'Tokyo, Japan', description: 'Join a sushi-making class with local chefs and explore hidden izakayas.', link: 'https://www.tokyosushiclass.com/' },
@@ -74,7 +74,7 @@ const LocalExperiences = () => {
             <Container>
                 <h2 className="text-center mb-4">Local Experience for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-                    
+             
                     <Button 
                         variant="outline-secondary" 
                         className="carousel-control prev"
@@ -117,9 +117,10 @@ const LocalExperiences = () => {
                         <FaArrowRight />
                     </Button>
 
-                            <Button className='explore-button' onClick={handleButtonClick} style={{ background: 'green', border: 'none', borderRadius: '40px', padding: '8px 16px', width: '40%', height: '60px', textAlign: 'center' }}>
-                                Start Your Local Experiences
-                            </Button>
+                    <Button className='explore-button' onClick={handleButtonClick} style={{ background: 'green', border: 'none', borderRadius: '40px', padding: '8px 16px', width: '40%', height: '60px', textAlign: 'center' }}>
+                        Start Your Local Experiences
+                    </Button>
+
                 </Row>
             </Container>
         </div>

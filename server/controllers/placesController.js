@@ -1,5 +1,7 @@
 // controllers/placesController.js
 const redisClient = require('../config/redis');
+const Tip = require('../models/Tip');
+const Tip = require('../models/Tip');
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -97,7 +99,6 @@ exports.searchPlaces = async (req, res) => {
                 image: detailsData.result.photos ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${detailsData.result.photos[0].photo_reference}&key=${apiKey}` : null
             };
         }));
-        console.log("DP: ", detailedPlaces);
 
         // Cache results for 24 hours
         await redisClient.set(cacheKey, JSON.stringify(detailedPlaces), { EX: 86400 });
@@ -192,6 +193,20 @@ exports.getPlaceDetails = async (req, res) => {
             types: result.types
         };
 
+        // 🌱 Fetch Relevant Eco-Friendly Tips  
+        const relevantTips = await Tip.find({
+            $or: [
+                { category: { $in: result.types } }, // Match place types (e.g., "hotel", "park")
+                { category: locality }, // Match city
+                { category: country }, // Match country
+                { category: "general" } // Include general tips as a fallback
+            ]
+        });
+
+        placeDetails.ecoTips = relevantTips.map(tip => tip.text);
+
+        console.log("Eco-Tips:", placeDetails.ecoTips);
+
         // STORE IN CACHE WITH TIMESTAMP
         const cacheData = { data: placeDetails, timestamp: Date.now() };
         await redisClient.set(place_id, JSON.stringify(cacheData));
@@ -241,8 +256,97 @@ exports.getNearbyAttractions = async (req, res) => {
         await redisClient.set(cacheKey, JSON.stringify(attractions), { EX: 43200 });
 
         console.log("Serving from API...");
+        res.json(attractions);
+        res.json(attractions);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch attractions" });
     }
 };
 
+exports.getLocalExperiences = async (req, res) => {
+    try {
+        const { location, category, sortBy } = req.query;
+
+        if (!location) {
+            return res.status(400).json({ error: "Location is required" });
+        }
+
+        // Check cache first
+        const cacheKey = `localExperiences:${location}:${category}:${sortBy}`;
+        const cachedData = await redisClient.get(cacheKey);
+        if (cachedData) {
+            console.log("Serving from cache...");
+            return res.json(JSON.parse(cachedData));
+        }
+
+        // Define curated categories
+        let placeTypes = [];
+        if (category === "Workshops") {
+            placeTypes = ["art_gallery", "university", "point_of_interest", "school", "cultural_center"];
+        } else if (category === "Cultural") {
+            placeTypes = ["museum", "church", "historical_landmark", "synagogue", "hindu_temple", "mosque"];
+        } else if (category === "Eco-Friendly") {
+            placeTypes = ["park", "nature_reserve", "farm", "botanical_garden", "wildlife_park"];
+        } else if (category === "Dining") {
+            placeTypes = ["restaurant", "cafe", "bakery", "farmers_market", "vegan_restaurant"];
+        } else if (category === "Adventure") {
+            placeTypes = ["hiking_trail", "campground", "ski_resort", "climbing_area", "rafting"];
+        } else if (category === "Tours") {
+            placeTypes = ["tourist_attraction", "zoo", "aquarium", "winery", "brewery", "boat_tour"];
+        } else {
+            // If 'All Categories' is selected or no category is provided, return all relevant experiences
+            placeTypes = [];
+        }
+
+
+        const searchUrl = category !== ""
+            ? `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(location)}&type=${placeTypes.join("|")}&key=${apiKey}`
+            : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=things to do in ${encodeURIComponent(location)}&key=${apiKey}`;
+        const searchResponse = await fetch(searchUrl);
+        const searchData = await searchResponse.json();
+
+        if (!searchData.results || searchData.results.length === 0) {
+            return res.json([]);
+        }
+
+        // Fetch place details for each experience
+        let experiences = await Promise.all(
+            searchData.results.slice(0, 20).map(async (place) => {
+                const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,photos,rating,user_ratings_total,editorial_summary,price_level&key=${apiKey}`;
+                const detailsResponse = await fetch(detailsUrl);
+                const detailsData = await detailsResponse.json();
+
+                return {
+                    id: place.place_id,
+                    name: detailsData.result.name,
+                    address: detailsData.result.formatted_address,
+                    description: detailsData.result.editorial_summary?.overview || "No description available.",
+                    rating: detailsData.result.rating || "No Rating",
+                    userRatings: detailsData.result.user_ratings_total || 0,
+                    priceLevel: detailsData.result.price_level || "N/A",
+                    image: detailsData.result.photos
+                        ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${detailsData.result.photos[0].photo_reference}&key=${apiKey}`
+                        : "/images/default-experience.jpg"
+                };
+            })
+        );
+
+        // **Sorting Logic**
+        if (sortBy === "Price") {
+            experiences.sort((a, b) => (a.priceLevel === "N/A" ? 1 : a.priceLevel - b.priceLevel));
+        } else if (sortBy === "Rating") {
+            experiences.sort((a, b) => b.rating - a.rating);
+        } else if (sortBy === "Popularity") {
+            experiences.sort((a, b) => b.userRatings - a.userRatings);
+        }
+
+        // Cache results for 12 hours
+        await redisClient.set(cacheKey, JSON.stringify(experiences), { EX: 43200 });
+
+        console.log("Serving from API...");
+        res.json(experiences);
+    } catch (error) {
+        console.error("Error fetching local experiences:", error);
+        res.status(500).json({ error: "Error fetching local experiences" });
+    }
+};

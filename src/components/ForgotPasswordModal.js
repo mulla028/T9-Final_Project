@@ -36,7 +36,7 @@ export default function ForgotPasswordModal({ handleClose, show }) {
     };
 
     return (
-        <Modal dialogClassName={styles['modal-dialog']} onHide={handleCloseModal} show={show} centered scrollable>
+        <Modal dialogClassName={styles['modal-dialog']} contentClassName={styles['custom-modal']} onHide={handleCloseModal} show={show} centered scrollable>
             <Modal.Header closeButton>
                 <Modal.Title>Forgot Your Password ?</Modal.Title>
             </Modal.Header>

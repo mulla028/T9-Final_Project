@@ -67,7 +67,7 @@ const FeaturedDestinations = () => {
             <Container>
                 <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-                    
+      
                     {/* 左箭头 */}
                     <Button 
                         variant="outline-secondary" 

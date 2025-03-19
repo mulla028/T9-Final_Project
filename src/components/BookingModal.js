@@ -148,7 +148,7 @@ export default function BookingModal({
     try {
       console.log("Sending request to:", "http://localhost:8080/api/bookings/add");
       console.log("Request payload:", bookingPayload);
-  
+
       const response = await fetch("http://localhost:8080/api/bookings/add", {
         method: "POST",
         headers: {
@@ -157,7 +157,7 @@ export default function BookingModal({
         },
         body: JSON.stringify(bookingPayload),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error response:", errorData);
@@ -180,7 +180,7 @@ export default function BookingModal({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg" centered>
+    <Modal show={show} onHide={handleClose} contentClassName="custom-modal" size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Your Booking</Modal.Title>
       </Modal.Header>
@@ -338,9 +338,8 @@ export default function BookingModal({
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                     placeholderText="Time"
-                    className={`date-picker ${
-                      errors.time ? "border border-danger" : ""
-                    }`}
+                    className={`date-picker ${errors.time ? "border border-danger" : ""}`}
+
                     icon={<FaClock className="search-icon" />}
                     value={time}
                     isInvalid={!!errors.time}
