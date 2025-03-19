@@ -57,10 +57,9 @@ const BookingDetails = () => {
           );
         }
       });
+      setTravelStyle(localStorage.getItem("travelStyle"));
     }
-  }, [id]);
-    setTravelStyle(localStorage.getItem("travelStyle"));
-  }, [localStorage.getItem(travelStyle)]);
+  }, [id, localStorage.getItem(travelStyle)]);
 
   useEffect(() => {
     setHasPrice(travelStyle === "Eco-Stays");
