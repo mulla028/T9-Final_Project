@@ -26,6 +26,7 @@ export default function BookingModal({
     startDate: "",
     endDate: "",
     time: ""
+    time: ""
   });
   const [time, setTime] = useState(new Date());
 
@@ -74,106 +75,103 @@ export default function BookingModal({
   const validate = () => {
     let newErrors = { visitDate: "", time: "" };
 
+
     const now = new Date();
     const selectedDate = new Date(startDate);
+    const selectedTime = new Date(time);
+
     const selectedTime = new Date(time);
 
     if (!visitDate) {
       newErrors.visitDate = "Visit date is required.";
     }
 
+
     if (!time) {
       newErrors.time = "Time cannot be empty.";
     } else if (
       selectedDate.toDateString() === now.toDateString() &&
       selectedTime.getHours() < now.getHours()
-    ) {
-      newErrors.time = "Selected time cannot be in the past.";
-    } else if (
       selectedDate.toDateString() === now.toDateString() &&
-      selectedTime.getHours() === now.getHours() &&
-      selectedTime.getMinutes() < now.getMinutes()
+        selectedTime.getHours() < now.getHours()
     ) {
-      newErrors.time = "Selected time cannot be in the past.";
-    }
+    newErrors.time = "Selected time cannot be in the past.";
+  } else if (
+    selectedDate.toDateString() === now.toDateString() &&
+    selectedTime.getHours() === now.getHours() &&
+    selectedTime.getMinutes() < now.getMinutes()
+  ) {
+    newErrors.time = "Selected time cannot be in the past.";
+  }
 
-    setErrors(newErrors);
-    return !Object.values(newErrors).some((error) => error);
+
+  setErrors(newErrors);
+  return !Object.values(newErrors).some((error) => error);
+};
+
+
+
+
+
+const handleConfirmBooking = async () => {
+  const isValid = validate();
+  const isFormValid = validateForm();
+
+  if (!isValid && !isFormValid) return;
+
+  const bookingPayload = {
+    email: localStorage.getItem("email"),
   };
+  if (
+    bookingData.model === "isPackageMode&&hasPrice" ||
+    bookingData.model === "hasPrice"
+  ) {
+    bookingPayload.placeName = placeDetails.name;
+    bookingPayload.location = placeDetails.address;
+    bookingPayload.checkIn = startDate;
+    bookingPayload.checkOut = endDate;
+    bookingPayload.guests = guests;
+    bookingPayload.phone = placeDetails.phone;
+    bookingPayload.package = bookingData.packageType;
+    bookingPayload.preferences = bookingData.preferences;
+    bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * (guests || 1) : bookingData.price * (guests || 1);
+  } else {
+    bookingPayload.experiences = [
+      {
+        name: placeDetails.name,
+        location: placeDetails.address,
+        time: time.toLocaleTimeString(),
+        date: time.toLocaleDateString()
+      },
+    ];
+  }
 
+  try {
+    const response = await fetch("http://localhost:8080/api/bookings/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": localStorage.getItem("access_token"),
+      },
+      body: JSON.stringify(bookingPayload),
+    });
 
-
-  const handleConfirmBooking = async () => {
-    const isValid = validate();
-    const isFormValid = validateForm();
-
-    if (!isValid && !isFormValid) return;
-
-    const bookingPayload = {
-      email: localStorage.getItem("email"),
-    };
-    if (
-      bookingData.model === "isPackageMode&&hasPrice" ||
-      bookingData.model === "hasPrice"
-    ) {
-      bookingPayload.placeName = placeDetails.name;
-      bookingPayload.location = placeDetails.address;
-      bookingPayload.checkIn = startDate;
-      bookingPayload.checkOut = endDate;
-      bookingPayload.guests = guests;
-      bookingPayload.phone = placeDetails.phone;
-      bookingPayload.package = bookingData.packageType;
-      bookingPayload.preferences = bookingData.preferences;
-      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        )
-        : bookingData.price *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        );
+    const data = await response.json();
+    if (response.ok) {
+      alert("The reservation was successfully registered!");
     } else {
-      bookingPayload.experiences = [
-        {
-          name: placeDetails.name,
-          location: placeDetails.address,
-          time: time.toLocaleTimeString(),
-          date: time.toLocaleDateString()
-        },
-      ];
+      alert(data.message);
     }
+  } catch (error) {
+    console.error(error);
+    alert("Error saving reservation!");
+  }
+  handleClose();
+  window.location.pathname = "/";
+};
 
-    try {
-      const response = await fetch("http://localhost:8080/api/bookings/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(bookingPayload),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("The reservation was successfully registered!");
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error saving reservation!");
-    }
-    handleClose();
-    window.location.pathname = "/";
-  };
-
-  return (
+return (
+  <Modal show={show} contentClassName='custom-modal' onHide={handleClose} size="lg" centered>
     <Modal show={show} contentClassName='custom-modal' onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
         <Modal.Title>Confirm Your Booking</Modal.Title>
@@ -253,13 +251,7 @@ export default function BookingModal({
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {bookingData.price *
-                          Math.max(
-                            (new Date(endDate).setHours(12) -
-                              new Date(startDate).setHours(12)) /
-                            (1000 * 60 * 60 * 24),
-                            1,
-                          )}
+                        {bookingData.price * (guests || 1)}
 
                       </div>
                     </>
@@ -360,5 +352,5 @@ export default function BookingModal({
         </Button>
       </Modal.Footer>
     </Modal>
-  );
+    );
 }

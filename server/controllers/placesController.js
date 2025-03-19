@@ -1,6 +1,7 @@
 // controllers/placesController.js
 const redisClient = require('../config/redis');
 const Tip = require('../models/Tip');
+const Tip = require('../models/Tip');
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
@@ -255,6 +256,7 @@ exports.getNearbyAttractions = async (req, res) => {
         await redisClient.set(cacheKey, JSON.stringify(attractions), { EX: 43200 });
 
         console.log("Serving from API...");
+        res.json(attractions);
         res.json(attractions);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch attractions" });
