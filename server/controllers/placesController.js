@@ -292,10 +292,14 @@ exports.getLocalExperiences = async (req, res) => {
         } else if (category === "Tours") {
             placeTypes = ["tourist_attraction", "zoo", "aquarium", "winery", "brewery", "boat_tour"];
         } else {
-            placeTypes = ["point_of_interest", "tourist_attraction", "establishment"]; // Default
+            // If 'All Categories' is selected or no category is provided, return all relevant experiences
+            placeTypes = [];
         }
 
-        const searchUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(location)}&type=${placeTypes.join("|")}&key=${apiKey}`;
+
+        const searchUrl = category !== ""
+            ? `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(location)}&type=${placeTypes.join("|")}&key=${apiKey}`
+            : `https://maps.googleapis.com/maps/api/place/textsearch/json?query=things to do in ${encodeURIComponent(location)}&key=${apiKey}`;
         const searchResponse = await fetch(searchUrl);
         const searchData = await searchResponse.json();
 

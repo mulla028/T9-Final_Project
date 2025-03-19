@@ -5,7 +5,7 @@
 //     console.log(req.body);
 //     try {
 //         const { placeName, location, checkIn, checkOut, guests, email, phone, package, totalPrice, preferences, experiences } = req.body;
-        
+
 //         const user = await User.findOne({ email });
 //         if (!user) {
 //             return res.status(404).json({ message: "User not found." });
@@ -32,7 +32,7 @@
 //             const earliestExpDate = new Date(Math.min(...experiences.map(exp => new Date(exp.date).getTime())));
 //             bookingDate = bookingDate ? (earliestExpDate < bookingDate ? earliestExpDate : bookingDate) : earliestExpDate;
 //         }
-        
+
 //         newBooking.bookingDate = bookingDate;
 //         user.itinerary.push(newBooking);
 
@@ -61,14 +61,13 @@
 
 
 
-const User = require('../models/User'); 
-const mongoose = require('mongoose');
+const User = require('../models/User');
 
 const addBooking = async (req, res) => {
     console.log(req.body);
     try {
-        const { placeName, location, checkIn, checkOut, guests, email, phone, package, totalPrice,preferences, experiences } = req.body;
-        
+        const { placeName, location, checkIn, checkOut, guests, email, phone, package, totalPrice, preferences, experiences } = req.body;
+
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "User not found." });

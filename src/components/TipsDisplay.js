@@ -5,13 +5,15 @@ const TipsDisplay = ({ tips }) => {
     const [expanded, setExpanded] = useState(false);
     const visibleCount = 2;
 
+    console.log("TipsDisplay tips: ", tips);
+
 
     return (
         <div className="mt-4">
             <h4>🌿 Eco-Friendly Travel Tips</h4>
 
             {/* Display Key Tips */}
-            {tips.slice(0, visibleCount).map((tip, index) => (
+            {tips?.slice(0, visibleCount).map((tip, index) => (
                 <Card key={index} className="mb-2 p-2 shadow-sm">
                     <Card.Body>{tip}</Card.Body>
                 </Card>

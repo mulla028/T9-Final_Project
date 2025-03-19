@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
+
 export default function BookingModal({
   handleClose,
   show,
@@ -123,7 +124,20 @@ export default function BookingModal({
       bookingPayload.phone = placeDetails.phone;
       bookingPayload.package = bookingData.packageType;
       bookingPayload.preferences = bookingData.preferences;
-      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice * (guests || 1) : bookingData.price * (guests || 1);
+      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice *
+        Math.max(
+          (new Date(endDate).setHours(12) -
+            new Date(startDate).setHours(12)) /
+          (1000 * 60 * 60 * 24),
+          1,
+        )
+        : bookingData.price *
+        Math.max(
+          (new Date(endDate).setHours(12) -
+            new Date(startDate).setHours(12)) /
+          (1000 * 60 * 60 * 24),
+          1,
+        );
     } else {
       bookingPayload.experiences = [
         {
@@ -169,7 +183,8 @@ export default function BookingModal({
         {placeDetails &&
           bookingData &&
           (bookingData.model == "isPackageMode" ||
-            bookingData.model == "hasPrice" || bookingData.model == "isPackageMode&&hasPrice" ? (
+            bookingData.model == "hasPrice" ||
+            bookingData.model == "isPackageMode&&hasPrice" ? (
             <>
               <h4 className="mb-4">{placeDetails.name}</h4>
 
@@ -190,6 +205,7 @@ export default function BookingModal({
                       min={today}
                       isInvalid={!!errors.startDate}
                       onChange={(e) => setStartDate(e.target.value)}
+                      className="form-control"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.startDate}
@@ -204,6 +220,7 @@ export default function BookingModal({
                       min={startDate}
                       isInvalid={!!errors.endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                      className="form-control"
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.endDate}
@@ -236,7 +253,13 @@ export default function BookingModal({
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {bookingData.price * (guests || 1)}
+                        {bookingData.price *
+                          Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                            (1000 * 60 * 60 * 24),
+                            1,
+                          )}
 
                       </div>
                     </>
@@ -247,7 +270,13 @@ export default function BookingModal({
                       </div>
                       <div className="mb-2">
                         <strong>Total:</strong> $
-                        {customPackagePrice * (guests || 1)}
+                        {customPackagePrice *
+                          Math.max(
+                            (new Date(endDate).setHours(12) -
+                              new Date(startDate).setHours(12)) /
+                            (1000 * 60 * 60 * 24),
+                            1,
+                          )}
 
                       </div>
                     </>
@@ -286,6 +315,7 @@ export default function BookingModal({
                     min={today}
                     isInvalid={!!errors.startDate}
                     onChange={(e) => setStartDate(e.target.value)}
+                    className="form-control"
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.startDate}
@@ -306,7 +336,8 @@ export default function BookingModal({
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                     placeholderText="Time"
-                    className={`date-picker ${errors.time ? "border border-danger" : ""}`}
+                    wrapperClassName="d-flex justify-content-between align-items-center"
+                    className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
                     icon={<FaClock className="search-icon" />}
                     value={time}
                     isInvalid={!!errors.time}

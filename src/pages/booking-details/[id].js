@@ -11,7 +11,7 @@ import {
   Spinner,
   Nav,
   ToggleButtonGroup,
-  ToggleButton,
+  ToggleButton
 } from "react-bootstrap";
 import dynamic from "next/dynamic";
 import DatePicker from "react-datepicker";
@@ -42,6 +42,20 @@ const BookingDetails = () => {
   const [time, setTime] = useState(new Date());
   const [startDate, endDate] = dateRange;
 
+  useEffect(() => {
+    if (id) {
+      fetchPlaceDetails(id).then((data) => {
+        setPlaceDetails(data);
+        setLoading(false);
+
+        if (data.lat && data.lng) {
+          fetchNearbyAttractions({ lat: data.lat, lng: data.lng }).then(
+            (attractions) => setNearbyAttractions(attractions),
+          );
+        }
+      });
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!visitDate) {
@@ -116,21 +130,6 @@ const BookingDetails = () => {
     setErrors(newErrors);
     return !Object.values(newErrors).some((error) => error);
   };
-
-  useEffect(() => {
-    if (id) {
-      fetchPlaceDetails(id).then((data) => {
-        setPlaceDetails(data);
-        setLoading(false);
-
-        if (data.lat && data.lng) {
-          fetchNearbyAttractions({ lat: data.lat, lng: data.lng }).then(
-            (attractions) => setNearbyAttractions(attractions),
-          );
-        }
-      });
-    }
-  }, [id]);
 
   if (loading) {
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
@@ -214,7 +213,7 @@ const BookingDetails = () => {
             className="border rounded mb-3 gap-2 p-2"
             activeKey={activeTab}
           >
-            {["details", "tips", "attractions", "reviews"].map((section) => (
+            {["details", "attractions", "reviews"].map((section) => (
               <Nav.Item key={section}>
                 <Nav.Link
                   eventKey={`#${section}`}
@@ -269,14 +268,21 @@ const BookingDetails = () => {
         <Col md={4}>
           <Card className="p-3 shadow-sm mb-3">
             <h4>Contact Information</h4>
-            <p><strong>Phone:</strong> {placeDetails.phone || "Not Available"}</p>
-            <p><strong>Website:</strong> <a href={placeDetails.website} target="_blank">{placeDetails.website || "N/A"}</a></p>
+            <p>
+              <strong>Phone:</strong> {placeDetails.phone || "Not Available"}
+            </p>
+            <p>
+              <strong>Website:</strong>{" "}
+              <a href={placeDetails.website} target="_blank">
+                {placeDetails.website || "N/A"}
+              </a>
+            </p>
           </Card>
 
           {/* Pricing & Availability / Package Toggle */}
-          <Card className="pricing-card p-4 mt-4 shadow-lg">
+          <Card className="p-3 shadow-sm mt-4">
             {/* Conditional Heading */}
-            <h4 className="text-center mb-3">
+            <h4>
               {hasPrice ? "Choose Your Booking Option" : "Add to Itinerary"}
             </h4>
 
@@ -311,13 +317,11 @@ const BookingDetails = () => {
             {/* Standard Pricing */}
             {!isPackageMode && hasPrice && (
               <>
-                <p className="text-muted text-center">
+                <p>
                   <strong>Price Level:</strong> {priceIndicator}
                 </p>
-
                 <Form>
-                  {/* Date Range Picker */}
-                  <Form.Group className="mb-3">
+                  <Form.Group controlId="date" className="form-group mb-3">
                     <DatePicker
                       showIcon
                       selected={startDate}
@@ -329,69 +333,75 @@ const BookingDetails = () => {
                       dateFormat="MMM d, yyyy"
                       placeholderText="Select Dates"
                       wrapperClassName="d-flex justify-content-between align-items-center"
-                      className="form-control date-picker"
+                      className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
+                      icon={<FaCalendarAlt className="search-icon" />}
                     />
+                    {(errors.startDate || errors.endDate) && (
+                      <div className="text-danger">
+                        Please select a valid date range.
+                      </div>
+                    )}
                   </Form.Group>
 
                   {isBookable ? (
                     <>
-                      {/* Guests Field */}
-                      <Form.Group className="mb-3">
+                      <Form.Group controlId="guests" className="mb-3">
                         <Form.Label>Number of Guests</Form.Label>
                         <Form.Control
                           type="number"
-                          min="1"
-                          max="5"
+                          required
                           value={guests}
-                          onChange={(e) => {
-                            const value = Math.min(5, Math.max(1, Number(e.target.value)));
-                            setGuests(value);
-                          }}
+                          onChange={(e) => setGuests(e.target.value)}
+                          className={errors.guests ? "is-invalid" : ""}
                         />
+                        {errors.guests && (
+                          <div className="text-danger">
+                            Guests must be between 1 and 5.
+                          </div>
+                        )}
                       </Form.Group>
 
-                      {/* Preferences Field */}
-                      <Form.Group className="mb-3">
+                      <Form.Group controlId="preferences" className="mb-3">
                         <Form.Label>Preferences</Form.Label>
                         <Form.Control
                           as="textarea"
                           rows={3}
-                          placeholder="Any special requests?"
                           value={preferences}
                           onChange={(e) => setPreferences(e.target.value)}
                         />
                       </Form.Group>
 
-                      {/* View on Map Button */}
                       <Button
                         variant="outline-primary"
-                        className="w-100 mb-2 view-btn"
+                        className="w-100 mb-3"
                         onClick={() => router.push(placeDetails.mapUrl)}
                       >
                         View on Map
                       </Button>
 
-                      {/* Book Now Button */}
                       <Button
                         variant="success"
-                        className="w-100 book-btn"
+                        className="w-100"
                         onClick={handleShow}
                       >
-                        {priceData ? `Book Now for $${priceData.price}` : "Book Now"}
+                        {priceData
+                          ? `Book Now for $${priceData.price}`
+                          : "Book Now"}
                       </Button>
                     </>
                   ) : (
                     <>
                       <Button
                         variant="outline-primary"
-                        className="w-100 mb-2 view-btn"
+                        className="w-100 mb-3"
                         onClick={() => router.push(placeDetails.mapUrl)}
                       >
                         View on Map
                       </Button>
+
                       <Button
                         variant="warning"
-                        className="w-100 itinerary-btn"
+                        className="w-100"
                         onClick={handleShow}
                       >
                         Add to Itinerary
@@ -402,13 +412,13 @@ const BookingDetails = () => {
               </>
             )}
 
-            {/* Custom Packages */}
+            {/* Custom Booking Packages */}
             {isPackageMode && hasPrice && (
               <>
-                <h5 className="text-center mb-3">Available Packages</h5>
-                <ul className="package-list">
+                <h5>Available Packages</h5>
+                <ul>
                   {packages.map((pkg, index) => (
-                    <li key={index} className="mb-2">
+                    <li key={index}>
                       <strong>{pkg.name}:</strong> {pkg.description} - $
                       {pkg.price} per night
                     </li>
@@ -416,23 +426,21 @@ const BookingDetails = () => {
                 </ul>
 
                 <Form>
-                  {/* Package Dropdown */}
-                  <Form.Group className="mb-3">
-                    <Form.Label>Select Package</Form.Label>
+                  <Form.Group controlId="bookingPackage" className="mb-3">
+                    <Form.Label>Select Booking Package</Form.Label>
                     <Form.Select
                       value={packageType}
                       onChange={(e) => setPackageType(e.target.value)}
                     >
-                      {packages.map((pkg, index) => (
-                        <option key={index} value={pkg.name.toLowerCase()}>
-                          {pkg.name} (${pkg.price})
-                        </option>
-                      ))}
+                      <option value="standard">Standard Stay ($100)</option>
+                      <option value="all-inclusive">
+                        Luxury Package ($250)
+                      </option>
+                      <option value="vip">Adventure Package ($400)</option>
                     </Form.Select>
                   </Form.Group>
 
-                  {/* Date Range */}
-                  <Form.Group className="mb-3">
+                  <Form.Group controlId="date" className="form-group mb-3">
                     <DatePicker
                       showIcon
                       selected={startDate}
@@ -444,13 +452,35 @@ const BookingDetails = () => {
                       dateFormat="MMM d, yyyy"
                       placeholderText="Select Dates"
                       wrapperClassName="d-flex justify-content-between align-items-center"
-                      className="form-control date-picker"
+                      className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
+                      icon={<FaCalendarAlt className="search-icon" />}
                     />
+                    {(errors.startDate || errors.endDate) && (
+                      <div className="text-danger">
+                        Please select a valid date range.
+                      </div>
+                    )}
+                  </Form.Group>
+
+                  <Form.Group controlId="guests" className="mb-3">
+                    <Form.Label>Number of Guests</Form.Label>
+                    <Form.Control
+                      type="number"
+                      required
+                      value={guests}
+                      onChange={(e) => setGuests(e.target.value)}
+                      className={errors.guests ? "is-invalid" : ""}
+                    />
+                    {errors.guests && (
+                      <div className="text-danger">
+                        Please enter a valid number of guests.
+                      </div>
+                    )}
                   </Form.Group>
 
                   <Button
                     variant="outline-primary"
-                    className="w-100 mb-3 view-btn"
+                    className="w-100 mb-3"
                     onClick={() => router.push(placeDetails.mapUrl)}
                   >
                     View on Map
@@ -458,13 +488,73 @@ const BookingDetails = () => {
 
                   <Button
                     variant="success"
-                    className="w-100 book-btn"
+                    className="w-100"
                     onClick={handleShow}
                   >
                     Book Package
                   </Button>
                 </Form>
               </>
+            )}
+
+            {!hasPrice && (
+              <Form>
+                <Form.Group controlId="visitDate" className="mb-3">
+                  <DatePicker
+                    showIcon
+                    selected={visitDate}
+                    onChange={(date) => {
+                      setVisitDate(date);
+                      setErrors((prev) => ({ ...prev, visitDate: "" }));
+                    }}
+                    minDate={new Date()}
+                    dateFormat="yyyy/MM/dd"
+                    placeholderText="Visit Date"
+                    wrapperClassName="d-flex justify-content-between align-items-center"
+                    className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
+                    icon={<FaCalendarAlt className="search-icon" />}
+                  />
+                  {errors.visitDate && (
+                    <div className="text-danger mt-1">{errors.visitDate}</div>
+                  )}
+                </Form.Group>
+                <Form.Group controlId="date" className="mb-3">
+                  <DatePicker
+                    showIcon
+                    selected={time}
+                    onChange={(time) => {
+                      setTime(time);
+                      setErrors((prev) => ({ ...prev, time: "" }));
+                    }}
+                    showTimeSelect
+                    showTimeSelectOnly
+                    timeIntervals={15}
+                    timeCaption="Time"
+                    dateFormat="h:mm aa"
+                    placeholderText="Time"
+                    wrapperClassName="d-flex justify-content-between align-items-center"
+                    className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
+                    icon={<FaClock className="search-icon" />}
+                  />
+                  {errors.time && <div className="text-danger mt-1">{errors.time}</div>}
+
+                </Form.Group>
+
+                <Button
+                  variant="outline-primary"
+                  className="w-100 mb-3"
+                  onClick={() => router.push(placeDetails.mapUrl)}
+                >
+                  View on Map
+                </Button>
+                <Button
+                  variant="warning"
+                  className="w-100"
+                  onClick={handleShowNotPrice}
+                >
+                  Add to Itinerary
+                </Button>
+              </Form>
             )}
           </Card>
         </Col>
@@ -478,17 +568,17 @@ const BookingDetails = () => {
             {placeDetails.description || "No detailed description available."}
           </p>
 
+          {/* Eco-Friendly Tips Section - Below the Description */}
+          <Row className="mt-5" id="tips">
+            <Col md={8}>
+              <TipsDisplay tips={placeDetails.ecoTips} />
+            </Col>
+          </Row>
+
           {/* Google Map Embed */}
-          <Card className="p-3 shadow-sm mt-3">
+          <Card className="p-3 shadow-sm mt-5">
             <Map lat={placeDetails.lat} lng={placeDetails.lng} />
           </Card>
-        </Col>
-      </Row>
-
-      {/* Eco-Friendly Tips Section - Below the Description */}
-      <Row className="mt-5" id="tips">
-        <Col md={8}>
-          <TipsDisplay tips={placeDetails.ecoTips} />
         </Col>
       </Row>
 
@@ -514,22 +604,28 @@ const BookingDetails = () => {
       <Row className="mt-5" id="reviews">
         <Col>
           <h4>User Reviews</h4>
-          {placeDetails.reviews.length > 0 ? placeDetails.reviews.map((review, index) => (
-            <Card className="mb-3 p-3 shadow-sm" key={index}>
-              <Card.Body>
-                <Card.Title>{review.author_name}</Card.Title>
-                <Card.Subtitle className="mb-2 text-muted">Rating: {review.rating} ⭐</Card.Subtitle>
-                <Card.Text>{review.text}</Card.Text>
-              </Card.Body>
-            </Card>
-          )) : <p>No reviews available.</p>}
+          {placeDetails.reviews.length > 0 ? (
+            placeDetails.reviews.map((review, index) => (
+              <Card className="mb-3 p-3 shadow-sm" key={index}>
+                <Card.Body>
+                  <Card.Title>{review.author_name}</Card.Title>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    Rating: {review.rating} ⭐
+                  </Card.Subtitle>
+                  <Card.Text>{review.text}</Card.Text>
+                </Card.Body>
+              </Card>
+            ))
+          ) : (
+            <p>No reviews available.</p>
+          )}
         </Col>
       </Row>
       <BookingModal
         show={showConfirmation}
         handleClose={handleClose}
         placeDetails={placeDetails}
-        bookingData={getBookingData()}
+        bookingData={getBookingData}
         onConfirm={handleConfirmBooking}
       />
     </Container>
