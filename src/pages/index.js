@@ -10,7 +10,6 @@ import LocalExperience from '../components/LocalExperiences';
 import Testimonials from '../components/Testimonials';
 import EcoPartners from '../components/EcoPartners';
 import BlogSection from '../components/BlogSection';
-import LocalExperience from '../components/LocalExperiences';
 import Footer from '../components/Footer';
 
 export default function Home() {
