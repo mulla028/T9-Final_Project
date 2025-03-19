@@ -1,7 +1,6 @@
 // controllers/placesController.js
 const redisClient = require('../config/redis');
 const Tip = require('../models/Tip');
-const Tip = require('../models/Tip');
 
 const apiKey = process.env.GOOGLE_MAPS_API_KEY;
 
