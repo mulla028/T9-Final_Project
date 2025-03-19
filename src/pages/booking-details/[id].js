@@ -320,8 +320,8 @@ const BookingDetails = () => {
                       endDate={endDate}
                       selectsRange
                       minDate={new Date()}
-                      dateFormat="MMM d, yyyy"
-                      placeholderText="Select Dates"
+                      dateFormat="  MMM d, yyyy"
+                      placeholderText="  Select Dates"
                       className={`date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
                       icon={<FaCalendarAlt className="search-icon" />}
                     />

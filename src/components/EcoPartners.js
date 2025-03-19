@@ -14,8 +14,8 @@ const EcoPartners = () => {
         },
         {
             name: 'Sustainable Journeys',
-            image: 'https://www.sustainablejourneys.co.uk/wp-content/uploads/2023/09/Sustainable_Journeys_1.png',
-            link: 'https://www.sustainablejourneys.co.uk/journeys/',
+            image: 'https://images.squarespace-cdn.com/content/v1/6605083334a64b233b206e5a/f8ffd603-82a5-4c37-b8a9-60b9ce497e3c/SJ_Logo-04.png?format=1500w',
+            link: 'https://sustainablejourney.org/',
         },
         {
             name: 'Nature Adventures',
