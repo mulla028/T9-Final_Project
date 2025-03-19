@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { API_BASE_URL } from "@/utils/general";
 
 export default function BookingModal({
   handleClose,
@@ -146,10 +147,10 @@ export default function BookingModal({
     }
   
     try {
-      console.log("Sending request to:", "http://localhost:8080/api/bookings/add");
+      console.log("Sending request to:", `${API_BASE_URL}/api/bookings/add`);
       console.log("Request payload:", bookingPayload);
 
-      const response = await fetch("http://localhost:8080/api/bookings/add", {
+      const response = await fetch(`${API_BASE_URL}/bookings/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
