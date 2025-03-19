@@ -595,7 +595,7 @@ const BookingDetails = () => {
         <Col md={8}>
           <h4>Nearby Attractions</h4>
           <ul>
-            {nearbyAttractions.length > 0 ? (
+            {nearbyAttractions?.length > 0 ? (
               nearbyAttractions.map((attraction) => (
                 <li key={attraction.name}>
                   {attraction.name} - {attraction.rating} ⭐
