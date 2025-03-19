@@ -256,7 +256,6 @@ exports.getNearbyAttractions = async (req, res) => {
 
         console.log("Serving from API...");
         res.json(attractions);
-        res.json(attractions);
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch attractions" });
     }
