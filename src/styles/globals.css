@@ -457,7 +457,7 @@ footer form {
 }
 
 /* Ensure consistency inside a form group */
-.form-group .date-picker {
+.datepicker {
   width: 100%;
 }
 
@@ -1063,6 +1063,47 @@ footer form {
 
 .feedback-form .card-body:hover {
   transform: translateY(-5px);
+}
+
+.custom-modal {
+  border-radius: 20px;
+  border: none;
+}
+
+.pricing-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 12px;
+  border: 1px solid #3ac48a;
+  /* backdrop-filter: blur(10px);
+  transition: all 0.3s ease-in-out; */
+}
+
+/* .pricing-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+} */
+
+.toggle-btn {
+  margin: 0 0.5rem;
+  border-radius: 30px;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.view-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+.book-btn:hover {
+  background: #28a745;
+}
+
+.package-list li {
+  padding: 0.5rem;
+  background: rgba(0, 123, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
 }
 
 @keyframes fadeIn {

@@ -11,7 +11,7 @@ import {
   Spinner,
   Nav,
   ToggleButtonGroup,
-  ToggleButton,
+  ToggleButton
 } from "react-bootstrap";
 import dynamic from "next/dynamic";
 import DatePicker from "react-datepicker";
@@ -19,6 +19,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { fetchPlaceDetails, fetchNearbyAttractions } from "@/services";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import BookingModal from "@/components/BookingModal";
+import TipsDisplay from "@/components/TipsDisplay";
+import { useSelector } from "react-redux";
 
 // Load Google Maps dynamically
 const Map = dynamic(() => import("@/components/GoogleMap"), { ssr: false });
@@ -39,8 +41,29 @@ const BookingDetails = () => {
   const [dateRange, setDateRange] = useState([null, null]);
   const [visitDate, setVisitDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
+  const [travelStyle, setTravelStyle] = useState();
   const [startDate, endDate] = dateRange;
+  const [hasPrice, setHasPrice] = useState();
 
+  useEffect(() => {
+    if (id) {
+      fetchPlaceDetails(id).then((data) => {
+        setPlaceDetails(data);
+        setLoading(false);
+
+        if (data.lat && data.lng) {
+          fetchNearbyAttractions({ lat: data.lat, lng: data.lng }).then(
+            (attractions) => setNearbyAttractions(attractions),
+          );
+        }
+      });
+      setTravelStyle(localStorage.getItem("travelStyle"));
+    }
+  }, [id, localStorage.getItem(travelStyle)]);
+
+  useEffect(() => {
+    setHasPrice(travelStyle === "Eco-Stays");
+  }, [travelStyle]);
 
   useEffect(() => {
     if (!visitDate) {
@@ -49,6 +72,9 @@ const BookingDetails = () => {
       setErrors((prev) => ({ ...prev, visitDate: false }));
     }
   }, [visitDate]);
+  useEffect(() => {
+    console.log(placeDetails);
+  }, [placeDetails]);
 
   const [errors, setErrors] = useState({
     guests: false,
@@ -58,36 +84,38 @@ const BookingDetails = () => {
   });
 
   const today = new Date().toISOString().split("T")[0];
-
+  useEffect(() => {
+    console.log(placeDetails);
+  }, [placeDetails]);
   const validate = () => {
-  let newErrors = { visitDate: "", time: "" };
+    let newErrors = { visitDate: "", time: "" };
 
-  const now = new Date();
-  const selectedDate = new Date(visitDate); 
-  const selectedTime = new Date(time);
+    const now = new Date();
+    const selectedDate = new Date(visitDate);
+    const selectedTime = new Date(time);
 
-  if (!visitDate) {
-    newErrors.visitDate = "Visit date is required.";
-  }
+    if (!visitDate) {
+      newErrors.visitDate = "Visit date is required.";
+    }
 
-  if (!time) {
-    newErrors.time = "Time cannot be empty.";
-  } else if (
-    selectedDate.toDateString() === now.toDateString() && 
-    selectedTime.getHours() < now.getHours() 
-  ) {
-    newErrors.time = "Selected time cannot be in the past.";
-  } else if (
-    selectedDate.toDateString() === now.toDateString() &&
-    selectedTime.getHours() === now.getHours() &&
-    selectedTime.getMinutes() < now.getMinutes()
-  ) {
-    newErrors.time = "Selected time cannot be in the past.";
-  }
+    if (!time) {
+      newErrors.time = "Time cannot be empty.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() < now.getHours()
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
+    } else if (
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() === now.getHours() &&
+      selectedTime.getMinutes() < now.getMinutes()
+    ) {
+      newErrors.time = "Selected time cannot be in the past.";
+    }
 
-  setErrors(newErrors);
-  return !Object.values(newErrors).some((error) => error);
-};
+    setErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
 
   const handleShowNotPrice = () => {
     if (validate()) {
@@ -116,21 +144,6 @@ const BookingDetails = () => {
     return !Object.values(newErrors).some((error) => error);
   };
 
-  useEffect(() => {
-    if (id) {
-      fetchPlaceDetails(id).then((data) => {
-        setPlaceDetails(data);
-        setLoading(false);
-
-        if (data.lat && data.lng) {
-          fetchNearbyAttractions({ lat: data.lat, lng: data.lng }).then(
-            (attractions) => setNearbyAttractions(attractions),
-          );
-        }
-      });
-    }
-  }, [id]);
-
   if (loading) {
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
   }
@@ -153,7 +166,7 @@ const BookingDetails = () => {
   const priceIndicator = priceData
     ? `$${priceData.price} (${priceData.label})`
     : "N/A";
-  const hasPrice = priceIndicator !== "N/A" ? true : false;
+  // const hasPrice = priceIndicator !== "N/A" ? true : false;
 
   /** Custom Booking Packages */
   const packages = [
@@ -195,7 +208,7 @@ const BookingDetails = () => {
     } else {
       return {
         startDate: visitDate,
-        time:time,
+        time: time,
         model: "!hasPrice",
       };
     }
@@ -213,7 +226,7 @@ const BookingDetails = () => {
             className="border rounded mb-3 gap-2 p-2"
             activeKey={activeTab}
           >
-            {["details", "attractions", "reviews"].map((section) => (
+            {["details", "tips", "attractions", "reviews"].map((section) => (
               <Nav.Item key={section}>
                 <Nav.Link
                   eventKey={`#${section}`}
@@ -268,22 +281,14 @@ const BookingDetails = () => {
         <Col md={4}>
           <Card className="p-3 shadow-sm mb-3">
             <h4>Contact Information</h4>
-            <p>
-              <strong>Phone:</strong> {placeDetails.phone || "Not Available"}
-            </p>
-            {/* <p><strong>Location:</strong> {placeDetails.address}</p> */}
-            <p>
-              <strong>Website:</strong>{" "}
-              <a href={placeDetails.website} target="_blank">
-                {placeDetails.website || "N/A"}
-              </a>
-            </p>
+            <p><strong>Phone:</strong> {placeDetails.phone || "Not Available"}</p>
+            <p><strong>Website:</strong> <a href={placeDetails.website} target="_blank">{placeDetails.website || "N/A"}</a></p>
           </Card>
 
           {/* Pricing & Availability / Package Toggle */}
-          <Card className="p-3 shadow-sm mt-4">
+          <Card className="pricing-card p-4 mt-4 shadow-lg">
             {/* Conditional Heading */}
-            <h4>
+            <h4 className="text-center mb-3">
               {hasPrice ? "Choose Your Booking Option" : "Add to Itinerary"}
             </h4>
 
@@ -294,11 +299,24 @@ const BookingDetails = () => {
                 name="bookingMode"
                 defaultValue={0}
                 onChange={(val) => setIsPackageMode(val === 1)}
+                className="d-flex justify-content-center mb-4"
               >
-                <ToggleButton id="standard" value={0} variant="outline-primary">
+
+                <ToggleButton
+                  id="standard"
+                  value={0}
+                  variant={isPackageMode ? "outline-primary" : "primary"}
+                  className="toggle-btn"
+                >
                   Standard Pricing
                 </ToggleButton>
-                <ToggleButton id="packages" value={1} variant="outline-success">
+
+                <ToggleButton
+                  id="packages"
+                  value={1}
+                  variant={isPackageMode ? "success" : "outline-success"}
+                  className="toggle-btn"
+                >
                   Custom Packages
                 </ToggleButton>
               </ToggleButtonGroup>
@@ -307,11 +325,13 @@ const BookingDetails = () => {
             {/* Standard Pricing */}
             {!isPackageMode && hasPrice && (
               <>
-                <p>
+                <p className="text-muted text-center">
                   <strong>Price Level:</strong> {priceIndicator}
                 </p>
+
                 <Form>
-                  <Form.Group controlId="date" className="form-group mb-3">
+                  {/* Date Range Picker */}
+                  <Form.Group className="mb-3">
                     <DatePicker
                       showIcon
                       selected={startDate}
@@ -322,75 +342,71 @@ const BookingDetails = () => {
                       minDate={new Date()}
                       dateFormat="MMM d, yyyy"
                       placeholderText="Select Dates"
-                      className={`date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
+                      wrapperClassName="d-flex justify-content-between align-items-center"
+                      className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
                       icon={<FaCalendarAlt className="search-icon" />}
                     />
-                    {(errors.startDate || errors.endDate) && (
-                      <div className="text-danger">
-                        Please select a valid date range.
-                      </div>
-                    )}
                   </Form.Group>
 
                   {isBookable ? (
                     <>
-                      <Form.Group controlId="guests" className="mb-3">
+                      {/* Guests Field */}
+                      <Form.Group className="mb-3">
                         <Form.Label>Number of Guests</Form.Label>
                         <Form.Control
                           type="number"
-                          required
+                          min="1"
+                          max="5"
                           value={guests}
-                          onChange={(e) => setGuests(e.target.value)}
-                          className={errors.guests ? "is-invalid" : ""}
+                          onChange={(e) => {
+                            const value = Math.min(5, Math.max(1, Number(e.target.value)));
+                            setGuests(value);
+                          }}
                         />
-                        {errors.guests && (
-                          <div className="text-danger">
-                            Guests must be between 1 and 5.
-                          </div>
-                        )}
                       </Form.Group>
 
-                      <Form.Group controlId="preferences" className="mb-3">
+                      {/* Preferences Field */}
+                      <Form.Group className="mb-3">
                         <Form.Label>Preferences</Form.Label>
                         <Form.Control
                           as="textarea"
                           rows={3}
+                          placeholder="Any special requests?"
                           value={preferences}
                           onChange={(e) => setPreferences(e.target.value)}
                         />
                       </Form.Group>
 
+                      {/* View on Map Button */}
                       <Button
                         variant="outline-primary"
-                        className="w-100 mb-3"
+                        className="w-100 mb-2 view-btn"
                         onClick={() => router.push(placeDetails.mapUrl)}
                       >
                         View on Map
                       </Button>
 
+                      {/* Book Now Button */}
                       <Button
                         variant="success"
-                        className="w-100"
+                        className="w-100 book-btn"
                         onClick={handleShow}
                       >
-                        {priceData
-                          ? `Book Now for $${priceData.price}`
-                          : "Book Now"}
+                        {priceData ? `Book Now for $${priceData.price}` : "Book Now"}
                       </Button>
                     </>
                   ) : (
                     <>
                       <Button
                         variant="outline-primary"
-                        className="w-100 mb-3"
+                        className="w-100 mb-2 view-btn"
                         onClick={() => router.push(placeDetails.mapUrl)}
                       >
                         View on Map
                       </Button>
-
                       <Button
                         variant="warning"
-                        className="w-100"
+                        className="w-100 itinerary-btn"
                         onClick={handleShow}
                       >
                         Add to Itinerary
@@ -401,13 +417,13 @@ const BookingDetails = () => {
               </>
             )}
 
-            {/* Custom Booking Packages */}
+            {/* Custom Packages */}
             {isPackageMode && hasPrice && (
               <>
-                <h5>Available Packages</h5>
-                <ul>
+                <h5 className="text-center mb-3">Available Packages</h5>
+                <ul className="package-list">
                   {packages.map((pkg, index) => (
-                    <li key={index}>
+                    <li key={index} className="mb-2">
                       <strong>{pkg.name}:</strong> {pkg.description} - $
                       {pkg.price} per night
                     </li>
@@ -415,21 +431,23 @@ const BookingDetails = () => {
                 </ul>
 
                 <Form>
-                  <Form.Group controlId="bookingPackage" className="mb-3">
-                    <Form.Label>Select Booking Package</Form.Label>
+                  {/* Package Dropdown */}
+                  <Form.Group className="mb-3">
+                    <Form.Label>Select Package</Form.Label>
                     <Form.Select
                       value={packageType}
                       onChange={(e) => setPackageType(e.target.value)}
                     >
-                      <option value="standard">Standard Stay ($100)</option>
-                      <option value="all-inclusive">
-                        Luxury Package ($250)
-                      </option>
-                      <option value="vip">Adventure Package ($400)</option>
+                      {packages.map((pkg, index) => (
+                        <option key={index} value={pkg.name.toLowerCase()}>
+                          {pkg.name} (${pkg.price})
+                        </option>
+                      ))}
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group controlId="date" className="form-group mb-3">
+                  {/* Date Range */}
+                  <Form.Group className="mb-3">
                     <DatePicker
                       showIcon
                       selected={startDate}
@@ -440,7 +458,8 @@ const BookingDetails = () => {
                       minDate={new Date()}
                       dateFormat="MMM d, yyyy"
                       placeholderText="Select Dates"
-                      className={`date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
+                      wrapperClassName="d-flex justify-content-between align-items-center"
+                      className={`form-control date-picker ${errors.startDate || errors.endDate ? "is-invalid" : ""}`}
                       icon={<FaCalendarAlt className="search-icon" />}
                     />
                     {(errors.startDate || errors.endDate) && (
@@ -468,7 +487,7 @@ const BookingDetails = () => {
 
                   <Button
                     variant="outline-primary"
-                    className="w-100 mb-3"
+                    className="w-100 mb-3 view-btn"
                     onClick={() => router.push(placeDetails.mapUrl)}
                   >
                     View on Map
@@ -476,7 +495,7 @@ const BookingDetails = () => {
 
                   <Button
                     variant="success"
-                    className="w-100"
+                    className="w-100 book-btn"
                     onClick={handleShow}
                   >
                     Book Package
@@ -498,7 +517,8 @@ const BookingDetails = () => {
                     minDate={new Date()}
                     dateFormat="yyyy/MM/dd"
                     placeholderText="Visit Date"
-                    className={`date-picker ${errors.visitDate ? "border border-danger" : ""}`}
+                    wrapperClassName="d-flex justify-content-between align-items-center"
+                    className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
                     icon={<FaCalendarAlt className="search-icon" />}
                   />
                   {errors.visitDate && (
@@ -511,7 +531,7 @@ const BookingDetails = () => {
                     selected={time}
                     onChange={(time) => {
                       setTime(time);
-                      setErrors((prev) => ({ ...prev, time: "" })); 
+                      setErrors((prev) => ({ ...prev, time: "" }));
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -519,11 +539,13 @@ const BookingDetails = () => {
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                     placeholderText="Time"
-                    className={`date-picker ${errors.time ? "border border-danger" : ""}`}
+                    wrapperClassName="d-flex justify-content-between align-items-center"
+                    className={`form-control date-picker ${errors.time ? "border border-danger" : ""}`}
                     icon={<FaClock className="search-icon" />}
                   />
-                     {errors.time && <div className="text-danger mt-1">{errors.time}</div>}
-
+                  {errors.time && (
+                    <div className="text-danger mt-1">{errors.time}</div>
+                  )}
                 </Form.Group>
 
                 <Button
@@ -554,8 +576,15 @@ const BookingDetails = () => {
             {placeDetails.description || "No detailed description available."}
           </p>
 
+          {/* Eco-Friendly Tips Section - Below the Description */}
+          <Row className="mt-5" id="tips">
+            <Col md={8}>
+              <TipsDisplay tips={placeDetails.ecoTips} />
+            </Col>
+          </Row>
+
           {/* Google Map Embed */}
-          <Card className="p-3 shadow-sm mt-3">
+          <Card className="p-3 shadow-sm mt-5">
             <Map lat={placeDetails.lat} lng={placeDetails.lng} />
           </Card>
         </Col>
@@ -583,28 +612,22 @@ const BookingDetails = () => {
       <Row className="mt-5" id="reviews">
         <Col>
           <h4>User Reviews</h4>
-          {placeDetails.reviews.length > 0 ? (
-            placeDetails.reviews.map((review, index) => (
-              <Card className="mb-3 p-3 shadow-sm" key={index}>
-                <Card.Body>
-                  <Card.Title>{review.author_name}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    Rating: {review.rating} ⭐
-                  </Card.Subtitle>
-                  <Card.Text>{review.text}</Card.Text>
-                </Card.Body>
-              </Card>
-            ))
-          ) : (
-            <p>No reviews available.</p>
-          )}
+          {placeDetails.reviews.length > 0 ? placeDetails.reviews.map((review, index) => (
+            <Card className="mb-3 p-3 shadow-sm" key={index}>
+              <Card.Body>
+                <Card.Title>{review.author_name}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">Rating: {review.rating} ⭐</Card.Subtitle>
+                <Card.Text>{review.text}</Card.Text>
+              </Card.Body>
+            </Card>
+          )) : <p>No reviews available.</p>}
         </Col>
       </Row>
       <BookingModal
         show={showConfirmation}
         handleClose={handleClose}
         placeDetails={placeDetails}
-        bookingData={getBookingData()}
+        bookingData={getBookingData}
         onConfirm={handleConfirmBooking}
       />
     </Container>

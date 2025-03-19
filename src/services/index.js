@@ -123,7 +123,21 @@ export async function setPassword(id, password) {
 export async function getItineraryForDay(id, day) {
     const res = await my_fetch(`${API_BASE_URL}/itinerary`, {
         method: "POST",
-        body: JSON.stringify({id, day}),
+        body: JSON.stringify({ id, day }),
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function getItineraries(id) {
+    const res = await my_fetch(`${API_BASE_URL}/itineraries`, {
+        method: "POST",
+        body: JSON.stringify({ id }),
     });
 
     const data = await res.json();
@@ -194,11 +208,35 @@ export async function fetchNearbyAttractions(location) {
     }
 }
 
+export async function fetchExperiences(location, category, sortBy) {
+    const res = await my_fetch(`${API_BASE_URL}/places/experiences?location=${encodeURIComponent(location)}&category=${category}&sortBy=${sortBy}`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.error);
+    }
+}
+
+export async function createOrUpdateTip(url, method, tip) {
+    await my_fetch(url, {
+        method: method,
+        body: JSON.stringify(tip),
+    });
+}
+
+export async function deleteTip(id) {
+    await my_fetch(`${API_BASE_URL}/tips/${id}`, {
+        method: "DELETE",
+    });
+}
+
 export async function my_fetch(url, args) {
     const _args = {
         ...args,
         headers: {
-            "content-type": "application/json",
+            "Content-type": "application/json",
             "x-auth-token": getToken()
         }
     }

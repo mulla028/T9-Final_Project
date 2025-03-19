@@ -2,7 +2,7 @@
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
 const User = require('../models/SocialUser');
-const { CALLBACK_URL}  = require('../utils/general');
+const { CALLBACK_URL } = require('../utils/general');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 passport.use(
@@ -23,7 +23,7 @@ passport.use(
                         providerId: profile.id,
                     });
                 }
-                return done(null, {user, accessToken});
+                return done(null, { user, accessToken });
             } catch (error) {
                 return done(error);
             }
@@ -49,7 +49,7 @@ passport.use(
                         providerId: profile.id,
                     });
                 }
-                return done(null, user);
+                return done(null, { user, accessToken });
             } catch (error) {
                 return done(error);
             }

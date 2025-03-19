@@ -81,9 +81,14 @@ export default function Login() {
       }
     } else {
       try {
+        localStorage.setItem('email', data.email);  // **先存储 email**
         const token = await authenticateUser(data.email, data.password);
-        login(token);
-        router.push("/");
+        if (token) {
+          login(token);
+          router.push("/");
+        } else {
+          throw new Error("Authentication failed");
+        }
       } catch (error) {
         console.error('Error during login:', error);
         setWarning(error.message);

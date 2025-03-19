@@ -1,23 +1,33 @@
 import { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { isAuthenticated } from '@/services';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-const FeaturedDestinations = () => {
+const LocalExperiences = () => {
+    const router = useRouter();
+
+    const handleButtonClick = () => {
+        const authState = isAuthenticated();
+        const destination = authState ? "/local-experiences" : "/signup"; // ✅ No result needed
+        router.push(destination);
+    };
+
     const destinationsData = [
-        { image: 'https://images.unsplash.com/photo-1527430203327-e97f64c96a2c', title: 'Bali, Indonesia', description: 'Connect with local artisans and stay at eco-friendly homestays.', link: 'https://www.baliecostay.com/' },
-        { image: 'https://images.unsplash.com/photo-1723309032716-834b0b9fd7d8', title: 'Kyoto, Japan', description: 'Immerse yourself in serene temples and enjoy traditional tea ceremonies.', link: 'https://www.byfood.com/kyoto-tea-ceremony' },
-        { image: 'https://images.unsplash.com/photo-1698904738835-51c949c1cbaa', title: 'Tuscany, Italy', description: 'Explore scenic vineyards and sustainable farmhouses.', link: 'https://www.esperienza.org/lp-hiking-tours' },
-        { image: 'https://images.unsplash.com/photo-1668544732944-ac3f384f8e5f', title: 'Costa Rica', description: 'Stay at eco-lodges and explore the rich biodiversity of rainforests.', link: 'https://ecolodgesanywhere.com/eco-lodges-costa-rica/' },
-        { image: 'https://images.unsplash.com/photo-1612611155301-ac3e1734c91c', title: 'Patagonia, Argentina', description: 'Embark on a journey through the untouched wilderness.', link: 'https://www.unwildplanet.com/blog/first-timer%27s-guide-to-patagonia' },
-        { image: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be', title: 'Santorini, Greece', description: 'Enjoy stunning sunsets and traditional white-washed architecture.', link: 'https://www.greeka.com/cyclades/santorini/' },
-        { image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec', title: 'Machu Picchu, Peru', description: 'Explore the ancient Incan ruins in the heart of the Andes.', link: 'https://www.peru-explorer.com/explore-machu-picchu-peru-guided-tours-adventures.htm' },
-        { image: 'https://lh5.googleusercontent.com/p/AF1QipM6pcivlAHnZRGDQv5iHW8DMb83h5atzRDeEUA3=w540-h312-n-k-no', title: 'Queenstown, New Zealand', description: 'Experience adventure sports and breathtaking mountain landscapes.', link: 'https://www.queenstownnz.co.nz/' }
+        { image: 'https://d1s09xku4jkn9v.cloudfront.net/uploads/2017/09/4c.jpg', title: 'Tokyo, Japan', description: 'Join a sushi-making class with local chefs and explore hidden izakayas.', link: 'https://www.tokyosushiclass.com/' },
+        { image: 'https://souvenirsideas.com/wp-content/uploads/2024/08/image-297.png?w=1200', title: 'Marrakech, Morocco', description: 'Wander through the vibrant souks and learn traditional Moroccan pottery.', link: 'https://www.moroccanceramicart.com/' },
+        { image: 'https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/12/04/d1/7a.jpg', title: 'Barcelona, Spain', description: 'Experience a flamenco dance workshop and discover Gaudi’s masterpieces.', link: 'https://www.barcelonaflamenco.com/' },
+        { image: 'https://media.tacdn.com/media/attractions-splice-spp-674x446/11/ec/46/87.jpg', title: 'Hanoi, Vietnam', description: 'Take a street food tour and learn to cook authentic Vietnamese pho.', link: 'https://www.hanoifoodtours.com/' },
+        { image: 'https://images.squarespace-cdn.com/content/v1/58d29e6ccd0f6829bdf2f58f/1629314059653-ZVNFP616P6Q0VNFJ8DC6/Weaving+1.jpg', title: 'Cusco, Peru', description: 'Visit indigenous villages and participate in traditional weaving workshops.', link: 'https://www.peruweavingexperience.com/' },
+        { image: 'https://cdn.shopify.com/s/files/1/0539/8010/2827/files/IMG_6696_eaa4d746-9e34-408c-a00a-303b85353234.jpg?v=1630699889', title: 'Tuscany, Italy', description: 'Stay at a family-run vineyard and experience hands-on winemaking.', link: 'https://www.tuscanywineexperience.com/' },
+        { image: 'https://mediaim.expedia.com/localexpert/213802/a0d3bbb8-9e22-4fe4-aadd-71fbb1220bac.jpg?impolicy=resizecrop&rw=1005&rh=565', title: 'Kerala, India', description: 'Live with local fishermen and explore the serene backwaters in a houseboat.', link: 'https://www.keralahouseboatexperience.com/' },
+        { image: 'https://www.stcatharines.ca/en/news/resources/Images/CultureNews.jpg', title: 'Cape Town, South Africa', description: 'Join a township art tour and learn about local street art and culture.', link: 'https://www.capetownstreetart.com/' }
     ];
 
     const itemsPerPage = 4;
     const totalDestinations = destinationsData.length;
 
-    // 复制前后数据，确保无限滚动
     const extendedData = [
         ...destinationsData.slice(-itemsPerPage),
         ...destinationsData,
@@ -28,21 +38,18 @@ const FeaturedDestinations = () => {
     const [isTransitioning, setIsTransitioning] = useState(false);
     const carouselRef = useRef(null);
 
-    // 右滑动
     const handleNext = () => {
         if (isTransitioning) return;
         setIsTransitioning(true);
         setCurrentIndex((prev) => prev + itemsPerPage);
     };
 
-    // 左滑动
     const handlePrev = () => {
         if (isTransitioning) return;
         setIsTransitioning(true);
         setCurrentIndex((prev) => prev - itemsPerPage);
     };
 
-    // 监听 currentIndex，确保无缝滚动
     useEffect(() => {
         let timeout;
         if (currentIndex >= totalDestinations + itemsPerPage) {
@@ -65,10 +72,9 @@ const FeaturedDestinations = () => {
     return (
         <div className="featured-destinations" style={{ padding: '60px 0', position: 'relative', overflow: 'hidden' }}>
             <Container>
-                <h2 className="text-center mb-4">Featured Destinations for Slow Travel</h2>
+                <h2 className="text-center mb-4">Local Experience for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-      
-                    {/* 左箭头 */}
+             
                     <Button 
                         variant="outline-secondary" 
                         className="carousel-control prev"
@@ -78,7 +84,6 @@ const FeaturedDestinations = () => {
                         <FaArrowLeft />
                     </Button>
 
-                    {/* 轮播容器 */}
                     <div className="carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
                         <Row 
                             ref={carouselRef}
@@ -96,7 +101,6 @@ const FeaturedDestinations = () => {
                                         <Card.Body>
                                             <Card.Title>{destination.title}</Card.Title>
                                             <Card.Text>{destination.description}</Card.Text>
-                                            <Button className='explore-button' onClick={() => window.open(destination.link, '_blank')} style={{ background: 'green', border: 'none', borderRadius: '20px', padding: '8px 16px' }}>Explore</Button>
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -104,7 +108,6 @@ const FeaturedDestinations = () => {
                         </Row>
                     </div>
 
-                    {/* 右箭头 */}
                     <Button 
                         variant="outline-secondary" 
                         className="carousel-control next"
@@ -113,10 +116,15 @@ const FeaturedDestinations = () => {
                     >
                         <FaArrowRight />
                     </Button>
+
+                    <Button className='explore-button' onClick={handleButtonClick} style={{ background: 'green', border: 'none', borderRadius: '40px', padding: '8px 16px', width: '40%', height: '60px', textAlign: 'center' }}>
+                        Start Your Local Experiences
+                    </Button>
+
                 </Row>
             </Container>
         </div>
     );
 };
 
-export default FeaturedDestinations;
+export default LocalExperiences;

@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { Autocomplete } from '@react-google-maps/api';
 import { fetchPlaces } from '@/services/index';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTravelStyle } from '@/redux/slices/travelStyleSlice';
 
 const Hero = ({ setSearchResults }) => {
     const [searchInput, setSearchInput] = useState("");
@@ -9,7 +11,12 @@ const Hero = ({ setSearchResults }) => {
     const [autocompleteSelected, setAutocompleteSelected] = useState(false);
     const autoCompleteRef = useRef(null);
     const inputRef = useRef(null);
-    const [travelStyle, setTravelStyle] = useState('Cultural Immersion');
+    // const [travelStyle, setTravelStyle] = useState('Cultural Immersion');
+     const dispatch = useDispatch();
+    const travelStyle = useSelector((state) => state.travelStyle.travelStyle);
+    useEffect(() => {
+        localStorage.setItem("travelStyle", travelStyle);
+      }, [travelStyle]);
 
     // Handle place selection from Autocomplete
     const handlePlaceSelect = () => {
@@ -136,7 +143,7 @@ const Hero = ({ setSearchResults }) => {
                             minWidth: '180px',
                             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                         }}
-                        onChange={(e) => setTravelStyle(e.target.value)}
+                         onChange={(e) => dispatch(setTravelStyle(e.target.value))}
                     >
                         <option>Cultural Immersion</option>
                         <option>Eco-Stays</option>
