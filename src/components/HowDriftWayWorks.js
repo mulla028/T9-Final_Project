@@ -8,7 +8,7 @@ const HowDriftWayWorks = () => {
 
     const handleButtonClick = () => {
         const authState = isAuthenticated();
-        const destination = authState ? "/itinerary-planner" : "/login"; // ✅ No result needed
+        const destination = authState ? "/overview" : "/signup"; // ✅ No result needed
         router.push(destination);
     };
     

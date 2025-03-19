@@ -161,7 +161,7 @@ export default function BookingModal({
         address: bookingPayload.location
     }));
       alert("The reservation was successfully registered!");
-      window.location.href = "/itinerary-planner";
+      window.location.href = "/overview";
     } catch (error) {
       console.error("Error saving reservation:", error);
       alert("Error saving reservation!");
