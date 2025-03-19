@@ -134,6 +134,20 @@ export async function getItineraryForDay(id, day) {
     }
 }
 
+export async function getItineraries(id) {
+    const res = await my_fetch(`${API_BASE_URL}/itineraries`, {
+        method: "POST",
+        body: JSON.stringify({id}),
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export const updateItineraryForDay = async (id, day, newItinerary, transportMode) => {
     try {
         const response = await my_fetch(`${API_BASE_URL}/setItinerary`, {

@@ -11,6 +11,7 @@ const sendPasswordReset = require("./controllers/passwordResetController");
 const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
 const bookingRoutes = require('./routes/bookingRoutes');
+const carbonRoutes = require('./routes/carbonRoutes');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/Users', User);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/carbon', carbonRoutes);
 
 // Send email for password reset
 app.post('/api/passwordResetEmail', async (req, res) => {
@@ -68,7 +70,6 @@ app.post('/api/itinerary', async (req, res) => {
 
   try {
       const itinerary = await Users.getItineraryForDay(id, day);
-
       if (itinerary) {
           // Successfully found the itinerary
           res.send({ itinerary });
@@ -81,6 +82,26 @@ app.post('/api/itinerary', async (req, res) => {
       res.status(500).send({ message: error.message });
   }
 });
+
+// Get all user itineraries
+app.post('/api/itineraries', async (req, res) => {
+  const { id } = req.body; // You can destructure both at once
+
+  try {
+      const itinerary = await Users.getItineraries(id);
+      if (itinerary) {
+          // Successfully found the itinerary
+          res.send({ itinerary });
+      } else {
+          // If no itinerary found, return a 404 with a message
+          res.status(404).send({ message: "Itineraries not found" });
+      }
+  } catch (error) {
+      // Handle unexpected errors
+      res.status(500).send({ message: error.message });
+  }
+});
+
 
 
 // Set the user itinerary details for a specific day, including transport

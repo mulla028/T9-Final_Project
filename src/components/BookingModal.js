@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
+
 export default function BookingModal({
   handleClose,
   show,
@@ -24,7 +25,7 @@ export default function BookingModal({
     guests: "",
     startDate: "",
     endDate: "",
-    time:"",
+    time: "",
   });
   const [time, setTime] = useState(new Date());
 
@@ -35,8 +36,7 @@ export default function BookingModal({
     setTime(bookingData?.time);
   }, [bookingData]);
 
-
- useEffect(() => {
+  useEffect(() => {
     let newPrice = 0;
     if (bookingData.packageType === "vip") {
       newPrice = 400;
@@ -47,7 +47,6 @@ export default function BookingModal({
     }
     setCustomPackagePrice(newPrice);
   }, [bookingData.packageType]);
-
 
   const validateForm = () => {
     let newErrors = { guests: "", startDate: "", endDate: "" };
@@ -72,20 +71,20 @@ export default function BookingModal({
 
   const validate = () => {
     let newErrors = { visitDate: "", time: "" };
-  
+
     const now = new Date();
     const selectedDate = new Date(startDate);
-    const selectedTime = new Date(time); 
-  
+    const selectedTime = new Date(time);
+
     if (!visitDate) {
       newErrors.visitDate = "Visit date is required.";
     }
-  
+
     if (!time) {
       newErrors.time = "Time cannot be empty.";
     } else if (
-      selectedDate.toDateString() === now.toDateString() && 
-      selectedTime.getHours() < now.getHours() 
+      selectedDate.toDateString() === now.toDateString() &&
+      selectedTime.getHours() < now.getHours()
     ) {
       newErrors.time = "Selected time cannot be in the past.";
     } else if (
@@ -95,19 +94,17 @@ export default function BookingModal({
     ) {
       newErrors.time = "Selected time cannot be in the past.";
     }
-  
+
     setErrors(newErrors);
     return !Object.values(newErrors).some((error) => error);
   };
-  
 
- 
   const handleConfirmBooking = async () => {
     const isValid = validate();
     const isFormValid = validateForm();
-
+  
     if (!isValid && !isFormValid) return;
-
+  
     const bookingPayload = {
       email: localStorage.getItem("email"),
     };
@@ -147,8 +144,11 @@ export default function BookingModal({
         },
       ];
     }
-
+  
     try {
+      console.log("Sending request to:", "http://localhost:8080/api/bookings/add");
+      console.log("Request payload:", bookingPayload);
+  
       const response = await fetch("http://localhost:8080/api/bookings/add", {
         method: "POST",
         headers: {
@@ -157,19 +157,26 @@ export default function BookingModal({
         },
         body: JSON.stringify(bookingPayload),
       });
-
-      const data = await response.json();
-      if (response.ok) {
-        alert("The reservation was successfully registered!");
-      } else {
-        alert(data.message);
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error response:", errorData);
+        alert(errorData.message || "Failed to save booking.");
+        return;
       }
+  
+      const data = await response.json();
+      localStorage.setItem("newStop", JSON.stringify({
+        name: bookingPayload.placeName,
+        address: bookingPayload.location
+    }));
+      alert("The reservation was successfully registered!");
+      window.location.href = "/overview?id=678eec356a8adc4fd20b1480";
     } catch (error) {
-      console.error(error);
+      console.error("Error saving reservation:", error);
       alert("Error saving reservation!");
     }
     handleClose();
-    window.location.pathname = "/";
   };
 
   return (
@@ -323,7 +330,7 @@ export default function BookingModal({
                     selected={time}
                     onChange={(time) => {
                       setTime(time);
-                      setErrors((prev) => ({ ...prev, time: "" })); 
+                      setErrors((prev) => ({ ...prev, time: "" }));
                     }}
                     showTimeSelect
                     showTimeSelectOnly
@@ -331,7 +338,9 @@ export default function BookingModal({
                     timeCaption="Time"
                     dateFormat="h:mm aa"
                     placeholderText="Time"
-                    className={`date-picker ${errors.time ? "border border-danger" : ""}`}
+                    className={`date-picker ${
+                      errors.time ? "border border-danger" : ""
+                    }`}
                     icon={<FaClock className="search-icon" />}
                     value={time}
                     isInvalid={!!errors.time}
