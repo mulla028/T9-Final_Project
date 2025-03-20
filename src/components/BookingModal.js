@@ -160,7 +160,7 @@ export default function BookingModal({
           location: placeDetails.address,
           time: time.toLocaleTimeString(),
           paid: bookingData.price > 0,
-          date: visitDate.toLocaleDateString(),
+          date: visitDate.toDateString(),
         },
       ];
     }
