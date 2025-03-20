@@ -3,7 +3,6 @@ import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
 import { API_BASE_URL } from "@/utils/general";
-import { API_BASE_URL } from "@/utils/general";
 
 export default function BookingModal({
   handleClose,
