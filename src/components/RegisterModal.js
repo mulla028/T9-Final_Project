@@ -46,6 +46,7 @@ export default function RegisterModal({ show, handleClose }) {
         console.log('Form submitted'); // Debugging line
         try {
             const { firstName, lastName, email, password, confirmPassword } = data;
+            localStorage.setItem('email', email);
             const token = await registerUser({ firstName, lastName, email }, password, confirmPassword);
             if (token) {
                 login(token)

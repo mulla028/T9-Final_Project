@@ -24,7 +24,7 @@ export default function Admin() {
   const router = useRouter();
 
   useEffect(() => {
-    
+
     if (!isAuthenticated()) {
       router.push("/");
       return;
@@ -132,6 +132,13 @@ export default function Admin() {
       <div className="d-grid gap-2">
         <Button variant="success" size="lg" href="/admin/addUser">
           Add User
+        </Button>
+      </div>
+
+      {/* View Tips Button */}
+      <div className="d-grid gap-2 mt-4">
+        <Button variant="warning" size="lg" href="/admin/tips">
+          View Tips
         </Button>
       </div>
     </Container>
