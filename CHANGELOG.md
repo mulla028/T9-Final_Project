@@ -1,10 +1,11 @@
 # Changelog
 
+## Sprint 3 (Sp-3)
+
 - Fixed days of the trips for user in database. So the trip length tracking is more convenient to display
 - Separate and Categorize the stay and experience of the user based on the location searched
 - Overal costs for stays(including hotels, cottages .. ) calculate base on days of booking not number of guests
-
-## Sprint 3 (Sp-3)
+- New page that calculates emssion waste
 
 ### redirection of the itinerary-planner
 - Users can go to the itinerary-planner page after login otherwise it will go to the login page
