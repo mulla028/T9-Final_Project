@@ -141,6 +141,12 @@ const ItineraryOverview = () => {
             .catch(err => console.error("Failed to copy:", err));
     };
 
+    const handleGoBack = () => {
+        router.push({
+            pathname: "/"
+        });
+    };
+
     return (
         <>
             <Container className="itinerary-planner" style={{ marginTop: '60px' }}>
@@ -189,8 +195,9 @@ const ItineraryOverview = () => {
                 />
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
-                    <Button variant="success p-2 p-2" onClick={handlePrint}>Download Itinerary</Button>
-                    <Button variant="primary p-2 px-2" onClick={handleShare}>Share Itinerary</Button>
+                    <Button variant="success" className="p-2" onClick={handlePrint}> Download Itinerary </Button>
+                    <Button variant="primary" className="p-2" onClick={handleShare}> Share Itinerary </Button>
+                    <Button variant="outline-secondary" className="p-2" onClick={handleGoBack}> Go Back to Main Page </Button>
                 </div>
             </Container>
 
