@@ -202,9 +202,9 @@ const ItineraryOverview = () => {
                 />
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
-                    <Button variant="success p-2" onClick={handlePrint}> Download Itinerary </Button>
-                    <Button variant="primary p-2" onClick={handleShare}> Share Itinerary </Button>
-                    <Button variant="outline-secondary p-2" onClick={handleGoBack}> Go Back to Main Page </Button>
+                    <Button variant="success" className="p-2" onClick={handlePrint}> Download Itinerary </Button>
+                    <Button variant="primary" className="p-2" onClick={handleShare}> Share Itinerary </Button>
+                    <Button variant="outline-secondary" className="p-2" onClick={handleGoBack}> Go Back to Main Page </Button>
                 </div>
             </Container>
 
