@@ -1,12 +1,22 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dropdown, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+import { fetchProfile } from '@/services';
 
 const ProfileDropdown = () => {
     const [show, setShow] = useState(false);
+    const [user, setUser] = useState({ name: '', email: '', profilePicture: '', phoneNumber: '', location: '' });
     const { logout } = useAuth();
     const router = useRouter();
+
+    useEffect(() => {
+        fetchProfile().then((data) => {
+            setUser(data);
+        }).catch((error) => {
+            console.error('Error fetching profile:', error);
+        });
+    }, []);
 
     const handleLogout = () => {
         logout();
@@ -39,7 +49,7 @@ const ProfileDropdown = () => {
                     onClick={() => setShow(!show)}
                 >
                     <img
-                        src="https://images.unsplash.com/photo-1466112928291-0903b80a9466?q=80&w=1473&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" // Replace with your profile image path
+                        src={user.profilePicture} // Replace with your profile image path
                         alt="Profile"
                         className="rounded-circle"
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -47,8 +57,8 @@ const ProfileDropdown = () => {
                 </Button>
 
                 <Dropdown.Menu style={{ width: '350px', padding: '15px' }}>
-                    <Dropdown.Item href="#">View Account</Dropdown.Item>
-                    <Dropdown.Item href="#">Settings</Dropdown.Item>
+                    <Dropdown.Item href="/user/profile">View Account</Dropdown.Item>
+                    <Dropdown.Item href="/overview">Trips</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>

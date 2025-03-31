@@ -120,6 +120,58 @@ export async function setPassword(id, password) {
     }
 }
 
+export async function fetchProfile() {
+    const res = await my_fetch(`${API_BASE_URL}/users/profile`);
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function updateProfile(user) {
+    const res = await my_fetch(`${API_BASE_URL}/users/profile`, {
+        method: "PUT",
+        body: JSON.stringify(user),
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function deleteProfile(id) {
+    const res = await my_fetch(`${API_BASE_URL}/users/profile/${id}`, {
+        method: "DELETE",
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return data;
+    }
+    else {
+        throw new Error(data.message);
+    }
+}
+
+export async function updatePassword(password, newPassword, confirmPassword) {
+    const res = await my_fetch(`${API_BASE_URL}/users/password`, {
+        method: "PUT",
+        body: JSON.stringify({ password, newPassword, confirmPassword }),
+    });
+
+    const data = await res.json();
+    if (res.status === 200) {
+        return 200;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export async function getItineraryForDay(id, day) {
     const res = await my_fetch(`${API_BASE_URL}/itinerary`, {
         method: "POST",
@@ -245,7 +297,7 @@ export async function my_fetch(url, args) {
 
         if (response?.status === 401) {
             removeToken();
-            Router.push("/login");
+            Router.push("/signup?role=user");
             return;
         }
         return response;
