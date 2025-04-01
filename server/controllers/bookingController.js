@@ -36,12 +36,14 @@ const addBooking = async (req, res) => {
     }
 
     // Find an existing itinerary entry with the same date
-    let existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+    let existingEntry;
+    let newDay = false;
+    existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
 
-    if (!existingEntry) {
+    if(!existingEntry) {
       // If no existing entry is found, create a new one
-      existingEntry = { date, stay: null, experiences: [] };
-      user.itinerary.push(existingEntry);
+      existingEntry = { day : 0, date, stay: null, experiences: [] };
+      newDay = true;
     }
 
     if (placeName && checkIn && checkOut && guests) {
@@ -73,8 +75,10 @@ const addBooking = async (req, res) => {
     }
 
     // If you did add a new booking, then sort the dates
-    if (!existingEntry) {
+    if (newDay) {
+      user.itinerary.push(existingEntry);
       // Sorting logic
+      console.log(user.itinerary);
       user.itinerary.sort((a, b) => {
         const getDate = (entry) => entry.date || entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
         return new Date(getDate(a)) - new Date(getDate(b));
@@ -95,7 +99,7 @@ const addBooking = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+      console.error(error);
     res.status(500).json({ message: "An error occurred on the server." });
   }
 };

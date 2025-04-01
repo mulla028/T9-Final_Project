@@ -39,6 +39,7 @@ export default function BookingModal({
   useEffect(() => {
     setGuests(bookingData.guests || 1);
     setStartDate(formatDate(new Date(bookingData?.startDate)));
+    setVisitDate(formatDate(new Date(bookingData?.startDate)));
     setEndDate(formatDate(bookingData?.endDate) || "");
     setTime(bookingData?.time);
   }, [bookingData]);
@@ -201,7 +202,7 @@ export default function BookingModal({
     }
     else {
       
-      bookingPayload.date = visitDate.toISOString();
+      bookingPayload.date = new Date(visitDate).toISOString();
       console.log("Date of booking: " + bookingPayload.date);
       bookingPayload.experiences = [
         {
@@ -210,7 +211,7 @@ export default function BookingModal({
           location: placeDetails.address,
           time: time.toLocaleTimeString(),
           paid: bookingData.price > 0,
-          date: visitDate.toLocaleDateString(),
+          date: new Date(visitDate).toLocaleDateString()
         },
       ];
       try {
@@ -311,13 +312,13 @@ export default function BookingModal({
 
                           <Form.Control
                             type="date"
-                            value={startDate}
+                            value={visitDate}
                             min={today}
-                            isInvalid={!!errors.startDate}
+                            isInvalid={!!errors.visitDate}
                             onChange={(e) => setVisitDate(e.target.value)}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.startDate}
+                            {errors.visitDate}
                           </Form.Control.Feedback>
                         </div>
 
