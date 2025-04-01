@@ -58,7 +58,7 @@ const ProfileDropdown = () => {
 
                 <Dropdown.Menu style={{ width: '350px', padding: '15px' }}>
                     <Dropdown.Item href="/user/profile">View Account</Dropdown.Item>
-                    <Dropdown.Item href="/overview">Trips</Dropdown.Item>
+                    <Dropdown.Item href={`/overview/?id=${user._id}`}>Trips</Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
                 </Dropdown.Menu>
