@@ -136,7 +136,7 @@ export default function BookingModal({
 
       while (currentDate <= end) {
         let booking = {};
-        booking.date = currentDate;
+        booking.date = currentDate.toISOString(),
         booking.place_id = placeDetails.place_id,
         booking.placeName = placeDetails.name,
         booking.location = placeDetails.address,

@@ -5,6 +5,7 @@ const addBooking = async (req, res) => {
   console.log(req.body);
   try {
     const {
+      date,
       place_id,
       placeName,
       location,
@@ -34,11 +35,16 @@ const addBooking = async (req, res) => {
         .json({ message: "Not enough information has been submitted to make a reservation." });
     }
 
-    // Create a new booking object
-    const newBooking = {};
+    // Find an existing itinerary entry with the same date
+    let existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+
+    if (!existingEntry) {
+      // If no existing entry is found, create a new one
+      existingEntry = { date, stay: null, experiences: [] };
+    }
 
     if (placeName && checkIn && checkOut && guests) {
-      newBooking.stay = {
+      existingEntry.stay = {
         placeId: place_id,
         placeName,
         location,
@@ -53,7 +59,7 @@ const addBooking = async (req, res) => {
     }
 
     if (experiences && experiences.length > 0) {
-      newBooking.experiences = experiences.map((exp) => ({
+      existingEntry.experiences = experiences.map((exp) => ({
         placeId: exp.placeId,
         name: exp.name,
         location: exp.location || null,
@@ -64,20 +70,21 @@ const addBooking = async (req, res) => {
       }));
     }
 
-    // Add the new booking to the user's itinerary
-    user.itinerary.push(newBooking);
+    user.itinerary.push(existingEntry);
 
-    // Sorting logic
-    user.itinerary.sort((a, b) => {
-      const getDate = (entry) => entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
-      return new Date(getDate(a)) - new Date(getDate(b));
-    });
+    // If you did add a new booking, then sort the dates
+    if (!existingEntry) {
+      // Sorting logic
+      user.itinerary.sort((a, b) => {
+        const getDate = (entry) => entry.date || entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
+        return new Date(getDate(a)) - new Date(getDate(b));
+      });
 
-    // Re-number days
-    user.itinerary.forEach((entry, index) => {
-      entry.day = index + 1;
-    });
-
+      // Re-number days
+      user.itinerary.forEach((entry, index) => {
+        entry.day = index + 1;
+      });
+    }
     // Save updated user itinerary
     await user.save();
 
@@ -86,6 +93,7 @@ const addBooking = async (req, res) => {
       message: "Reservation successfully added!",
       itinerary: user.itinerary,
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred on the server." });
@@ -114,6 +122,7 @@ const addMultipleBookings = async (req, res) => {
   try {
     req.body.plans.forEach(async plan => {
       const {
+        date,
         place_id,
         placeName,
         location,
@@ -127,11 +136,19 @@ const addMultipleBookings = async (req, res) => {
         experiences,
       } = plan;
 
-      // Create a new booking object
-      const newBooking = {};
+      // Find an existing itinerary entry with the same date
+      let existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+
+      if (!existingEntry) {
+        // If no existing entry is found, create a new one
+        existingEntry = { date, stay: null, experiences: [] };
+      }
+
+      // Add the date
+      existingEntry.date = date;
 
       if (placeName && checkIn && checkOut && guests) {
-        newBooking.stay = {
+        existingEntry.stay = {
           placeId: place_id,
           placeName,
           location,
@@ -146,7 +163,7 @@ const addMultipleBookings = async (req, res) => {
       }
 
       if (experiences && experiences.length > 0) {
-        newBooking.experiences = experiences.map((exp) => ({
+        existingEntry.experiences = experiences.map((exp) => ({
           placeId: exp.placeId,
           name: exp.name,
           location: exp.location || null,
@@ -156,13 +173,12 @@ const addMultipleBookings = async (req, res) => {
 
         }));
       }
-      // Add the new booking to the user's itinerary
-      user.itinerary.push(newBooking);
+      user.itinerary.push(existingEntry);
     });
-
+    
     // Sorting logic
     user.itinerary.sort((a, b) => {
-      const getDate = (entry) => entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
+      const getDate = (entry) => entry.date || entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
       return new Date(getDate(a)) - new Date(getDate(b));
     });
 
