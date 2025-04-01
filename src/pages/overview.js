@@ -47,6 +47,7 @@ const ItineraryOverview = () => {
 
                             newItineraries.push({
                                 day: itinerary.day,
+                                date: itinerary.date?.split('T')[0],
                                 stops: newStops
                             });
                         }
@@ -169,7 +170,7 @@ const ItineraryOverview = () => {
                                 <Col md={6} key={index} className="mb-3">
                                     <Accordion.Item eventKey={index.toString()}>
                                         <Accordion.Header onClick={() => handleToggle(index.toString())}>
-                                            Day {dayPlan.day}
+                                            Day {dayPlan.day} - {dayPlan.date || ""}
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             <ListGroup variant="flush">

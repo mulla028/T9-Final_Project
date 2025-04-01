@@ -41,6 +41,7 @@ const addBooking = async (req, res) => {
     if (!existingEntry) {
       // If no existing entry is found, create a new one
       existingEntry = { date, stay: null, experiences: [] };
+      user.itinerary.push(existingEntry);
     }
 
     if (placeName && checkIn && checkOut && guests) {
@@ -59,7 +60,8 @@ const addBooking = async (req, res) => {
     }
 
     if (experiences && experiences.length > 0) {
-      existingEntry.experiences = experiences.map((exp) => ({
+      existingEntry.experiences.push(
+      ...experiences.map((exp) => ({
         placeId: exp.placeId,
         name: exp.name,
         location: exp.location || null,
@@ -67,10 +69,8 @@ const addBooking = async (req, res) => {
         paid: exp.paid || false,
         date: exp.date,
 
-      }));
+      })));
     }
-
-    user.itinerary.push(existingEntry);
 
     // If you did add a new booking, then sort the dates
     if (!existingEntry) {
@@ -138,10 +138,12 @@ const addMultipleBookings = async (req, res) => {
 
       // Find an existing itinerary entry with the same date
       let existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+      let newDay = false;
 
       if (!existingEntry) {
         // If no existing entry is found, create a new one
         existingEntry = { date, stay: null, experiences: [] };
+        newDay = true;
       }
 
       // Add the date
@@ -163,17 +165,20 @@ const addMultipleBookings = async (req, res) => {
       }
 
       if (experiences && experiences.length > 0) {
-        existingEntry.experiences = experiences.map((exp) => ({
+        existingEntry.experiences.push(
+        ...experiences.map((exp) => ({
           placeId: exp.placeId,
           name: exp.name,
           location: exp.location || null,
           time: exp.time,
           paid: exp.paid || false,
           date: exp.date,
-
-        }));
+  
+        })));
       }
-      user.itinerary.push(existingEntry);
+
+      // Push the new itinerary if it does not exist
+      if (newDay) user.itinerary.push(existingEntry);
     });
     
     // Sorting logic

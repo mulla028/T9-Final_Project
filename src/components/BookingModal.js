@@ -117,13 +117,14 @@ export default function BookingModal({
   };
 
   const handleConfirmBooking = async () => {
-    const isValid = validate();
-    const isFormValid = validateForm();
+    let isValid = validate();
+    let isFormValid = validateForm();
+
+    if (!isValid && !isFormValid) return;
+    
     const bookingPayload = {
       email: localStorage.getItem("email"),
     };
-
-    if (!isValid && !isFormValid) return;
 
     if (
       bookingData.model === "isPackageMode&&hasPrice" ||
@@ -200,7 +201,8 @@ export default function BookingModal({
     }
     else {
       
-      bookingPayload.date = time.toLocaleDateString();
+      bookingPayload.date = visitDate.toISOString();
+      console.log("Date of booking: " + bookingPayload.date);
       bookingPayload.experiences = [
         {
           id: placeDetails.place_id,
@@ -208,7 +210,7 @@ export default function BookingModal({
           location: placeDetails.address,
           time: time.toLocaleTimeString(),
           paid: bookingData.price > 0,
-          date: time.toLocaleDateString(),
+          date: visitDate.toLocaleDateString(),
         },
       ];
       try {
@@ -430,10 +432,13 @@ export default function BookingModal({
 
                     <Form.Control
                       type="date"
-                      value={visitDate}
+                      value={visitDate ? new Date(visitDate).toISOString().split("T")[0] : ""}
                       min={today}
                       isInvalid={!!errors.visitDate}
-                      onChange={(e) => setVisitDate(e.target.value)}
+                      onChange={(e) => {
+                        console.log("visitDate changed:", e.target.value); // Debugging
+                        setVisitDate(e.target.value);
+                      }}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.visitDate}
