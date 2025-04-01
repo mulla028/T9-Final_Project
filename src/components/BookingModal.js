@@ -119,40 +119,88 @@ export default function BookingModal({
   const handleConfirmBooking = async () => {
     const isValid = validate();
     const isFormValid = validateForm();
-
-    if (!isValid && !isFormValid) return;
-
     const bookingPayload = {
       email: localStorage.getItem("email"),
     };
+
+    if (!isValid && !isFormValid) return;
+
     if (
       bookingData.model === "isPackageMode&&hasPrice" ||
       bookingData.model === "hasPrice&&isEcoStay"
     ) {
-      bookingPayload.place_id = placeDetails.place_id;
-      bookingPayload.placeName = placeDetails.name;
-      bookingPayload.location = placeDetails.address;
-      bookingPayload.checkIn = startDate;
-      bookingPayload.checkOut = endDate;
-      bookingPayload.guests = guests;
-      bookingPayload.phone = placeDetails.phone;
-      bookingPayload.package = bookingData.packageType;
-      bookingPayload.preferences = bookingData.preferences;
-      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        )
-        : bookingData.price *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        )
-    } else {
+      let currentDate = new Date(startDate); 
+      const end = new Date(endDate);
+
+      bookingPayload.plans = [];
+
+      while (currentDate <= end) {
+        let booking = {};
+        booking.date = currentDate;
+        booking.place_id = placeDetails.place_id,
+        booking.placeName = placeDetails.name,
+        booking.location = placeDetails.address,
+        booking.checkIn = startDate,
+        booking.checkOut = endDate,
+        booking.guests = guests,
+        booking.phone = placeDetails.phone,
+        booking.package = bookingData.packageType,
+        booking.preferences = bookingData.preferences,
+        booking.totalPrice = bookingData.price == 0 ? customPackagePrice *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+            (1000 * 60 * 60 * 24),
+            1,
+          )
+          : bookingData.price *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+            (1000 * 60 * 60 * 24),
+            1,
+          );
+
+          bookingPayload.plans.push(booking);
+          currentDate.setDate(currentDate.getDate() + 1); 
+        }
+
+        try {
+          console.log("Sending request to:", `${API_BASE_URL}/bookings/addMultiple`);
+          console.log("Request payload:", bookingPayload);
+    
+          const response = await fetch(`${API_BASE_URL}/bookings/addMultiple`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-auth-token": localStorage.getItem("access_token"),
+            },
+            body: JSON.stringify(bookingPayload),
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error response:", errorData);
+            alert(errorData.message || "Failed to save booking.");
+            return;
+          }
+    
+          const data = await response.json();
+          localStorage.setItem("newStop", JSON.stringify({
+            name: bookingPayload.plans[0].placeName,
+            address: bookingPayload.plans[0].location
+          }));
+          alert("The reservations were successfully registered!");
+          window.location.href = `/overview?id=${data.id}`;
+        } catch (error) {
+          console.error("Error saving reservation:", error);
+          alert("Error saving reservation!");
+        }
+        handleClose();
+    }
+    else {
+      
+      bookingPayload.date = time.toLocaleDateString();
       bookingPayload.experiences = [
         {
           id: placeDetails.place_id,
@@ -163,40 +211,39 @@ export default function BookingModal({
           date: time.toLocaleDateString(),
         },
       ];
-    }
-
-    try {
-      console.log("Sending request to:", `${API_BASE_URL}/bookings/add`);
-      console.log("Request payload:", bookingPayload);
-
-      const response = await fetch(`${API_BASE_URL}/bookings/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(bookingPayload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error response:", errorData);
-        alert(errorData.message || "Failed to save booking.");
-        return;
+      try {
+        console.log("Sending request to:", `${API_BASE_URL}/bookings/add`);
+        console.log("Request payload:", bookingPayload);
+  
+        const response = await fetch(`${API_BASE_URL}/bookings/add`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-auth-token": localStorage.getItem("access_token"),
+          },
+          body: JSON.stringify(bookingPayload),
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error("Error response:", errorData);
+          alert(errorData.message || "Failed to save booking.");
+          return;
+        }
+  
+        const data = await response.json();
+        localStorage.setItem("newStop", JSON.stringify({
+          name: bookingPayload.placeName,
+          address: bookingPayload.location
+        }));
+        alert("The reservation was successfully registered!");
+        window.location.href = `/overview?id=${data.id}`;
+      } catch (error) {
+        console.error("Error saving reservation:", error);
+        alert("Error saving reservation!");
       }
-
-      const data = await response.json();
-      localStorage.setItem("newStop", JSON.stringify({
-        name: bookingPayload.placeName,
-        address: bookingPayload.location
-      }));
-      alert("The reservation was successfully registered!");
-      window.location.href = `/overview?id=${data.id}`;
-    } catch (error) {
-      console.error("Error saving reservation:", error);
-      alert("Error saving reservation!");
+      handleClose();
     }
-    handleClose();
   };
 
   return (
