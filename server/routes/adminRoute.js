@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
 const { verifyAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
+const {createUser, updateUser, deleteUser } = require("../controllers/adminController.js");
 
 router.post("/login/admin", async (req, res) => {
   const { email, password } = req.body;
@@ -41,5 +42,8 @@ router.get("/", verifyAdmin, async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
-
+router.post("/", createUser);
+router.patch("/:id", updateUser);
+router.delete("/:id", deleteUser);
 module.exports = router;
+

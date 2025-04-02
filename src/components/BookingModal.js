@@ -153,6 +153,7 @@ export default function BookingModal({
           1,
         )
     } else {
+      console.log(time)
       bookingPayload.experiences = [
         {
           id: placeDetails.place_id,

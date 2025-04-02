@@ -1,4 +1,3 @@
-
 const User = require("../models/User");
 
 const addBooking = async (req, res) => {
