@@ -72,7 +72,7 @@ export default function UpdateUser() {
       if (!res.ok) throw new Error(result.message || "Error updating user");
 
       setSuccess("User successfully updated");
-      window.location.href = "/admin";
+      router.push('/admin');
     } catch (error) {
       setError(error.message);
     } finally {
