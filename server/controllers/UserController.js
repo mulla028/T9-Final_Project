@@ -108,4 +108,37 @@ const updateUserItineraryForDay = async (userId, day, newItinerary, newTransport
     }
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, getItineraryForDay, getItineraries, updateUserItineraryForDay };
+const deleteUserItineraryForDay = async (userId, day) => {
+    try {
+        const result = await User.updateOne(
+            { _id: userId },
+            { $pull: { itinerary: { day: day } } } // Remove itinerary entry for the given day
+        );
+
+        if (result.modifiedCount === 0) {
+            return { success: false, message: "No itinerary found for the specified day" };
+        } 
+        else {
+            //Sort the days
+            const user = await User.findOne({ _id: userId });
+            user.itinerary.sort((a, b) => {
+                const getDate = (entry) => entry.date || entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
+                return new Date(getDate(a)) - new Date(getDate(b));
+              });
+        
+               // Re-number days
+               user.itinerary.forEach((entry, index) => {
+                 entry.day = index + 1;
+               })
+
+               await user.save();
+         } 
+
+        return { success: true, message: "Itinerary deleted successfully" };
+    } catch (error) {
+        console.error("Error deleting itinerary:", error);
+        throw error;
+    }
+};
+
+module.exports = { getUsers, getUser, createUser, updateUser, deleteUser, getItineraryForDay, getItineraries, updateUserItineraryForDay, deleteUserItineraryForDay };

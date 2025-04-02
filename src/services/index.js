@@ -173,6 +173,29 @@ export const updateItineraryForDay = async (id, day, newItinerary, transportMode
     }
 };
 
+export const deleteItineraryForDay = async (id, day) => {
+    try {
+        const response = await my_fetch(`${API_BASE_URL}/deleteItinerary`, {
+            method: "DELETE",
+            body: JSON.stringify({
+                id,
+                day
+            }),
+        });
+
+        console.log(response);
+
+        if (!response.ok) {
+            throw new Error("Failed to delete itinerary");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error deleting itinerary:", error);
+        throw error;
+    }
+};
+
 export async function fetchPlaces(location, travelStyle) {
     const res = await my_fetch(`${API_BASE_URL}/places?location=${encodeURIComponent(location)}&travelStyle=${travelStyle}`);
     console.log("fetchPlaces() res: ", res);
