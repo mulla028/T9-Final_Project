@@ -4,12 +4,12 @@ const passport = require('./config/passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const auth = require('./routes/authRoutes');
-const User = require('./routes/userRoute');
+const user = require('./routes/userRoutes');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const tipRoutes = require('./routes/tipRoutes');
 const sendPasswordReset = require("./controllers/passwordResetController");
-const Users = require("./controllers/UserController");
+const Users = require("./controllers/userController");
 const { REDIRECT_URL } = require('./utils/general');
 const bookingRoutes = require('./routes/bookingRoutes');
 const carbonRoutes = require('./routes/carbonRoutes');
@@ -26,7 +26,7 @@ app.use(passport.initialize());
 
 // Define Routes
 app.use('/api/auth', auth);
-app.use('/api/Users', User);
+app.use('/api/users', user);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
 app.use('/api/tips', tipRoutes);

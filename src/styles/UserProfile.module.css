@@ -1,0 +1,215 @@
+/* UserProfile.css */
+
+.sidebar {
+    background: #f8f9fa;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.sidebar li svg {
+    margin-right: 10px;
+}
+
+.sidebar .active {
+    background: #9ed4aa;
+    border-radius: 5px;
+}
+
+.sidebar li:hover {
+    background: #d3efd9;
+    border-radius: 5px;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.profile-card {
+    height: 100vh;
+    width: 65%;
+    padding: 20px;
+    border: none;
+    margin-bottom: 20px;
+    /* border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.custom-file-upload {
+    color: black;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 12px;
+}
+
+.custom-delete-btn {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 30px;
+    color: black;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.custom-delete-btn:hover {
+    background: none;
+    color: black;
+}
+
+.custom-label {
+    font-size: 18px;
+    font-weight: 500; 
+}
+
+.custom-input {
+    background: rgba(255, 255, 255, 0.8); /* Adjust the background color and opacity as needed */
+    /* border: 2px solid #9ea3a8; */
+    border-radius: 30px;
+    padding: 12px 20px;
+    margin: 5px 0;
+    width: 100%;
+    color: #9ea3a8; /* Text color */
+}
+/* 
+.custom-file-upload:hover {
+    background: #0056b3;
+} */
+
+.integrated-accounts {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.save-btn {
+    /* background: #28a745; */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+
+.custom-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgb(234, 46, 87);
+    padding: 8px 12px;
+    cursor: pointer;
+    display: inline-block;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 12px;
+}
+
+.custom-button:hover {
+    background: none;
+    color: rgb(234, 46, 87);
+    border: 1px solid rgb(234, 46, 87);
+}
+
+.social-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+
+.button-group {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px; /* Adds space between the buttons */
+  }
+
+  /* Medium Screens */
+@media (max-width: 992px) {
+    .profile-card {
+        width: 80%;
+    }
+}
+
+/* Small Screens */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-card {
+        width: 90%;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        width: 70%;
+        height: 100vh;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+    .profile-card {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+}
+
