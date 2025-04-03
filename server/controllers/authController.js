@@ -23,7 +23,7 @@ exports.register = async (req, res) => {
         await newUser.save();
         console.log("User saved successfully:", newUser);
 
-        const payload = { id: newUser.id, username: newUser.username };
+        const payload = { id: user.id, username: user.username };
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
             if (err) throw err;
             res.json({ token });
