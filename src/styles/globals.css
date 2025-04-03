@@ -1106,6 +1106,123 @@ footer form {
   margin-bottom: 0.5rem;
 }
 
+/* Small Screens (max-width: 768px) */
+@media (max-width: 768px) {
+  body {
+      font-size: 14px;
+  }
+}
+
+/* Extra Small Screens (max-width: 480px) */
+@media (max-width: 480px) {
+  body {
+      font-size: 12px;
+  }
+}
+
+/* HERO SECTION RESPONSIVENESS */
+@media (max-width: 992px) {
+  .hero-section {
+      height: 80vh;
+      padding: 20px;
+      text-align: center;
+  }
+
+  .hero-title {
+      font-size: 2rem;
+  }
+
+  .hero-subtitle {
+      font-size: 1rem;
+      margin-bottom: 30px;
+  }
+
+  .search-input {
+      width: 100% !important;
+  }
+
+  .search-button {
+      width: 100%;
+      margin-top: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+      height: 70vh;
+  }
+
+  .hero-title {
+      font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+      font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+      height: 60vh;
+  }
+
+  .hero-title {
+      font-size: 1.5rem;
+  }
+
+  .hero-subtitle {
+      font-size: 0.85rem;
+  }
+}
+
+/* FEATURED DESTINATIONS & LOCAL EXPERIENCES */
+@media (max-width: 992px) {
+  .destination-card {
+      width: 100%;
+  }
+
+  .carousel-wrapper {
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+  }
+
+  .carousel-row {
+      flex-wrap: nowrap;
+  }
+
+  .carousel-control {
+      display: none; /* Hide arrows on small screens */
+  }
+
+  .explore-button {
+      width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .destination-card {
+      width: 100%;
+      max-width: 90%;
+      margin: 0 auto;
+  }
+
+  .carousel-wrapper {
+      width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .destination-card {
+      width: 100%;
+      max-width: 100%;
+  }
+
+  .explore-button {
+      font-size: 0.9rem;
+      padding: 8px;
+  }
+}
+
 @keyframes fadeIn {
   from {
       opacity: 0;
