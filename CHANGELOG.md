@@ -1,23 +1,35 @@
 # Changelog
 
+## Sprint 4 (Sp-4)
+
+### Added Features
+
+- **User pages (profile and password)** ([#114](https://github.com/mulla028/T9-Final_Project/pull/114))
+
+  - Implemented error handling for profile updates to notify users of success or failure.
+  - Improved state management when updating user details.
+  - Users can now upload a custom profile picture
+  - Moved password update functionality to a separate page (user/password.js) for better separation of concerns.
+
 ## Sprint 3 (Sp-3)
 
 - Fixed days of the trips for user in database. So the trip length tracking is more convenient to display
 - Separate and Categorize the stay and experience of the user based on the location searched
-- Overal costs for stays(including hotels, cottages .. ) calculate base on days of booking not number of guests
-- New page that calculates emssion waste
+- Overall costs for stays(including hotels, cottages .. ) calculate base on days of booking not number of guests
+- New page that calculates emission waste
 
 ### redirection of the itinerary-planner
+
 - Users can go to the itinerary-planner page after login otherwise it will go to the login page
 - After users confirm booking it will go to the itinerary-planner page and save the booking address as a stop in the itinerary-planner page
 
-## Sprint 2 (Sp-2)  
+## Sprint 2 (Sp-2)
 
 ### confirm-booking
 
 - Users can review and edit their booked places before confirmation
 - Users are able to change the date, number of guests and even cancel the process
-- All confirmed booking palces by users will be saved to database for the record and itenareray purpose
+- All confirmed booking places by users will be saved to database for the record and itinerary purpose
 
 ### Deployment
 

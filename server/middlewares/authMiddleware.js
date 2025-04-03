@@ -7,8 +7,8 @@ const authMiddleware = (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'No token, authorization denied' });
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
+    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decodedUser;
     next();
   } catch (err) {
     res.status(401).json({ message: 'Token is not valid' });
@@ -23,11 +23,11 @@ const verifyAdmin = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded.role !== "admin") {
+    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+    if (decodedUser.role !== "admin") {
       return res.status(403).json({ message: "Access denied" });
     }
-    req.admin = decoded;
+    req.admin = decodedUser;
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
