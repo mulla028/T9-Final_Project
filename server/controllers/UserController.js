@@ -67,7 +67,7 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (user) {
-        user.name = req.body.name || user.name;
+        user.username = req.body.username || user.username;
         user.email = req.body.email || user.email;
         user.location = req.body.location || user.location;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;

@@ -224,3 +224,60 @@
     width: 100%;
     color: #9ea3a8; /* Text color */
 }
+
+/* Medium Screens (Tablets) */
+@media (max-width: 992px) {
+    .login-box {
+        width: 50%;
+        padding: 20px;
+    }
+}
+
+/* Small Screens (Mobile) */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+
+    .login-box {
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    .quote-text {
+        font-size: 24px;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+    .login-box {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .quote-text {
+        font-size: 18px;
+    }
+
+    .custom-submit-button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .social-login-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .custom-google-button, 
+    .custom-facebook-button {
+        width: 100%;
+        height: auto;
+        padding: 12px;
+        border-radius: 10px;
+    }
+}
+

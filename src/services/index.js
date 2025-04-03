@@ -172,6 +172,19 @@ export async function updatePassword(password, newPassword, confirmPassword) {
     }
 }
 
+export async function addBooking(booking) {
+    const res = await my_fetch(`${API_BASE_URL}/bookings/add`, {
+        method: "POST",
+        body: JSON.stringify(booking),
+    });
+
+    if (res.status === 201) {
+        return res;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 export async function getItineraryForDay(id, day) {
     const res = await my_fetch(`${API_BASE_URL}/itinerary`, {
         method: "POST",

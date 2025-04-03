@@ -8,7 +8,7 @@ import UserLayout from '@/components/UserLayout';
 import styles from '@/styles/UserProfile.module.css';
 
 const UserProfile = () => {
-    const [user, setUser] = useState({ name: '', email: '', profilePicture: '', phoneNumber: '', location: '' });
+    const [user, setUser] = useState({ username: '', email: '', profilePicture: '', phoneNumber: '', location: '' });
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -57,7 +57,6 @@ const UserProfile = () => {
             alert('Failed to delete account. Please try again.');
             return;
         }
-        alert('Account deleted successfully!');
     };
 
     return (

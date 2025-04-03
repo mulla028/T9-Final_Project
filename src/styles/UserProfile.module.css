@@ -163,3 +163,53 @@
     display: flex;
     gap: 10px; /* Adds space between the buttons */
   }
+
+  /* Medium Screens */
+@media (max-width: 992px) {
+    .profile-card {
+        width: 80%;
+    }
+}
+
+/* Small Screens */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-card {
+        width: 90%;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -100%;
+        width: 70%;
+        height: 100vh;
+        transition: left 0.3s ease-in-out;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+}
+
+/* Extra Small Screens */
+@media (max-width: 480px) {
+    .profile-card {
+        width: 95%;
+        padding: 10px;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-pic {
+        width: 60px;
+        height: 60px;
+    }
+}
+
