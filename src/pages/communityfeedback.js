@@ -54,62 +54,49 @@ const CommunityFeedbackPage = () => {
     );
   };
 
+  const stripApiFromBaseUrl = (url) => url.replace(/\/api\/?$/, '');
+
   const openModal = (mediaUrls, index) => {
-    const fullUrls = mediaUrls.map(url => `http://localhost:8080${url}`);
-    setModalMedia(fullUrls);
-    setCurrentIndex(index);
-    setModalShow(true);
-  };
+  const baseUrl = stripApiFromBaseUrl(API_BASE_URL);
+  const fullUrls = mediaUrls.map(url =>
+    `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  );
+  setModalMedia(fullUrls);
+  setCurrentIndex(index);
+  setModalShow(true);
+};
 
-  const renderMediaThumbnails = (mediaUrls) => {
-    if (!mediaUrls || mediaUrls.length === 0) return null;
+const renderMediaThumbnails = (mediaUrls) => {
+  if (!mediaUrls || mediaUrls.length === 0) return null;
 
-    const fullUrls = mediaUrls.map(url => `http://localhost:8080${url}`);
+  const baseUrl = stripApiFromBaseUrl(API_BASE_URL);
+  const fullUrls = mediaUrls.map(url =>
+    `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`
+  );
 
-    return (
-      <div
-        className="d-flex flex-wrap justify-content-center"
-        style={{
-          gap: '10px',
-          margin: '10px auto',
-          maxWidth: '260px'
-        }}
-      >
-        {fullUrls.map((url, idx) => (
-          <div
-            key={idx}
-            style={{ width: '80px', height: '80px', cursor: 'pointer' }}
-            onClick={() => openModal(mediaUrls, idx)}
-          >
-            {url.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
-              <img
-                src={url}
-                alt="media"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: '12px'
-                }}
-              />
-            ) : (
-              <video
-                muted
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: '12px'
-                }}
-              >
-                <source src={url} type="video/mp4" />
-              </video>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  };
+  return (
+    <div className="d-flex flex-wrap justify-content-center" style={{ gap: '10px', margin: '10px auto', maxWidth: '260px' }}>
+      {fullUrls.map((url, idx) => (
+        <div key={idx} style={{ width: '80px', height: '80px', cursor: 'pointer' }} onClick={() => openModal(mediaUrls, idx)}>
+          {url.match(/\.(jpeg|jpg|png|gif|webp)$/i) ? (
+            <img
+              src={url}
+              alt="media"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+            />
+          ) : (
+            <video
+              muted
+              style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+            >
+              <source src={url} type="video/mp4" />
+            </video>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % modalMedia.length);
