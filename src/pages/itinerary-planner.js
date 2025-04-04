@@ -6,7 +6,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import MapComponent from "@/components/MapComponent";
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { getItineraryForDay, updateItineraryForDay } from "@/services";
+import { getItineraryForDay, updateItineraryForDay, deleteItineraryForDay } from "@/services";
 
 const mapAPI = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -18,7 +18,8 @@ const ItineraryPlanner = () => {
 
     const [stops, setStops] = useState([{}]);
     const [itinerary, setItinerary] = useState(null);
-
+    const [date, setDate] = useState(null);
+    const [isStayDatesLocked, setIsStayDatesLocked] = useState(false);
     const [newStop, setNewStop] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -45,6 +46,8 @@ const ItineraryPlanner = () => {
             try {
                 const itineraryData = await getItineraryForDay(id, day);
                 if (itineraryData) {
+                    console.log(itineraryData.itinerary.date);
+                    setDate(itineraryData.itinerary.date.split('T')[0] || null);
                     setItinerary(itineraryData);
                     const newStops = [];
                     const addedPlaces = new Set();
@@ -86,6 +89,7 @@ const ItineraryPlanner = () => {
                             });
                             addedPlaces.add(key);
                         }
+                        setIsStayDatesLocked(true);
                     }
 
                     // Process Experiences as Stops
@@ -227,6 +231,10 @@ const ItineraryPlanner = () => {
     };
 
     const handleRemoveStop = (index) => {
+        // If the removed stop is the locked stay, unlock it
+        if (isStayDatesLocked && (stops[index].type === "lodging" || stops[index].checkIn)) {
+            setIsStayDatesLocked(false);
+        }
         setStops(stops.filter((_, i) => i !== index));
     };
 
@@ -256,6 +264,21 @@ const ItineraryPlanner = () => {
         let stay = {};
         let experiences = [];
         let missingFields = [];
+
+        if(stops.length == 0) {
+            try {
+                await deleteItineraryForDay(id, day);
+                alert("Itinerary saved successfully!");
+                router.push({
+                    pathname: "/overview",
+                    query: { id },
+                });
+                return;
+            } catch (error) {
+                console.error("Error saving itinerary:", error);
+                alert("Failed to save itinerary");
+            }
+        }
 
         stops.forEach((stop, index) => {
             if (stop.type === "lodging" || stop.checkIn) {
@@ -388,7 +411,8 @@ const ItineraryPlanner = () => {
                     </Col>
 
                     <Col md={4} >
-                        <h4>Itinerary Stops for Day {day}</h4>
+                        <h4>Itinerary Stops for Day {day} </h4>
+                        <h6>{date ? date : ""} </h6>    
                         <ListGroup className="mb-3 itinerary-sidebar">
                             {stops.map((stop, index) => (
                                 <ListGroup.Item key={index} className="d-flex flex-column">
@@ -406,13 +430,16 @@ const ItineraryPlanner = () => {
                                                 <Form.Label>Check-in Date</Form.Label>
                                                 <Form.Control
                                                     type="date"
-                                                    value={stop.checkIn ? stop.checkIn.split("T")[0] : ""}
+                                                    value={stop.checkIn ? stop.checkIn.split("T")[0] : date}
                                                     onChange={(e) => {
-                                                        // Update the check-in date for the specific stop
-                                                        const updatedStops = [...stops];
-                                                        updatedStops[index].checkIn = e.target.value;
-                                                        setStops(updatedStops);
+                                                        if (!isStayDatesLocked) {
+                                                            // Update the check-in date for the specific stop
+                                                            const updatedStops = [...stops];
+                                                            updatedStops[index].checkIn = e.target.value;
+                                                            setStops(updatedStops);
+                                                        }
                                                     }}
+                                                    disabled={true} // Disable always at the day itself
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="checkOut">
@@ -421,11 +448,14 @@ const ItineraryPlanner = () => {
                                                     type="date"
                                                     value={stop.checkOut ? stop.checkOut.split("T")[0] : ""}
                                                     onChange={(e) => {
-                                                        // Update the check-out date for the specific stop
-                                                        const updatedStops = [...stops];
-                                                        updatedStops[index].checkOut = e.target.value;
-                                                        setStops(updatedStops);
+                                                        if (!isStayDatesLocked) {
+                                                            // Update the check-out date for the specific stop
+                                                            const updatedStops = [...stops];
+                                                            updatedStops[index].checkOut = e.target.value;
+                                                            setStops(updatedStops);
+                                                        }
                                                     }}
+                                                    disabled={isStayDatesLocked} // Disable if dates are locked
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="guests">
