@@ -251,8 +251,8 @@ export default function BookingModal({
     } catch (error) {
       console.error("Error saving reservation:", error);
       alert("Error saving reservation!");
-      handleClose();
-
+    }
+    handleClose();
     }
   };
 
@@ -491,4 +491,4 @@ export default function BookingModal({
       </Modal.Footer>
     </Modal>
   );
-}
+  }
