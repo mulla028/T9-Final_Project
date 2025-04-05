@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     itinerary: [
         {
             day: { type: Number, required: true },
+            date: { type: Date },
             stay: {
                 placeId: { type: String }, // Google Places ID (Optional if no stay)
                 placeName: { type: String },
