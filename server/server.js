@@ -13,6 +13,8 @@ const Users = require("./controllers/userController");
 const { REDIRECT_URL } = require('./utils/general');
 const bookingRoutes = require('./routes/bookingRoutes');
 const carbonRoutes = require('./routes/carbonRoutes');
+const feedbackRoute = require('./routes/feedbackRoute');
+const path = require('path');
 
 const app = express();
 
@@ -32,6 +34,9 @@ app.use('/api/places', places);
 app.use('/api/tips', tipRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/carbon', carbonRoutes);
+app.use('/api/feedback', feedbackRoute);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Send email for password reset
 app.post('/api/passwordResetEmail', async (req, res) => {
