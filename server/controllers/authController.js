@@ -7,24 +7,31 @@ exports.register = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
-        return res.status(400).json({ message: 'Password doesn\'t not match' });
+        return res.status(400).json({ message: "Passwords do not match" });
     }
 
     try {
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: 'User already exists!' });
+        let existingUser = await User.findOne({ email });
 
-        user = new User({ username, email, password });
-        user.password = await bcrypt.hash(password, process.env.PASSWORD_SALT);
-        await user.save();
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists!" });
+        }
 
-        const payload = { user: { id: user.id, username: user.username } };
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, email, password: hashedPassword });
+
+        await newUser.save();
+        console.log("User saved successfully:", newUser);
+
+        const payload = { id: newUser.id, username: newUser.username };
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
             if (err) throw err;
             res.json({ token });
         });
+
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        console.error("Server Error:", err);
+        res.status(500).json({ message: "Internal server error, please try again." });
     }
 };
 
