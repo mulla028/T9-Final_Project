@@ -41,7 +41,8 @@ const ProfileDropdown = () => {
         setShow(isOpen);
     };
 
-    const lastName = user?.name?.split(" ").slice(-1)[0] || user?.username?.split(" ").slice(-1)[0];
+    const rawLastName = user?.name?.split(" ").slice(-1)[0] || user?.username?.split(" ").slice(-1)[0];
+    const lastName = rawLastName ? rawLastName.charAt(0).toUpperCase() + rawLastName.slice(1) : '';
 
     return (
         <div className="d-flex justify-content-end align-items-center" style={{ height: '60px' }}>
