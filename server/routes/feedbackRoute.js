@@ -3,10 +3,12 @@ const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const Feedback = require('../models/Feedback');
+const User = require('../models/User'); // make sure this is imported to populate later
 
+// Multer setup
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     const uniqueName = `media-${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
@@ -16,19 +18,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+// POST feedback
 router.post('/', upload.array('media'), async (req, res) => {
   try {
-    const { firstName, lastName, title, comment, rating } = req.body;
+    const { userId, title, comment, rating } = req.body;
 
-    if (!comment || !rating) {
+    if (!userId || !comment || !rating) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     const mediaUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
     const feedback = new Feedback({
-      firstName,
-      lastName,
+      userId,
       title,
       comment,
       rating,
@@ -43,6 +45,7 @@ router.post('/', upload.array('media'), async (req, res) => {
   }
 });
 
+// GET feedbacks with user info
 router.get('/', async (req, res) => {
   try {
     const { page = 1, limit = 4, search = '' } = req.query;
@@ -56,7 +59,8 @@ router.get('/', async (req, res) => {
     const feedbacks = await Feedback.find(query)
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+      .limit(parseInt(limit))
+      .populate('userId', 'username profilePicture'); // 👈 this pulls username & profilePicture
 
     const total = await Feedback.countDocuments(query);
 

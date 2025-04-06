@@ -56,12 +56,12 @@ export async function authenticateAdmin(email, password) {
     }
 }
 
-export async function registerUser(user, password, confirmPassword) {
-    const { firstName, lastName, email } = user;
+export async function registerUser({ username, email }, password, confirmPassword) {
     const res = await my_fetch(`${API_BASE_URL}/auth/register`, {
         method: "POST",
-        body: JSON.stringify({ username: `${firstName} ${lastName}`, email, password, confirmPassword }),
+        body: JSON.stringify({ username, email, password, confirmPassword }),
     });
+
 
     const data = await res.json();
     console.log('Response:', data); // Debugging line
