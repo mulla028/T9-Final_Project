@@ -19,14 +19,14 @@ const contactSupport = async (req, res) => {
         port: 465,
         secure: true,
         auth: {
-            user: "driftwaysystem@gmail.com",
-            pass: "rffoibyeszpwirwb"
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
         }
     });
 
     const mailOptions = {
         from: `"${name}" <${email}>`,
-        to: "driftwaysystem@gmail.com",
+        to: process.env.EMAIL_USER,
         subject: `[Support] ${subject}`,
         text: `Support Request\n\nFrom: ${name}\nEmail: ${email}\n\n${message}`,
     };
