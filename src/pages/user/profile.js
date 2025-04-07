@@ -68,7 +68,7 @@ const UserProfile = () => {
                     <p>Manage your account settings and set preferences.</p>
                 </div>
                 <div className={styles["profile-header"]}>
-                    {user.profilePicture ? <img src={user.profilePicture} alt="Profile" className={styles["profile-pic"]} /> : <FaUser className={styles["profile-pic"]} />}
+                    {user.profilePicture ? <img src={user.profilePicture} alt="Profile" className={styles["profile-pic"]} /> : <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', borderRadius: '50%', marginLeft:'-8px'}}/>}
                     <label htmlFor="profile-upload" className={styles["custom-file-upload"]}>Upload new picture</label>
                     <input id="profile-upload" type="file" accept="image/*" onChange={handleFileChange} hidden />
                     <Button className={styles["custom-delete-btn"]} onClick={() => setUser({ ...user, profilePicture: '' })}>Delete</Button>
