@@ -10,7 +10,7 @@ const LocalExperiences = () => {
 
     const handleButtonClick = () => {
         const authState = isAuthenticated();
-        const destination = authState ? "/local-experiences" : "/signup"; // ✅ No result needed
+        const destination = authState ? "/local-experiences" : "/signup?role=user"; // ✅ No result needed
         router.push(destination);
     };
 
@@ -74,9 +74,9 @@ const LocalExperiences = () => {
             <Container>
                 <h2 className="text-center mb-4">Local Experience for Slow Travel</h2>
                 <Row className="destination-carousel align-items-center">
-             
-                    <Button 
-                        variant="outline-secondary" 
+
+                    <Button
+                        variant="outline-secondary"
                         className="carousel-control prev"
                         onClick={handlePrev}
                         style={{ position: 'absolute', left: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}
@@ -85,7 +85,7 @@ const LocalExperiences = () => {
                     </Button>
 
                     <div className="carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
-                        <Row 
+                        <Row
                             ref={carouselRef}
                             className="carousel-row"
                             style={{
@@ -108,20 +108,37 @@ const LocalExperiences = () => {
                         </Row>
                     </div>
 
-                    <Button 
-                        variant="outline-secondary" 
+                    <Button
+                        variant="outline-secondary"
                         className="carousel-control next"
                         onClick={handleNext}
                         style={{ position: 'absolute', right: 0, zIndex: 10, background: 'white', borderRadius: '50%', padding: '10px' }}
                     >
                         <FaArrowRight />
                     </Button>
-
-                    <Button className='explore-button' onClick={handleButtonClick} style={{ background: 'green', border: 'none', borderRadius: '40px', padding: '8px 16px', width: '40%', height: '60px', textAlign: 'center' }}>
-                        Start Your Local Experiences
-                    </Button>
-
                 </Row>
+
+                <div className="d-flex justify-content-center mt-5">
+                    <Link href="/local-experiences" passHref>
+                        <Button
+                            variant="primary"
+                            size="lg"
+                            onClick={handleButtonClick}
+                            style={{
+                                padding: '12px 30px',
+                                borderRadius: '30px',
+                                background: 'linear-gradient(90deg, #28a745, #218838)',
+                                border: 'none',
+                                boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                                transition: 'transform 0.3s ease',
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                        >
+                            Explore More Local Experiences
+                        </Button>
+                    </Link>
+                </div>
             </Container>
         </div>
     );

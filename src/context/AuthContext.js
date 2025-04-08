@@ -17,6 +17,11 @@ export function AuthProvider({ children }) {
                 token: token,
                 username: decoded.username // Assuming the decoded token contains the username
             });
+        } else {
+            setAuthState({
+                token: null,
+                username: ''
+            });
         }
     }, []);
 

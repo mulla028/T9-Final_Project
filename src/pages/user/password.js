@@ -53,13 +53,15 @@ const PasswordSettings = () => {
     return (
         <UserLayout>
             <Card className={userStyles["profile-card"]}>
+                <div className='mb-4'>
+                    <p>Manage your password</p>
+                </div>
                 <Form onSubmit={handleSubmit(onSubmit)} className="mb-4">
                     <Form.Group className="mb-4" controlId="formPassword" style={{ position: 'relative' }}>
                         <Form.Label className={userStyles['custom-label']}>Old Password</Form.Label>
                         <div className={styles["password-container"]}>
                             <Form.Control className={userStyles["custom-input"]}
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Password"
                                 {...register('password', { required: 'Password is required', minLength: 8 })}
                                 isInvalid={touchedFields.password && errors.password}
                             // style={{ padding: '15px', paddingRight: '50px' }}
@@ -78,7 +80,6 @@ const PasswordSettings = () => {
                         <div className={styles["password-container"]}>
                             <Form.Control className={userStyles["custom-input"]}
                                 type={showPassword ? "text" : "password"}
-                                placeholder="New Password"
                                 {...register('newPassword', { required: 'New password is required', minLength: 8 })}
                                 isInvalid={touchedFields.newPassword && errors.newPassword}
                             // style={{ padding: '15px' }}
@@ -96,7 +97,6 @@ const PasswordSettings = () => {
                         <Form.Label className={userStyles['custom-label']}> Confirm Password</Form.Label>
                         <Form.Control className={userStyles["custom-input"]}
                             type="password"
-                            placeholder="Confirm Password"
                             {...register('confirmPassword', { required: 'Confirm password is required' })}
                             isInvalid={touchedFields.confirmPassword && errors.confirmPassword}
                         // style={{ padding: '15px' }}

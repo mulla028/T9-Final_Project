@@ -3,8 +3,10 @@ import { jwtDecode } from 'jwt-decode';
 import Router from 'next/router';
 import { API_BASE_URL } from '@/utils/general';
 
-export function setToken(token) {
-    localStorage.setItem('access_token', token);
+export function setToken(data) {
+    const { accessToken, refreshToken } = data;
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
 }
 
 export function getToken() {
@@ -37,6 +39,7 @@ export function isAuthenticated() {
 
 export function removeToken() {
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     localStorage.removeItem('email');
 }
 
@@ -67,8 +70,8 @@ export async function registerUser(user, password, confirmPassword) {
     console.log('Response:', data); // Debugging line
 
     if (res.status === 200) {
-        setToken(data.token);
-        return data.token;
+        setToken(data);
+        return data.accessToken;
     } else {
         throw new Error(data.message);
     }
@@ -83,8 +86,8 @@ export async function authenticateUser(email, password) {
     const data = await res.json();
 
     if (res.status === 200) {
-        setToken(data.token);
-        return data.token;
+        setToken(data);
+        return data.accessToken;
     } else {
         throw new Error(data.message);
     }
@@ -320,6 +323,191 @@ export async function deleteTip(id) {
     });
 }
 
+export async function fetchNotifications() {
+    const res = await my_fetch(`${API_BASE_URL}/notifications`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function markNotificationAsRead(id) {
+    const res = await my_fetch(`${API_BASE_URL}/notifications/${id}`, {
+        method: "PATCH",
+    });
+
+    if (res.status === 204) {
+        return;
+    } else {
+        const data = await res.json();
+        throw new Error(data.message);
+    }
+}
+
+export async function markAllNotificationsAsRead() {
+    const res = await my_fetch(`${API_BASE_URL}/notifications/mark-all-read`, {
+        method: "PATCH",
+    });
+
+    if (res.status === 204) {
+        return;
+    } else {
+        const data = await res.json();
+        throw new Error(data.message);
+    }
+}
+
+export async function dismissNotification(id) {
+    const res = await my_fetch(`${API_BASE_URL}/notifications/${id}`, {
+        method: "DELETE",
+    });
+
+    if (res.status === 204) {
+        return;
+    } else {
+        const data = await res.json();
+        throw new Error(data.message);
+    }
+}
+
+export async function fetchUnreadCount() {
+    const res = await my_fetch(`${API_BASE_URL}/notifications/unread-count`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.unreadCount;
+    } else if (res.status === 204) {
+        return 0; // If the user is not logged in, return 0 unread notifications
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function sendSupportMessage(formData) {
+    const res = await my_fetch(`${API_BASE_URL}/support/contact`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function fetchTerms() {
+    const res = await my_fetch(`${API_BASE_URL}/terms`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.terms.content;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function updateTerms(terms) {
+    const res = await my_fetch(`${API_BASE_URL}/terms`, {
+        method: "POST",
+        body: JSON.stringify({ content: terms }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.terms.content;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function updatePolicy(privacy) {
+    const res = await my_fetch(`${API_BASE_URL}/privacy`, {
+        method: "POST",
+        body: JSON.stringify({ content: privacy }),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.privacy.content;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function fetchPolicy() {
+    const res = await my_fetch(`${API_BASE_URL}/privacy`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.privacy.content;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function fetchFaqs() {
+    const res = await my_fetch(`${API_BASE_URL}/faqs`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.faqs;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function createFaq(faq) {
+    const res = await my_fetch(`${API_BASE_URL}/faqs`, {
+        method: "POST",
+        body: JSON.stringify(faq),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.faq;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+const fetchWithTokenRefresh = async (url, options) => {
+    try {
+        let retryResponse = null;
+        // Access Token expired, try to refresh it
+        const refreshResponse = await fetch(`${API_BASE_URL}/token/refresh-token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refreshToken: localStorage.getItem('refresh_token') })
+        });
+
+        if (refreshResponse.ok) {
+            const { accessToken } = await refreshResponse.json();
+            localStorage.setItem('access_token', accessToken);
+
+            // Retry the original request with the new Access Token
+            options.headers['x-auth-token'] = accessToken; // Update the token in headers
+            retryResponse = await fetch(url, options);
+            if (!retryResponse.ok) {
+                throw new Error('Failed to fetch after token refresh');
+            }
+        }
+
+        return retryResponse;
+    } catch (error) {
+        console.error("Error handling request:", error);
+        throw error;
+    }
+};
+
 export async function my_fetch(url, args) {
     const _args = {
         ...args,
@@ -332,9 +520,8 @@ export async function my_fetch(url, args) {
         const response = await fetch(url, _args);
 
         if (response?.status === 401) {
-            removeToken();
-            Router.push("/signup?role=user");
-            return;
+            // Token expired, try to refresh it
+            return fetchWithTokenRefresh(url, _args);
         }
         return response;
     } catch (error) {

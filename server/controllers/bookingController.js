@@ -1,5 +1,6 @@
 
 const User = require("../models/User");
+const Notification = require("../models/Notification");
 
 const addBooking = async (req, res) => {
   console.log(req.body);
@@ -40,9 +41,9 @@ const addBooking = async (req, res) => {
     let newDay = false;
     existingEntry = user.itinerary.find(itinerary => itinerary.date?.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
 
-    if(!existingEntry) {
+    if (!existingEntry) {
       // If no existing entry is found, create a new one
-      existingEntry = { day : 0, date, stay: null, experiences: [] };
+      existingEntry = { day: 0, date, stay: null, experiences: [] };
       newDay = true;
     }
 
@@ -63,15 +64,15 @@ const addBooking = async (req, res) => {
 
     if (experiences && experiences.length > 0) {
       existingEntry.experiences.push(
-      ...experiences.map((exp) => ({
-        placeId: exp.placeId,
-        name: exp.name,
-        location: exp.location || null,
-        time: exp.time,
-        paid: exp.paid || false,
-        date: exp.date,
+        ...experiences.map((exp) => ({
+          placeId: exp.placeId,
+          name: exp.name,
+          location: exp.location || null,
+          time: exp.time,
+          paid: exp.paid || false,
+          date: exp.date,
 
-      })));
+        })));
     }
 
     // If you did add a new booking, then sort the dates
@@ -92,6 +93,21 @@ const addBooking = async (req, res) => {
     // Save updated user itinerary
     await user.save();
 
+    // Create a notification for the user
+    const notification = new Notification({
+      userId: user._id,
+      type: "Booking Confirmation",
+      message: existingEntry
+        ? `Your booking at ${existingEntry.experiences?.[0]?.name} is confirmed!`
+        : "Your booking is confirmed!", // Fallback message if no stay is found
+      icon: "success",
+      relatedId: existingEntry.experiences[0]?._id || null,
+      timestamp: new Date(),
+    });
+
+    await notification.save();
+    console.log(notification);
+
     res.status(201).json({
       id: user._id,
       message: "Reservation successfully added!",
@@ -99,7 +115,7 @@ const addBooking = async (req, res) => {
     });
 
   } catch (error) {
-      console.error(error);
+    console.error(error);
     res.status(500).json({ message: "An error occurred on the server." });
   }
 };
@@ -170,21 +186,21 @@ const addMultipleBookings = async (req, res) => {
 
       if (experiences && experiences.length > 0) {
         existingEntry.experiences.push(
-        ...experiences.map((exp) => ({
-          placeId: exp.placeId,
-          name: exp.name,
-          location: exp.location || null,
-          time: exp.time,
-          paid: exp.paid || false,
-          date: exp.date,
-  
-        })));
+          ...experiences.map((exp) => ({
+            placeId: exp.placeId,
+            name: exp.name,
+            location: exp.location || null,
+            time: exp.time,
+            paid: exp.paid || false,
+            date: exp.date,
+
+          })));
       }
 
       // Push the new itinerary if it does not exist
       if (newDay) user.itinerary.push(existingEntry);
     });
-    
+
     // Sorting logic
     user.itinerary.sort((a, b) => {
       const getDate = (entry) => entry.date || entry.stay?.checkIn || entry.experiences?.[0]?.date || "";
@@ -199,13 +215,31 @@ const addMultipleBookings = async (req, res) => {
     // Save updated user itinerary
     await user.save();
 
+    // Find the most recent itinerary entry with a stay
+    const recentStayEntry = user.itinerary.find(itinerary => itinerary.stay?.placeName);
+
+    // Create a notification for the user
+    const notification = new Notification({
+      userId: user._id,
+      type: "Booking Confirmation",
+      message: recentStayEntry
+        ? `Your booking at ${recentStayEntry.stay.placeName} is confirmed!`
+        : "Your booking is confirmed!", // Fallback message if no stay is found
+      icon: "success",
+      relatedId: recentStayEntry?.stay?.placeId || null,
+      timestamp: new Date(),
+    });
+
+    await notification.save();
+    console.log(notification);
+
     res.status(201).json({
       id: user._id,
       message: "Reservations are successfully added!",
       itinerary: user.itinerary,
     });
   }
-  catch {
+  catch (error) {
     console.error(error);
     res.status(500).json({ message: "An error occurred on the server." });
   }
