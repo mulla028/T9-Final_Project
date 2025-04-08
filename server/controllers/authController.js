@@ -2,6 +2,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { generateToken } = require('../utils/jwtUtils');
 
 exports.register = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
@@ -23,10 +24,11 @@ exports.register = async (req, res) => {
         await newUser.save();
         console.log("User saved successfully:", newUser);
 
-        const payload = { id: user.id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+        const refreshToken = generateToken(user);
+        const payload = { id: user._id, username: user.username };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ accessToken, refreshToken });
         });
 
     } catch (err) {
@@ -44,10 +46,11 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 
-        const payload = { id: user.id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+        const refreshToken = generateToken(user);
+        const payload = { id: user._id, username: user.username };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ accessToken, refreshToken });
         });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });

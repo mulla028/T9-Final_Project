@@ -1,10 +1,29 @@
+import { useState, useEffect } from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+import { FaBell } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
+import { fetchUnreadCount } from '@/services'
 
 const Header = () => {
     const { authState } = useAuth();
     const { token } = authState;
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+        // Fetch the unread count when the component mounts
+        fetchUnreadCount().then((count) => {
+            setUnreadCount(count);
+        }).catch((error) => {
+            console.error('Error fetching unread count:', error);
+        });
+    }, []);
+
+
+    const handleClick = () => {
+        window.location.href = '/notifications'; // Redirect to notifications page
+    }
+
 
     return (
         <Navbar bg="light" expand="lg" fixed="top"> {/* Keeps the header fixed */}
@@ -18,9 +37,15 @@ const Header = () => {
                         <Nav.Link href="#eco-partners" className="no-bold-link">EcoPartnerships</Nav.Link>
                         <Nav.Link href="#blog-section" className="no-bold-link">Blog</Nav.Link>
                     </Nav>
-                    <Nav>
+                    <Nav className='d-flex align-items-center gap-4'>
                         {token ? (
-                            <ProfileDropdown />
+                            <>
+                                <div className='icon-button position-relative' onClick={handleClick}>
+                                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                                    <FaBell size={24} />
+                                </div>
+                                <ProfileDropdown />
+                            </>
                         ) : (
                             <>
                                 <Button variant="success" href="/signup?role=user" className="my-button">

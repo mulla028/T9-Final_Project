@@ -3,6 +3,7 @@ import { Dropdown, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProfile } from '@/services';
+import { FaUser } from "react-icons/fa"
 
 const ProfileDropdown = () => {
     const [show, setShow] = useState(false);
@@ -40,20 +41,24 @@ const ProfileDropdown = () => {
             >
                 <Button
                     variant="light"
-                    className="p-2 rounded-circle d-flex align-items-center border-0"
+                    className="p-2 rounded-circle d-flex align-items-center justify-content-center border-0"
                     style={{
-                        width: '50px',
-                        height: '50px',
+                        width: '60px',
+                        height: '60px',
                         overflow: 'hidden',
                     }}
                     onClick={() => setShow(!show)}
-                >
-                    <img
-                        src={user.profilePicture} // Replace with your profile image path
-                        alt="Profile"
-                        className="rounded-circle"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                >{/* FaUser is used as a placeholder for the profile picture */}
+                    {user.profilePicture ? (
+                        <img
+                            src={user.profilePicture} // Replace with your profile image path
+                            alt="Profile"
+                            className="rounded-circle"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                    ) : (
+                        <FaUser className="rounded-circle" size={30} color="#000" />
+                    )}
                 </Button>
 
                 <Dropdown.Menu style={{ width: '350px', padding: '15px' }}>

@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "driftwaysystem@gmail.com", 
-        pass: "rffoibyeszpwirwb"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -25,19 +25,19 @@ module.exports.sendPasswordReset = async function (email) {
         console.log(user);
         if (!user) {
             // Check if the user has signed in with google or fb
-            const socialUser = await SocialUser.findOne({email});
+            const socialUser = await SocialUser.findOne({ email });
             if (socialUser) {
                 throw new Error("You are using third-party applications, please use Google or Facebook to sign-in.");
             } else {
                 throw new Error("No user found.");
             }
         } else {
-        // Send the verification code to the user's email
-        const mailOptions = {
-            from: "driftwaysystem@gmail.com",
-            to: email,
-            subject: 'Verification Code for Password Reset',
-            html: `
+            // Send the verification code to the user's email
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Verification Code for Password Reset',
+                html: `
   <!doctype html>
                     <html lang="en-US">
 
@@ -116,18 +116,18 @@ module.exports.sendPasswordReset = async function (email) {
         <!--/100% body table-->
     </body>
   `
-        };
-        await new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (error) => {
-                if (error) {
-                    console.log("Email sent fail");
-                    reject(error);
-                } else {
-                    resolve("email sent");
-                    console.log("Email sent!");
-                }
+            };
+            await new Promise((resolve, reject) => {
+                transporter.sendMail(mailOptions, (error) => {
+                    if (error) {
+                        console.log("Email sent fail");
+                        reject(error);
+                    } else {
+                        resolve("email sent");
+                        console.log("Email sent!");
+                    }
+                });
             });
-        });
         }
     } catch (error) {
         throw error; // Rethrow the error to ensure it's caught in the caller function
@@ -143,8 +143,8 @@ module.exports.resetPassword = async function (id, password) {
         const hashedPassword = await bcrypt.hash(password.password, salt);
 
         // Update the user
-        await User.updateOne({_id: id}, 
-             {$set:{password: hashedPassword}});
+        await User.updateOne({ _id: id },
+            { $set: { password: hashedPassword } });
     } catch (error) {
         console.log(error.message);
     }
