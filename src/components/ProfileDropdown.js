@@ -3,26 +3,37 @@ import { Dropdown, Button } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProfile } from '@/services';
-import { FaUser } from "react-icons/fa"
+import { FaUser } from 'react-icons/fa';
+import styles from '@/styles/UserProfile.module.css';
 
 const ProfileDropdown = () => {
     const [show, setShow] = useState(false);
-    const [user, setUser] = useState({ name: '', email: '', profilePicture: '', phoneNumber: '', location: '' });
+    const [user, setUser] = useState({
+        name: '',
+        username: '',
+        email: '',
+        profilePicture: '',
+        phoneNumber: '',
+        location: ''
+    });
+
     const { logout } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
-        fetchProfile().then((data) => {
-            setUser(data);
-        }).catch((error) => {
-            console.error('Error fetching profile:', error);
-        });
+        fetchProfile()
+            .then((data) => {
+                setUser(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching profile:', error);
+            });
     }, []);
 
     const handleLogout = () => {
         logout();
         setTimeout(() => {
-            router.push("/");
+            router.push('/');
         }, 2000);
     };
 
@@ -30,15 +41,13 @@ const ProfileDropdown = () => {
         setShow(isOpen);
     };
 
+    const rawLastName = user?.name?.split(" ").slice(-1)[0] || user?.username?.split(" ").slice(-1)[0];
+    const lastName = rawLastName ? rawLastName.charAt(0).toUpperCase() + rawLastName.slice(1) : '';
+
     return (
-        <div className="d-flex justify-content-end align-items-center"
-            style={{ height: '60px' }}
-        >
-            <Dropdown
-                show={show}
-                onToggle={toggleDropdown}
-                align="end"
-            >
+        <div className="d-flex justify-content-end align-items-center" style={{ height: '60px' }}>
+            {lastName && <span className="me-2">Hi, {lastName}</span>}
+            <Dropdown show={show} onToggle={toggleDropdown} align="end">
                 <Button
                     variant="light"
                     className="p-2 rounded-circle d-flex align-items-center justify-content-center border-0"
@@ -48,16 +57,16 @@ const ProfileDropdown = () => {
                         overflow: 'hidden',
                     }}
                     onClick={() => setShow(!show)}
-                >{/* FaUser is used as a placeholder for the profile picture */}
-                    {user.profilePicture ? (
+                >
+                    {!user.profilePicture ? (
+                        <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', borderRadius: '50%', marginLeft:'-8px'}}/>
+                    ) : (
                         <img
-                            src={user.profilePicture} // Replace with your profile image path
+                            src={user.profilePicture}
                             alt="Profile"
                             className="rounded-circle"
                             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
-                    ) : (
-                        <FaUser className="rounded-circle" size={30} color="#000" />
                     )}
                 </Button>
 

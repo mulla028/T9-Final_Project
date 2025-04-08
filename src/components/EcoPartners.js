@@ -25,6 +25,7 @@ const EcoPartners = () => {
     ];
 
     return (
+        <section id="eco-partners">
         <div
             id="eco-partners" // Section ID for navigation
             className="eco-partners"
@@ -75,6 +76,7 @@ const EcoPartners = () => {
                 </Row>
             </Container>
         </div>
+        </section>
     );
 };
 

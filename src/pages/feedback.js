@@ -4,20 +4,20 @@ import axios from 'axios';
 import { FaRegStar, FaStar } from 'react-icons/fa';
 import { API_BASE_URL } from '@/utils/general';
 import { useRouter } from 'next/router';
+import { fetchProfile } from '@/services';
+import Header from '@/components/Header'; 
 
 const StarRating = ({ rating, setRating }) => {
   const [hover, setHover] = useState(null);
-
   return (
     <div className="mb-3">
-      <Form.Label style={{ fontFamily: 'Quicksand, serif', fontSize: '1.2rem' }}>
+      <Form.Label style={{ fontFamily: 'Quicksand, serif', fontSize: '1.2rem', marginLeft:'5px' }}>
         Rating
       </Form.Label>
-      <div style={{ display: 'flex', gap: '5px', cursor: 'pointer' }}>
+      <div style={{ display: 'flex', gap: '5px', cursor: 'pointer', marginLeft:'5px' }}>
         {[...Array(5)].map((_, index) => {
           const starValue = index + 1;
           const isFilled = starValue <= (hover || rating);
-
           return (
             <span
               key={index}
@@ -26,11 +26,7 @@ const StarRating = ({ rating, setRating }) => {
               onMouseLeave={() => setHover(null)}
               style={{ fontSize: '30px' }}
             >
-              {isFilled ? (
-                <FaStar color="#f4b400" />
-              ) : (
-                <FaRegStar color="#555" />
-              )}
+              {isFilled ? <FaStar color="#f4b400" /> : <FaRegStar color="#555" />}
             </span>
           );
         })}
@@ -43,45 +39,32 @@ const FeedbackForm = () => {
   const [experienceTitle, setExperienceTitle] = useState('Eco Haven Resort');
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [media, setMedia] = useState([]);
-  const [reviews, setReviews] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const router = useRouter();
+  const [user, setUser] = useState(null);
   const commentRef = useRef(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchFeedbacks = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/feedback`);
-        setReviews(res.data.feedbacks.reverse());
-      } catch (err) {
-        console.error('Failed to fetch reviews:', err);
-      }
-    };
-    fetchFeedbacks();
+    fetchProfile()
+      .then((data) => setUser(data))
+      .catch((err) => console.error('Failed to fetch user profile:', err));
   }, []);
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
-    const textarea = commentRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
+    if (commentRef.current) {
+      commentRef.current.style.height = 'auto';
+      commentRef.current.style.height = `${commentRef.current.scrollHeight}px`;
     }
   };
 
   const handleAddMedia = (e) => {
     const selected = Array.from(e.target.files);
-    const uniqueNew = selected.filter(
-      (newFile) =>
-        !media.some(
-          (existing) =>
-            existing.name === newFile.name && existing.size === newFile.size
-        )
+    const unique = selected.filter(
+      (file) => !media.some((m) => m.name === file.name && m.size === file.size)
     );
-    setMedia((prev) => [...prev, ...uniqueNew]);
+    setMedia((prev) => [...prev, ...unique]);
     e.target.value = null;
   };
 
@@ -91,46 +74,31 @@ const FeedbackForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (rating === 0) {
-      alert('Please select a rating before submitting.');
-      return;
-    }
+    if (rating === 0) return alert('Please select a rating.');
+    if (!user || !user._id) return alert('User not loaded.');
 
     const formData = new FormData();
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
+    formData.append('userId', user._id);
     formData.append('title', experienceTitle);
     formData.append('rating', rating);
     formData.append('comment', comment);
-    media.forEach((file) => {
-      formData.append('media', file);
-    });
+    media.forEach((file) => formData.append('media', file));
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/feedback`, formData, {
+      await axios.post(`${API_BASE_URL}/feedback`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      setReviews([res.data, ...reviews]);
-      setExperienceTitle('Eco Haven Resort');
-      setRating(0);
-      setComment('');
-      setFirstName('');
-      setLastName('');
-      setMedia([]);
       setShowSuccess(true);
-
-      setTimeout(() => {
-        router.push('/communityfeedback');
-      }, 1000); 
-    } catch (error) {
-      console.error(error);
+      setTimeout(() => router.push('/communityfeedback'), 1000);
+    } catch (err) {
+      console.error(err);
       alert('Failed to submit feedback.');
     }
   };
 
   return (
+    <>
+    <Header />
     <Container
       fluid
       style={{
@@ -139,7 +107,7 @@ const FeedbackForm = () => {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         minHeight: '100vh',
-        paddingTop: '60px',
+        paddingTop: '160px',
       }}
     >
       {showSuccess && (
@@ -198,29 +166,11 @@ const FeedbackForm = () => {
                 </h2>
               </Card.Title>
               <br />
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="firstName" className="mb-3">
-                  <Form.Label>First Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your first name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </Form.Group>
-
-                <Form.Group controlId="lastName" className="mb-3">
-                  <Form.Label>Last Name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter your last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </Form.Group>
-
+              <Form onSubmit={handleSubmit}>               
                 <Form.Group controlId="experienceTitle" className="mb-3">
-                  <Form.Label>Experience</Form.Label>
+                <Form.Label style={{ fontFamily: 'Quicksand, serif', fontSize: '1.2rem', marginLeft:'5px' }}>
+                  Experience
+                </Form.Label>
                   <Form.Control
                     as="select"
                     value={experienceTitle}
@@ -240,7 +190,8 @@ const FeedbackForm = () => {
                 </Form.Group>
 
                 <Form.Group controlId="reviewComment" className="mb-3">
-                  <Form.Label>Feedback</Form.Label>
+                  <Form.Label style={{ fontFamily: 'Quicksand, serif', fontSize: '1.2rem', marginLeft:'5px' }}>
+                  Feedback</Form.Label>
                   <Form.Control
                     as="textarea"
                     placeholder="Write your review here..."
@@ -367,6 +318,7 @@ const FeedbackForm = () => {
         </Col>
       </Row>
     </Container>
+    </>
   );
 };
 
