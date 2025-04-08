@@ -26,6 +26,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-google-oidc": "^0.1.0",
     "passport-google-token": "^0.1.2",
+    "password": "^0.1.1",
     "redis": "^4.7.0",
     "sanitize-html": "^2.15.0"
   }

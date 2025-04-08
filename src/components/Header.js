@@ -18,7 +18,8 @@ const Header = () => {
                 .then((user) => {
                     const fullName = user?.name || user?.username || '';
                     const last = fullName?.split(' ').slice(-1)[0];
-                    setLastName(last);
+                    const capitalized = last.charAt(0).toUpperCase() + last.slice(1);
+                    setLastName(capitalized);
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
 
@@ -52,7 +53,7 @@ const Header = () => {
                                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                                     <FaBell size={24} />
                                 </div>
-                                <span className="me-2 fw-bold">{lastName}</span>
+                                <span className="me-2 fw-bold">Hi, {lastName}</span>
                                 <ProfileDropdown />
                             </>
                         ) : (

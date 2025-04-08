@@ -41,12 +41,8 @@ const ProfileDropdown = () => {
         setShow(isOpen);
     };
 
-    const rawLastName = user?.name?.split(" ").slice(-1)[0] || user?.username?.split(" ").slice(-1)[0];
-    const lastName = rawLastName ? rawLastName.charAt(0).toUpperCase() + rawLastName.slice(1) : '';
-
     return (
         <div className="d-flex justify-content-end align-items-center" style={{ height: '60px' }}>
-            {lastName && <span className="me-2">Hi, {lastName}</span>}
             <Dropdown show={show} onToggle={toggleDropdown} align="end">
                 <Button
                     variant="light"
