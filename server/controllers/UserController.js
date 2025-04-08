@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require("../models/User.js");
 const SocialUser = require("../models/SocialUser.js");
 const Notification = require("../models/Notification.js");
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');   
 
 // Get user profile
 const getUserProfile = async (req, res) => {

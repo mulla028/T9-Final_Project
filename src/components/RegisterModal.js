@@ -43,19 +43,19 @@ export default function RegisterModal({ show, handleClose }) {
 
     const onSubmit = async (data, e) => {
         e.preventDefault();
-        console.log('Form submitted'); // Debugging line
+        console.log('Form submitted'); 
         try {
             const { firstName, lastName, email, password, confirmPassword } = data;
             localStorage.setItem('email', email);
-            const token = await registerUser({ firstName, lastName, email }, password, confirmPassword);
+            const token = await registerUser({ username: `${firstName} ${lastName}`, email }, password, confirmPassword);
             if (token) {
                 login(token)
-                console.log('Registration successful'); // Debugging line
+                console.log('Registration successful'); 
 
                 router.push("/");
             }
         } catch (error) {
-            console.error('Error during registration:', error); // Debugging line
+            console.error('Error during registration:', error); 
             setWarning(error.message);
         }
     };

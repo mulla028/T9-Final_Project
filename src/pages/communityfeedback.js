@@ -4,6 +4,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/utils/general';
 import { FaStar } from 'react-icons/fa';
 import { useRouter } from 'next/router';
+import Header from '@/components/Header'; 
 
 const ITEMS_PER_PAGE = 4;
 const MAX_COMMENT_LENGTH = 100;
@@ -107,16 +108,18 @@ const renderMediaThumbnails = (mediaUrls) => {
   };
 
   return (
+    <>
+    <Header /> {/* ✅ Inject Navbar here */}
     <div
-    style={{
-      backgroundImage: "url('/icon/CommunityFeedback.jpg')",
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      minHeight: '120vh',
-      paddingTop: '60px',
-    }}
-  >
+      style={{
+        backgroundImage: "url('/icon/CommunityFeedback.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        minHeight: '120vh',
+        paddingTop: '60px',
+      }}
+    >
     <Container>
       <h2 className="text-center mb-5" 
       style={{
@@ -167,16 +170,20 @@ const renderMediaThumbnails = (mediaUrls) => {
             >
               <Card.Body className="text-center">
                 <img
-                  src="https://images.unsplash.com/photo-1466112928291-0903b80a9466?q=80&w=1473&auto=format&fit=crop"
+                  src={item.userId?.profilePicture || '/icon/default-icon.png'}
                   alt="Profile"
                   className="rounded-circle mb-3"
                   style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/icon/default-icon.png';
+                  }}
                 />
                 <Card.Text style={{ fontSize: '0.95rem', marginBottom: '10px' }}>
                   {renderComment(item.comment, index)}
                 </Card.Text>
                 <Card.Title style={{ fontSize: '1.25rem', fontWeight: '600' }}>
-                  {item.firstName || 'Anonymous'} {item.lastName || ''}
+                  {item.userId?.username || 'Anonymous'}
                 </Card.Title>
                 <Card.Subtitle className="mb-3 text-muted" style={{ fontSize: '1rem', marginTop:'10px' }}>
                   {item.title}
@@ -185,6 +192,11 @@ const renderMediaThumbnails = (mediaUrls) => {
                   {Array.from({ length: item.rating }).map((_, i) => (
                     <FaStar key={i} color="#f4b400" />
                   ))}
+                </Card.Subtitle>
+                <Card.Subtitle className="text-muted" style={{ fontSize: '0.85rem', marginTop:'10px', marginBottom: '10px' }}>
+                  {new Date(item.createdAt).toLocaleString('en-US', {
+                    dateStyle: 'medium',
+                  })}
                 </Card.Subtitle>
                 {renderMediaThumbnails(item.mediaUrls)}
               </Card.Body>
@@ -312,6 +324,7 @@ const renderMediaThumbnails = (mediaUrls) => {
       </Modal>
     </Container>
     </div>
+    </>
   );
 };
 
