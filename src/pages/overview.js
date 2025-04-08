@@ -150,7 +150,14 @@ const ItineraryOverview = () => {
 
     return (
         <>
-            <Container className="itinerary-planner" style={{ marginTop: '60px' }}>
+            <Navbar bg="light" expand="lg">
+                <Container fluid="md">
+                    <Navbar.Brand href="/">Driftway</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                </Container>
+            </Navbar>
+
+            <Container className="itinerary-planner" style={{ marginTop: '20px' }}>
                 <div className="hero" style={{ marginBottom: '20px' }}>
                     <h2 className="text-center mb-4">Your Itinerary Overview</h2>
                     <p>You can select a day to add or remove your experiences and stays.</p>
