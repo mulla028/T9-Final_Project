@@ -50,10 +50,10 @@ const ProfileDropdown = () => {
             <Dropdown show={show} onToggle={toggleDropdown} align="end">
                 <Button
                     variant="light"
-                    className="p-2 rounded-circle d-flex align-items-center border-0"
+                    className="p-2 rounded-circle d-flex align-items-center justify-content-center border-0"
                     style={{
-                        width: '50px',
-                        height: '50px',
+                        width: '60px',
+                        height: '60px',
                         overflow: 'hidden',
                     }}
                     onClick={() => setShow(!show)}

@@ -1,16 +1,19 @@
+import { useState, useEffect } from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
+import { FaBell } from 'react-icons/fa';
 import { useAuth } from '@/context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
-import { useEffect, useState } from 'react';
-import { fetchProfile } from '@/services';
+import { fetchProfile, fetchUnreadCount } from '@/services';
 
 const Header = () => {
     const { authState } = useAuth();
     const { token } = authState;
     const [lastName, setLastName] = useState('');
+    const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
         if (token) {
+            // Fetch profile info
             fetchProfile()
                 .then((user) => {
                     const fullName = user?.name || user?.username || '';
@@ -18,8 +21,17 @@ const Header = () => {
                     setLastName(last);
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
+
+            // Fetch unread notifications
+            fetchUnreadCount()
+                .then((count) => setUnreadCount(count))
+                .catch((error) => console.error('Error fetching unread count:', error));
         }
     }, [token]);
+
+    const handleClick = () => {
+        window.location.href = '/notifications';
+    }
 
     return (
         <Navbar bg="light" expand="lg" fixed="top">
@@ -33,9 +45,14 @@ const Header = () => {
                         <Nav.Link href="/#eco-partners" className="no-bold-link">EcoPartnerships</Nav.Link>
                         <Nav.Link href="/#blog-section" className="no-bold-link">Blog</Nav.Link>
                     </Nav>
-                    <Nav className="align-items-center">
+                    <Nav className="d-flex align-items-center gap-4">
                         {token ? (
                             <>
+                                <div className="icon-button position-relative" onClick={handleClick}>
+                                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                                    <FaBell size={24} />
+                                </div>
+                                <span className="me-2 fw-bold">{lastName}</span>
                                 <ProfileDropdown />
                             </>
                         ) : (

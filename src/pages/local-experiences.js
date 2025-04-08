@@ -109,6 +109,7 @@ const LocalExperiences = () => {
                     <Autocomplete
                         onLoad={(autocomplete) => (autoCompleteRef.current = autocomplete)}
                         onPlaceChanged={handlePlaceSelect}
+                        className="autocomplete"
                     >
                         <Form.Control
                             ref={inputRef}
@@ -120,7 +121,7 @@ const LocalExperiences = () => {
                                 setAutocompleteSelected(false); // Reset selection
                             }}
                             onKeyDown={handleKeyDown}
-                            className="search-input"
+                            style={{ borderRadius: "30px" }}
                         />
                     </Autocomplete>
                 </Col>

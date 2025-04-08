@@ -2,29 +2,38 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { generateToken } = require('../utils/jwtUtils');
 
 exports.register = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
-        return res.status(400).json({ message: 'Password doesn\'t not match' });
+        return res.status(400).json({ message: "Passwords do not match" });
     }
 
     try {
-        let user = await User.findOne({ email });
-        if (user) return res.status(400).json({ message: 'User already exists!' });
+        let existingUser = await User.findOne({ email });
 
-        user = new User({ username, email, password });
-        user.password = await bcrypt.hash(password, process.env.PASSWORD_SALT);
-        await user.save();
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists!" });
+        }
 
-        const payload = { id: user.id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = new User({ username, email, password: hashedPassword });
+
+        await newUser.save();
+        console.log("User saved successfully:", newUser);
+
+        const refreshToken = generateToken(user);
+        const payload = { id: user._id, username: user.username };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ accessToken, refreshToken });
         });
+
     } catch (err) {
-        res.status(500).json({ message: 'Server error' });
+        console.error("Server Error:", err);
+        res.status(500).json({ message: "Internal server error, please try again." });
     }
 };
 
@@ -37,10 +46,11 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 
-        const payload = { id: user.id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+        const refreshToken = generateToken(user);
+        const payload = { id: user._id, username: user.username };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
             if (err) throw err;
-            res.json({ token });
+            res.json({ accessToken, refreshToken });
         });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });

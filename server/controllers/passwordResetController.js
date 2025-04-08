@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const SocialUser = require('../models/SocialUser');
-const { CALLBACK_URL } = require('../utils/general');
+const { REDIRECT_URL } = require('../utils/general');
 
 // Nodemailer transporter setup
 // .env does not work for nodemailer, so hardcoded the user and pass!
@@ -12,8 +12,8 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        user: "driftwaysystem@gmail.com", 
-        pass: "rffoibyeszpwirwb"
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -25,19 +25,19 @@ module.exports.sendPasswordReset = async function (email) {
         console.log(user);
         if (!user) {
             // Check if the user has signed in with google or fb
-            const socialUser = await SocialUser.findOne({email});
+            const socialUser = await SocialUser.findOne({ email });
             if (socialUser) {
                 throw new Error("You are using third-party applications, please use Google or Facebook to sign-in.");
             } else {
                 throw new Error("No user found.");
             }
         } else {
-        // Send the verification code to the user's email
-        const mailOptions = {
-            from: "driftwaysystem@gmail.com",
-            to: email,
-            subject: 'Verification Code for Password Reset',
-            html: `
+            // Send the verification code to the user's email
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Verification Code for Password Reset',
+                html: `
   <!doctype html>
                     <html lang="en-US">
 
@@ -62,7 +62,7 @@ module.exports.sendPasswordReset = async function (email) {
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">
-                                          <a href="${CALLBACK_URL}" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
+                                          <a href="${REDIRECT_URL}" title="logo" target="_blank" style="font-family:poppins,serif; font-size:48px; text-decoration:none!important; color:black; font-weight:bold;">
                                             DriftWay
                                           </a>
                                         </td>
@@ -86,7 +86,7 @@ module.exports.sendPasswordReset = async function (email) {
                                                             <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start; ">
                                                                 Here is your password reset link:
                                                         </p><br><br><br>
-                                                        <button style="background-color:green; color:white; font-size:30px; border:none; border-radius:8px; padding:15px;"><a href="${CALLBACK_URL}/reset-password/${user._id}" style="color:white; text-decoration:none; ">Reset password here</a></button><br><br><br>
+                                                        <button style="background-color:green; color:white; font-size:30px; border:none; border-radius:8px; padding:15px;"><a href="${REDIRECT_URL}/reset-password/${user._id}" style="color:white; text-decoration:none; ">Reset password here</a></button><br><br><br>
                                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start;">
                                                             If this link is not requested by you, you may ignore this email.</p><br>
                                                             <p style="color:#455056; font-size:15px;line-height:24px; margin:0;text-align:start;">Regards,</p>
@@ -103,7 +103,7 @@ module.exports.sendPasswordReset = async function (email) {
                                     </tr>
                                     <tr>
                                         <td style="text-align:center;">
-                                            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <a href="${CALLBACK_URL}" style="text-decoration: none; color:rgba(69, 80, 86, 0.7411764705882353);"><strong>DriftWay Inc.</strong></a></p>
+                                            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <a href="${REDIRECT_URL}" style="text-decoration: none; color:rgba(69, 80, 86, 0.7411764705882353);"><strong>DriftWay Inc.</strong></a></p>
                                         </td>
                                     </tr>
                                     <tr>
@@ -116,18 +116,18 @@ module.exports.sendPasswordReset = async function (email) {
         <!--/100% body table-->
     </body>
   `
-        };
-        await new Promise((resolve, reject) => {
-            transporter.sendMail(mailOptions, (error) => {
-                if (error) {
-                    console.log("Email sent fail");
-                    reject(error);
-                } else {
-                    resolve("email sent");
-                    console.log("Email sent!");
-                }
+            };
+            await new Promise((resolve, reject) => {
+                transporter.sendMail(mailOptions, (error) => {
+                    if (error) {
+                        console.log("Email sent fail");
+                        reject(error);
+                    } else {
+                        resolve("email sent");
+                        console.log("Email sent!");
+                    }
+                });
             });
-        });
         }
     } catch (error) {
         throw error; // Rethrow the error to ensure it's caught in the caller function
@@ -143,8 +143,8 @@ module.exports.resetPassword = async function (id, password) {
         const hashedPassword = await bcrypt.hash(password.password, salt);
 
         // Update the user
-        await User.updateOne({_id: id}, 
-             {$set:{password: hashedPassword}});
+        await User.updateOne({ _id: id },
+            { $set: { password: hashedPassword } });
     } catch (error) {
         console.log(error.message);
     }

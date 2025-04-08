@@ -14,6 +14,12 @@ const { REDIRECT_URL } = require('./utils/general');
 const bookingRoutes = require('./routes/bookingRoutes');
 const carbonRoutes = require('./routes/carbonRoutes');
 const feedbackRoute = require('./routes/feedbackRoute');
+const notificationRoutes = require('./routes/notificationRoutes');
+const supportRoute = require('./routes/supportRoute');
+const faqRoutes = require('./routes/faqRoutes');
+const termsRoutes = require('./routes/termsRoutes');
+const privacyRoutes = require('./routes/privacyRoutes');
+const tokenRoute = require('./routes/refreshTokenRoute');
 const path = require('path');
 
 const app = express();
@@ -23,7 +29,8 @@ connectDB();
 
 // Middleware
 app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(passport.initialize());
 
 // Define Routes
@@ -35,6 +42,12 @@ app.use('/api/tips', tipRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/carbon', carbonRoutes);
 app.use('/api/feedback', feedbackRoute);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/support', supportRoute);
+app.use('/api/faqs', faqRoutes);
+app.use('/api/terms', termsRoutes);
+app.use('/api/privacy', privacyRoutes);
+app.use('/api/token', tokenRoute);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
