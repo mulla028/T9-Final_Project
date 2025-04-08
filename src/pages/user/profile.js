@@ -1,5 +1,4 @@
 // Description: User Profile Page Component
-
 import { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { FaUser, FaGoogle } from 'react-icons/fa';
@@ -65,7 +64,7 @@ const UserProfile = () => {
             <Card className={styles["profile-card"]}>
                 <div className='mb-4'>
                     <h3>{user.username}</h3>
-                    <p>Manage your account settings and set preferences.</p>
+                    <p>Manage your profile settings</p>
                 </div>
                 <div className={styles["profile-header"]}>
                     {user.profilePicture ? <img src={user.profilePicture} alt="Profile" className={styles["profile-pic"]} /> : <FaUser className={styles["profile-pic"]} />}
