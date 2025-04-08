@@ -31,14 +31,22 @@ const ContactSupport = () => {
             setError(true);
             return;
         }
+        if (form.attachments && form.attachments.length > 0) {
+            const fileSize = Array.from(form.attachments).reduce((total, file) => total + file.size, 0);
+            if (fileSize > 5 * 1024 * 1024) { // 5MB limit
+                setError('Attachments exceed the maximum size of 5MB.');
+                return;
+            }
+        }
 
         try {
             const data = await sendSupportMessage(form);
 
-            if (res.status === 200) {
+            if (data !== null) {
                 setSuccess(data.message);
                 setSubmitted(true);
                 setForm({ name: '', email: '', subject: '', message: '', attachments: null });
+                setError('');
             }
         } catch (err) {
             setError(err.response ? err.response.data.message : 'An error occurred. Please try again later.');

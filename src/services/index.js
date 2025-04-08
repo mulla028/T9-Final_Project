@@ -453,6 +453,32 @@ export async function fetchPolicy() {
     }
 }
 
+export async function fetchFaqs() {
+    const res = await my_fetch(`${API_BASE_URL}/faqs`);
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.faqs;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
+export async function createFaq(faq) {
+    const res = await my_fetch(`${API_BASE_URL}/faqs`, {
+        method: "POST",
+        body: JSON.stringify(faq),
+    });
+
+    const data = await res.json();
+
+    if (res.status === 200) {
+        return data.faq;
+    } else {
+        throw new Error(data.message);
+    }
+}
+
 const fetchWithTokenRefresh = async (url, options) => {
     try {
         let retryResponse = null;

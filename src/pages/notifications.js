@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, Container, Row, Col, Button, Spinner, Alert } from 'react-bootstrap';
+import { Card, Container, Row, Col, Button, Spinner, Alert, Modal } from 'react-bootstrap';
 import { FaArrowLeft, FaCheckCircle, FaExclamationCircle, FaInfoCircle } from 'react-icons/fa';
 import { fetchNotifications, markNotificationAsRead, markAllNotificationsAsRead, dismissNotification } from '@/services';
 
@@ -13,6 +13,9 @@ const NotificationsPanel = () => {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedNotification, setSelectedNotification] = useState(null);
+    const [showNotification, setShowNotification] = useState(false);
+
 
     useEffect(() => {
         fetchNotifications().then((data) => {
@@ -52,6 +55,8 @@ const NotificationsPanel = () => {
         // This could be a redirect to another page or a modal popup
         markNotificationAsRead(notification._id).then(() => {
             setNotifications((prev) => prev.map((n) => n._id === notification._id ? { ...n, isRead: true } : n));
+            setSelectedNotification(notification);
+            setShowNotification(true);
             console.log('Viewing notification:', notification);
         }).catch((err) => {
             console.error('Error marking notification as read:', err);
@@ -113,7 +118,6 @@ const NotificationsPanel = () => {
                                                 Dismiss
                                             </Button>
                                         </div>
-
                                     </Card>
                                 ))}
                             </>
@@ -121,8 +125,30 @@ const NotificationsPanel = () => {
                     </Col>
                 </Row >
             </Container >
-        </>
 
+            {/* Modal to display notification details */}
+            <Modal
+                show={showNotification}
+                onHide={() => { setShowNotification(false); setSelectedNotification(null); }}
+                size="lg"
+                centered
+                contentClassName="custom-modal">
+                <Modal.Header closeButton>
+                    <Modal.Title>Notification Details</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {/* Notification details go here */}
+                    {selectedNotification && (
+                        <div className="notification-details">
+                            <h5>{selectedNotification.type}</h5>
+                            <p>{selectedNotification.message}</p>
+                            <p><strong>Timestamp:</strong> {new Date(selectedNotification.timestamp).toLocaleString()}</p>
+                            <p><strong>Status:</strong> {selectedNotification.isRead ? 'Read' : 'Unread'}</p>
+                        </div>
+                    )}
+                </Modal.Body>
+            </Modal>
+        </>
     );
 };
 

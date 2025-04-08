@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 const SupportMessage = require('../models/SupportMessage');
 
 const contactSupport = async (req, res) => {
-    const { name, email, subject, message } = req.body;
+    const { name, email, subject, message, attachments } = req.body;
 
     if (!name || !email || !subject || !message) {
         res.status(400);
@@ -10,7 +10,7 @@ const contactSupport = async (req, res) => {
     }
 
     // Save to DB
-    await SupportMessage.create({ name, email, subject, message });
+    await SupportMessage.create({ name, email, subject, message, attachments });
 
     // Send email
     const transporter = nodemailer.createTransport({
@@ -28,7 +28,8 @@ const contactSupport = async (req, res) => {
         from: `"${name}" <${email}>`,
         to: process.env.EMAIL_USER,
         subject: `[Support] ${subject}`,
-        text: `Support Request\n\nFrom: ${name}\nEmail: ${email}\n\n${message}`,
+        // text: `Support Request\n\nFrom: ${name}\nEmail: ${email}\n\n${message}\n\nAttachments: ${attachments ? attachments.join(', ') : 'None'}`,
+        html: `<p>Support Request</p><p>From: ${name}</p><p>Email: ${email}</p><p>${message}</p><p>Attachments: ${attachments ? attachments.join(', ') : ''}</p>`,
     };
 
     await transporter.sendMail(mailOptions);
