@@ -32,7 +32,7 @@ const FAQPage = () => {
                 <Accordion defaultActiveKey="0">
                     {faqs.map((faq, idx) => (
                         <Accordion.Item eventKey={idx.toString()} key={faq._id}>
-                            <Accordion.Header>{faq.question}</Accordion.Header>
+                            <Accordion.Header><strong>{faq.question}</strong></Accordion.Header>
                             <Accordion.Body>{faq.answer}</Accordion.Body>
                         </Accordion.Item>
                     ))}

@@ -20,15 +20,12 @@ const PrivacyPolicyPage = () => {
     }, []);
 
     return (
-        <Container style={{ marginTop: '0px', paddingBottom: '40px' }}>
-            <h2 className="text-center mb-4">Privacy Policy</h2>
+        <Container style={{ marginTop: '0px', paddingBottom: '10px' }}>
 
             {loading && <Spinner animation="border" className="d-block mx-auto" />}
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                {privacy}
-            </div>
+            <div dangerouslySetInnerHTML={{ __html: privacy }} />
         </Container>
     );
 };

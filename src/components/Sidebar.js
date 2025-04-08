@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { FaUser, FaLock, FaUsers, FaEnvelope, FaFileContract, FaCogs } from 'react-icons/fa';
+import { FaUser, FaLock, FaUsers, FaEnvelope, FaFileContract } from 'react-icons/fa';
 import styles from '@/styles/UserProfile.module.css';
 
 const Sidebar = () => {
@@ -15,7 +15,6 @@ const Sidebar = () => {
             <ul>
                 <li className={isActive('/user/profile') ? styles.active : ''} onClick={() => router.push('/user/profile')}><FaUser /> Profile</li>
                 <li className={isActive('/user/password') ? styles.active : ''} onClick={() => router.push('/user/password')}><FaLock /> Password</li>
-                <li className={isActive('/user/preferences') ? styles.active : ''} onClick={() => router.push('/user/preferences')}><FaCogs /> Preferences</li>
             </ul>
 
             <div>

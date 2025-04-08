@@ -21,14 +21,11 @@ const TermsPage = () => {
 
     return (
         <Container style={{ marginTop: '0px', paddingBottom: '40px' }}>
-            <h2 className="text-center mb-4">Terms of Service</h2>
 
             {loading && <Spinner animation="border" className="d-block mx-auto" />}
             {error && <Alert variant="danger">{error}</Alert>}
 
-            <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-                {terms}
-            </div>
+            <div dangerouslySetInnerHTML={{ __html: terms }} />
         </Container>
     );
 };
