@@ -19,7 +19,7 @@ const connectDB = async () => {
         // Call seed functions after connection is established
         await seedEcoTips();
         await seedFAQs();
-        await seedLegalData();
+        // await seedLegalData();
     } catch (err) {
         console.error('❌ MongoDB connection error:', err.message);
         process.exit(1);
@@ -51,46 +51,46 @@ const seedFAQs = async () => {
     }
 };
 
-// 🌱 Seed Terms and Conditions and Privacy Policy
-const seedLegalData = async () => {
-    try {
-        const rawPrivacyHtml = fs.readFileSync(path.join(__dirname, '../privacy.txt'), 'utf-8');
-        const rawTermsHtml = fs.readFileSync(path.join(__dirname, '../terms.txt'), 'utf-8');
+// // 🌱 Seed Terms and Conditions and Privacy Policy
+// const seedLegalData = async () => {
+//     try {
+//         const rawPrivacyHtml = fs.readFileSync(path.join(__dirname, '../privacy.txt'), 'utf-8');
+//         const rawTermsHtml = fs.readFileSync(path.join(__dirname, '../terms.txt'), 'utf-8');
 
-        const cleanPrivacyHtml = sanitizeHtml(rawPrivacyHtml, {
-            allowedTags: [
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                'p', 'strong', 'em', 'ul', 'ol', 'li',
-                'a', 'br', 'hr', 'blockquote'
-            ],
-            allowedAttributes: {
-                a: ['href', 'name', 'target'],
-            },
-            allowedSchemes: ['http', 'https', 'mailto'],
-        });
+//         const cleanPrivacyHtml = sanitizeHtml(rawPrivacyHtml, {
+//             allowedTags: [
+//                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+//                 'p', 'strong', 'em', 'ul', 'ol', 'li',
+//                 'a', 'br', 'hr', 'blockquote'
+//             ],
+//             allowedAttributes: {
+//                 a: ['href', 'name', 'target'],
+//             },
+//             allowedSchemes: ['http', 'https', 'mailto'],
+//         });
 
-        const cleanTermsHtml = sanitizeHtml(rawTermsHtml, {
-            allowedTags: [
-                'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-                'p', 'strong', 'em', 'ul', 'ol', 'li',
-                'a', 'br', 'hr', 'blockquote'
-            ],
-            allowedAttributes: {
-                a: ['href', 'name', 'target'],
-            },
-            allowedSchemes: ['http', 'https', 'mailto'],
-        });
+//         const cleanTermsHtml = sanitizeHtml(rawTermsHtml, {
+//             allowedTags: [
+//                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+//                 'p', 'strong', 'em', 'ul', 'ol', 'li',
+//                 'a', 'br', 'hr', 'blockquote'
+//             ],
+//             allowedAttributes: {
+//                 a: ['href', 'name', 'target'],
+//             },
+//             allowedSchemes: ['http', 'https', 'mailto'],
+//         });
 
-        await Terms.deleteMany({}); // Clear existing terms
-        await Privacy.deleteMany({}); // Clear existing privacy policy
-        await Terms.create({ content: cleanTermsHtml });
-        await Privacy.create({ content: cleanPrivacyHtml });
+//         await Terms.deleteMany({}); // Clear existing terms
+//         await Privacy.deleteMany({}); // Clear existing privacy policy
+//         await Terms.create({ content: cleanTermsHtml });
+//         await Privacy.create({ content: cleanPrivacyHtml });
 
-        console.log('✅ Terms and Privacy added!');
-    } catch (error) {
-        console.error('❌ Error seeding Terms and Privacy:', error);
-    }
-}
+//         console.log('✅ Terms and Privacy added!');
+//     } catch (error) {
+//         console.error('❌ Error seeding Terms and Privacy:', error);
+//     }
+// }
 
 
 // 🌱 Seed Eco-Friendly Tips (Prevents Duplicates)
