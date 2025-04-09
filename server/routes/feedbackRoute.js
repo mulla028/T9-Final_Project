@@ -21,18 +21,16 @@ const upload = multer({ storage });
 // POST feedback
 router.post('/', upload.array('media'), async (req, res) => {
   try {
-    const { userId, userType, title, comment, rating } = req.body;
+    const { userId, title, comment, rating } = req.body;
 
-    if (!userId || !comment || !rating || !userType) {
+    if (!userId || !comment || !rating ) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    const userModel = userType === 'social' ? 'Social-User' : 'User';
     const mediaUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
     const feedback = new Feedback({
       userId,
-      userModel,
       title,
       comment,
       rating,
