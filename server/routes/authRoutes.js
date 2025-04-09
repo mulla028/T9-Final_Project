@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const { generateToken } = require('../utils/jwtUtils');
+const { generateToken, generateAccessToken } = require('../utils/jwtUtils');
 const { register, login } = require('../controllers/authController');
 const router = express.Router();
 const { REDIRECT_URL } = require('../utils/general');
@@ -46,16 +46,18 @@ router.get('/facebook', passport.authenticate('facebook', {
 
 // Callback Route for Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-    const token = generateToken(req.user.user);
-    console.log('token is ', token);
-    // const token = req.user.accessToken;
-    res.redirect(`${REDIRECT_URL}/auth/google/callback?token=${encodeURIComponent(token)}`);
+    const refreshToken = generateToken(req.user);
+    const accessToken = generateAccessToken(req.user);
+    const redirectUrl = `${REDIRECT_URL}/auth/google/callback?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`;
+    res.redirect(redirectUrl);
 });
 
 // Callback Route for Facebook
 router.get('/facebook/callback', passport.authenticate('facebook', { session: false }), (req, res) => {
-    const token = generateToken(req.user.user);
-    res.redirect(`${REDIRECT_URL}/auth/facebook/callback?token=${encodeURIComponent(token)}`);
+    const refreshToken = generateToken(req.user);
+    const accessToken = generateAccessToken(req.user);
+    const redirectUrl = `${REDIRECT_URL}/auth/facebook/callback?accessToken=${encodeURIComponent(accessToken)}&refreshToken=${encodeURIComponent(refreshToken)}`;
+    res.redirect(redirectUrl);
 });
 
 

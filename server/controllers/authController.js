@@ -2,7 +2,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { generateToken } = require('../utils/jwtUtils');
+const { generateToken, generateAccessToken } = require('../utils/jwtUtils');
 
 exports.register = async (req, res) => {
     const { username, email, password, confirmPassword } = req.body;
@@ -24,13 +24,9 @@ exports.register = async (req, res) => {
         await newUser.save();
         console.log("User saved successfully:", newUser);
 
-        const refreshToken = generateToken(user);
-        const payload = { id: user._id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
-            if (err) throw err;
-            res.json({ accessToken, refreshToken });
-        });
-
+        const refreshToken = generateToken(newUser);
+        const accessToken = generateAccessToken(newUser);
+        res.json({ message: "User registered successfully", accessToken, refreshToken });
     } catch (err) {
         console.error("Server Error:", err);
         res.status(500).json({ message: "Internal server error, please try again." });
@@ -47,11 +43,8 @@ exports.login = async (req, res) => {
         if (!isMatch) return res.status(400).json({ message: 'Invalid Password, Try again!' });
 
         const refreshToken = generateToken(user);
-        const payload = { id: user._id, username: user.username };
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, accessToken) => {
-            if (err) throw err;
-            res.json({ accessToken, refreshToken });
-        });
+        const accessToken = generateAccessToken(user);
+        res.json({ message: "User signed in successfully", accessToken, refreshToken });
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
     }
