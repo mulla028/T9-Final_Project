@@ -17,6 +17,8 @@ const Header = () => {
 
     useEffect(() => {
         if (token) {
+          
+            // Fetch profile info
             fetchProfile()
                 .then((user) => {
                     const fullName = user?.name || user?.username || '';
@@ -25,6 +27,7 @@ const Header = () => {
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
 
+            // Fetch unread notifications
             fetchUnreadCount()
                 .then((count) => setUnreadCount(count))
                 .catch((error) => console.error('Error fetching unread count:', error));
@@ -35,12 +38,9 @@ const Header = () => {
         window.location.href = '/notifications';
     };
 
+
     return (
-        <Navbar bg="light" expand="lg" fixed="top" className="mb-5">
-            <Container fluid="md">
-                <Navbar.Brand href="/">Driftway</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+        <Navbar bg="light" expand="lg" fixed="top">
                     {pathname === '/' && (
                         <Nav className="m-auto flex">
                             <Nav.Link href="/#why-slow-travel" className="no-bold-link">
