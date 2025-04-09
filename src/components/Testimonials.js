@@ -70,25 +70,23 @@ const Testimonials = () => {
             </div>
 
             <div className="d-flex justify-content-center mt-5">
-                <Link href="/feedback" passHref>
-                    <Button
-                        variant="primary"
-                        size="lg"
-                        onClick={handleButtonClick}
-                        style={{
-                            padding: '12px 30px',
-                            borderRadius: '30px',
-                            background: 'linear-gradient(90deg, #28a745, #218838)',
-                            border: 'none',
-                            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-                            transition: 'transform 0.3s ease',
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleButtonClick}
+                    style={{
+                        padding: '12px 30px',
+                        borderRadius: '30px',
+                        background: 'linear-gradient(90deg, #28a745, #218838)',
+                        border: 'none',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+                        transition: 'transform 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                     >
-                        Share Your Experience
-                    </Button>
-                </Link>
+                    Share Your Experience
+                </Button>
             </div>
         </div>
     );
