@@ -5,6 +5,7 @@ const FeedbackSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+
   },
   title: { type: String },
   comment: { type: String, required: true },

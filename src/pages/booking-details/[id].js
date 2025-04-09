@@ -233,7 +233,7 @@ const BookingDetails = () => {
   };
 
   return (
-    <Container className="booking-details" style={{ marginTop: "60px" }}>
+    <Container className="booking-details" style={{ marginTop: "100px" }}>
       {/* Header Section */}
       <Row className="mb-4">
         <Col md={8}>

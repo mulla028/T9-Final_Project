@@ -4,6 +4,7 @@ import { LoadScript } from "@react-google-maps/api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@/styles/globals.css";
 import store from "@/redux/store";
+import Header from "@/components/Header";
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 const libraries = ["places"];
@@ -11,8 +12,9 @@ const libraries = ["places"];
 export default function App({ Component, pageProps }) {
   return (
     <Provider store={store}> 
-      <AuthProvider>
+      <AuthProvider >
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries}>
+          <Header />
           <Component {...pageProps} />
         </LoadScript>
       </AuthProvider>

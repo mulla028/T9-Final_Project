@@ -76,9 +76,10 @@ const FeedbackForm = () => {
     e.preventDefault();
     if (rating === 0) return alert('Please select a rating.');
     if (!user || !user._id) return alert('User not loaded.');
-  
+
     const formData = new FormData();
     formData.append('userId', user._id);
+    formData.append('userType', user.userType); // ✅ new field for backend
     formData.append('title', experienceTitle);
     formData.append('rating', rating);
     formData.append('comment', comment);
