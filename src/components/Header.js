@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 import { FaBell } from 'react-icons/fa';
+import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
 import { fetchProfile, fetchUnreadCount } from '@/services';
 
 const Header = () => {
+    const router = useRouter();
+    const { pathname } = router;
+
     const { authState } = useAuth();
     const { token } = authState;
     const [lastName, setLastName] = useState('');
@@ -13,7 +17,6 @@ const Header = () => {
 
     useEffect(() => {
         if (token) {
-            // Fetch profile info
             fetchProfile()
                 .then((user) => {
                     const fullName = user?.name || user?.username || '';
@@ -22,7 +25,6 @@ const Header = () => {
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
 
-            // Fetch unread notifications
             fetchUnreadCount()
                 .then((count) => setUnreadCount(count))
                 .catch((error) => console.error('Error fetching unread count:', error));
@@ -31,28 +33,41 @@ const Header = () => {
 
     const handleClick = () => {
         window.location.href = '/notifications';
-    }
+    };
 
     return (
-        <Navbar bg="light" expand="lg" fixed="top">
+        <Navbar bg="light" expand="lg" fixed="top" className="mb-5">
             <Container fluid="md">
                 <Navbar.Brand href="/">Driftway</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="m-auto flex">
-                        <Nav.Link href="/#why-slow-travel" className="no-bold-link">How It Works</Nav.Link>
-                        <Nav.Link href="/#hero" className="no-bold-link">Discover</Nav.Link>
-                        <Nav.Link href="/#eco-partners" className="no-bold-link">EcoPartnerships</Nav.Link>
-                        <Nav.Link href="/#blog-section" className="no-bold-link">Blog</Nav.Link>
-                    </Nav>
-                    <Nav className="d-flex align-items-center gap-4">
-                        {token ? (
+                    {pathname === '/' && (
+                        <Nav className="m-auto flex">
+                            <Nav.Link href="/#why-slow-travel" className="no-bold-link">
+                                How It Works
+                            </Nav.Link>
+                            <Nav.Link href="/#hero" className="no-bold-link">
+                                Discover
+                            </Nav.Link>
+                            <Nav.Link href="/#eco-partners" className="no-bold-link">
+                                EcoPartnerships
+                            </Nav.Link>
+                            <Nav.Link href="/#blog-section" className="no-bold-link">
+                                Blog
+                            </Nav.Link>
+                        </Nav>
+                    )}
+                    <Nav className="d-flex align-items-center gap-4 ms-auto">
+                        {token ? !pathname.startsWith('/user') && (
                             <>
                                 <div className="icon-button position-relative" onClick={handleClick}>
-                                    {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
+                                    {unreadCount > 0 && (
+                                        <span className="notification-badge">
+                                            {unreadCount}
+                                        </span>
+                                    )}
                                     <FaBell size={24} />
                                 </div>
-                                {/* <span className="me-2 fw-bold">{lastName}</span> */}
                                 <ProfileDropdown />
                             </>
                         ) : (
