@@ -21,16 +21,18 @@ const upload = multer({ storage });
 // POST feedback
 router.post('/', upload.array('media'), async (req, res) => {
   try {
-    const { userId, title, comment, rating } = req.body;
+    const { userId, userType, title, comment, rating } = req.body;
 
-    if (!userId || !comment || !rating) {
+    if (!userId || !comment || !rating || !userType) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const userModel = userType === 'social' ? 'Social-User' : 'User';
     const mediaUrls = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
 
     const feedback = new Feedback({
       userId,
+      userModel,
       title,
       comment,
       rating,
@@ -60,7 +62,7 @@ router.get('/', async (req, res) => {
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit))
-      .populate('userId', 'username profilePicture'); // 👈 this pulls username & profilePicture
+      .populate('userId', 'username profilePicture name'); // ✅ works for both User and Social-User
 
     const total = await Feedback.countDocuments(query);
 

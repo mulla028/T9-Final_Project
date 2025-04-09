@@ -183,7 +183,7 @@ const renderMediaThumbnails = (mediaUrls) => {
                   {renderComment(item.comment, index)}
                 </Card.Text>
                 <Card.Title style={{ fontSize: '1.25rem', fontWeight: '600' }}>
-                  {item.userId?.username || 'Anonymous'}
+                  {item.userId?.username || item.userId?.name || 'Anonymous'}
                 </Card.Title>
                 <Card.Subtitle className="mb-3 text-muted" style={{ fontSize: '1rem', marginTop:'10px' }}>
                   {item.title}

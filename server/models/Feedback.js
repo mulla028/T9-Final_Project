@@ -3,8 +3,13 @@ const mongoose = require('mongoose');
 const FeedbackSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
-    required: true
+    required: true,
+    refPath: 'userModel' // 🔥 dynamic reference to User or Social-User
+  },
+  userModel: {
+    type: String,
+    required: true,
+    enum: ['User', 'Social-User'] // must match model names
   },
   title: { type: String },
   comment: { type: String, required: true },
