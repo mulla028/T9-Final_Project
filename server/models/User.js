@@ -4,24 +4,28 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    location: { type: String, default: '' },
+    phoneNumber: { type: String, default: '' },
+    profilePicture: { type: String, default: '' },
     createdAt: { type: Date, default: Date.now },
     itinerary: [
         {
             day: { type: Number, required: true },
+            date: { type: Date },
             stay: {
                 placeId: { type: String }, // Google Places ID (Optional if no stay)
                 placeName: { type: String },
                 location: { type: String },
                 phone: { type: String },
-                checkIn: { type: Date }, 
-                checkOut: { type: Date }, 
+                checkIn: { type: Date },
+                checkOut: { type: Date },
                 guests: { type: Number, min: 1 },
-                email:{ type: String },
-                totalPrice: { type: Number},
-                package:{ type: String},
-                preferences:{ type: String},
+                email: { type: String },
+                totalPrice: { type: Number },
+                package: { type: String },
+                preferences: { type: String },
             },
- 
+
             experiences: [
                 {
                     placeId: { type: String }, // Google Places ID

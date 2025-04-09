@@ -4,7 +4,7 @@ const passport = require('./config/passport');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const auth = require('./routes/authRoutes');
-const User = require('./routes/userRoute');
+const user = require('./routes/userRoutes');
 const AdminRoutes = require("./routes/adminRoute");
 const places = require('./routes/placesRoutes');
 const tipRoutes = require('./routes/tipRoutes');
@@ -13,6 +13,14 @@ const Users = require("./controllers/UserController");
 const { REDIRECT_URL } = require('./utils/general');
 const bookingRoutes = require('./routes/bookingRoutes');
 const carbonRoutes = require('./routes/carbonRoutes');
+const feedbackRoute = require('./routes/feedbackRoute');
+const notificationRoutes = require('./routes/notificationRoutes');
+const supportRoute = require('./routes/supportRoute');
+const faqRoutes = require('./routes/faqRoutes');
+const termsRoutes = require('./routes/termsRoutes');
+const privacyRoutes = require('./routes/privacyRoutes');
+const tokenRoute = require('./routes/refreshTokenRoute');
+const path = require('path');
 
 const app = express();
 
@@ -21,17 +29,27 @@ connectDB();
 
 // Middleware
 app.use(cors({ origin: REDIRECT_URL || 'http://localhost:3000', credentials: true }));
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(passport.initialize());
 
 // Define Routes
 app.use('/api/auth', auth);
-app.use('/api/Users', User);
+app.use('/api/users', user);
 app.use('/api/Admin', AdminRoutes);
 app.use('/api/places', places);
 app.use('/api/tips', tipRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/carbon', carbonRoutes);
+app.use('/api/feedback', feedbackRoute);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/support', supportRoute);
+app.use('/api/faqs', faqRoutes);
+app.use('/api/terms', termsRoutes);
+app.use('/api/privacy', privacyRoutes);
+app.use('/api/token', tokenRoute);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 // Send email for password reset
 app.post('/api/passwordResetEmail', async (req, res) => {
@@ -69,25 +87,19 @@ app.get('/api/visitors', (req, res) => {
 // Get the user itinerary details for a specific day
 app.post('/api/itinerary', async (req, res) => {
     const { id, day } = req.body; // You can destructure both at once
-
     try {
         const itinerary = await Users.getItineraryForDay(id, day);
-        try {
-            const itinerary = await Users.getItineraryForDay(id, day);
 
-            if (itinerary) {
-                // Successfully found the itinerary
-                res.send({ itinerary });
-            } else {
-                // If no itinerary found, return a 404 with a message
-                res.status(404).send({ message: "Itinerary not found" });
-            }
-        } catch (error) {
-            // Handle unexpected errors
-            res.status(500).send({ message: error.message });
+        if (itinerary) {
+            // Successfully found the itinerary
+            res.send({ itinerary });
+        } else {
+            // If no itinerary found, return a 404 with a message
+            res.status(404).send({ message: "Itinerary not found" });
         }
     } catch (error) {
-        res.status(500).send(error.message);
+        // Handle unexpected errors
+        res.status(500).send({ message: error.message });
     }
 });
 
@@ -131,6 +143,17 @@ app.post('/api/setItinerary', async (req, res) => {
 
     try {
         const response = await Users.updateUserItineraryForDay(id, Number(day), newItinerary, mappedMode);
+        res.status(200).json({ message: response });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+app.delete('/api/deleteItinerary', async (req, res) => {
+    const { id, day } = req.body;
+
+    try {
+        const response = await Users.deleteUserItineraryForDay(id, Number(day));
         res.status(200).json({ message: response });
     } catch (error) {
         res.status(500).send(error.message);

@@ -79,7 +79,8 @@ const Hero = ({ setSearchResults }) => {
         };
     }, [searchInput, travelStyle]);
 
-    return (
+    return (      
+        <section id="hero">
         <div
             id="hero"
             className="hero-section"
@@ -169,6 +170,7 @@ const Hero = ({ setSearchResults }) => {
                 </Form>
             </Container>
         </div>
+        </section>
     );
 };
 

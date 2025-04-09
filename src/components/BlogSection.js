@@ -22,7 +22,8 @@ const BlogSection = () => {
         }
     ];
 
-    return (
+    return (       
+        <section id="blog-section">
         <div id="blog-section" className="blog-section" style={{ padding: '60px 0' }}>
             <Container>
                 <h2 className="text-center mb-4">Tips & Guides for Slow Travel</h2>
@@ -65,6 +66,7 @@ const BlogSection = () => {
                 </div>
             </Container>
         </div>
+        </section>
     );
 };
 

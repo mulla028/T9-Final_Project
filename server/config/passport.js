@@ -20,10 +20,13 @@ passport.use(
                         name: profile.displayName,
                         email: profile.emails[0].value,
                         provider: 'google',
+                        profilePicture: profile._json.picture,
+                        location: profile._json.locale,
+                        phoneNumber: profile._json.phoneNumber || '', // Assuming phone number is in the profile
                         providerId: profile.id,
                     });
                 }
-                return done(null, { user, accessToken });
+                return done(null, user);
             } catch (error) {
                 return done(error);
             }
@@ -45,11 +48,14 @@ passport.use(
                     user = await User.create({
                         name: profile.displayName,
                         email: profile.emails[0].value,
+                        profilePicture: profile.photos[0].value,
+                        location: profile._json.location || '', // Assuming location is in the profile
+                        phoneNumber: profile._json.phoneNumber || '', // Assuming phone number is in the profile
                         provider: 'facebook',
                         providerId: profile.id,
                     });
                 }
-                return done(null, { user, accessToken });
+                return done(null, user);
             } catch (error) {
                 return done(error);
             }

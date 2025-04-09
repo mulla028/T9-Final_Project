@@ -8,7 +8,7 @@ const SearchResults = ({ searchResults }) => {
 
     const handleOnclick = (result) => {
         const authState = isAuthenticated();
-        const destination = authState && result?.place_id ? `/booking-details/${result.place_id}` : `/signup`;
+        const destination = authState && result?.place_id ? `/booking-details/${result.place_id}` : `/signup?role=user`;
         router.push(destination);
     }
 

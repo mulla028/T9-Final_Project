@@ -47,6 +47,7 @@ const ItineraryOverview = () => {
 
                             newItineraries.push({
                                 day: itinerary.day,
+                                date: itinerary.date?.split('T')[0],
                                 stops: newStops
                             });
                         }
@@ -85,7 +86,7 @@ const ItineraryOverview = () => {
         itinerariesPrint.forEach((dayPlan) => {
             html += `
                 <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
-                    <h3 style="padding: 10px; border-radius: 5px;">Day ${dayPlan.day}</h3>
+                    <h3 style="padding: 10px; border-radius: 5px;">Day ${dayPlan.day} - ${dayPlan.date?.split("T")[0] || ""} </h3>
                     <ul style="list-style-type: none; padding-left: 0;">`;
 
             if (dayPlan.stay) {
@@ -141,6 +142,12 @@ const ItineraryOverview = () => {
             .catch(err => console.error("Failed to copy:", err));
     };
 
+    const handleGoBack = () => {
+        router.push({
+            pathname: "/"
+        });
+    };
+
     return (
         <>
             <Navbar bg="light" expand="lg">
@@ -150,20 +157,20 @@ const ItineraryOverview = () => {
                 </Container>
             </Navbar>
 
-            <Container className="itinerary-planner" style={{ marginTop: '60px' }}>
+            <Container className="itinerary-planner" style={{ marginTop: '20px' }}>
                 <div className="hero" style={{ marginBottom: '20px' }}>
                     <h2 className="text-center mb-4">Your Itinerary Overview</h2>
                     <p>You can select a day to add or remove your experiences and stays.</p>
                 </div>
 
                 {itineraries.length > 0 ? (
-                    <Accordion activeKey={activeKey}>
-                        <Row>
+                    <Accordion activeKey={activeKey}  className="custom-accordion">
+                        <Row className="g-0 mt-0 pt-0">
                             {itineraries.map((dayPlan, index) => (
                                 <Col md={6} key={index} className="mb-3">
-                                    <Accordion.Item eventKey={index.toString()}>
-                                        <Accordion.Header onClick={() => handleToggle(index.toString())}>
-                                            Day {dayPlan.day}
+                                    <Accordion.Item className="g-0 mt-0 pt-0" eventKey={index.toString()}>
+                                        <Accordion.Header className="custom-accordion" onClick={() => handleToggle(index.toString())}>
+                                            Day {dayPlan.day} - {dayPlan.date || ""}
                                         </Accordion.Header>
                                         <Accordion.Body>
                                             <ListGroup variant="flush">
@@ -196,8 +203,9 @@ const ItineraryOverview = () => {
                 />
 
                 <div className="d-flex flex-wrap justify-content-center gap-3 mt-3">
-                    <Button variant="success p-2 p-2" onClick={handlePrint}>Download Itinerary</Button>
-                    <Button variant="primary p-2 px-2" onClick={handleShare}>Share Itinerary</Button>
+                    <Button variant="success" className="p-2" onClick={handlePrint}> Download Itinerary </Button>
+                    <Button variant="primary" className="p-2" onClick={handleShare}> Share Itinerary </Button>
+                    <Button variant="outline-secondary" className="p-2" onClick={handleGoBack}> Go Back to Main Page </Button>
                 </div>
             </Container>
 
@@ -244,6 +252,9 @@ const ItineraryOverview = () => {
                     .print-only { display: block !important; }
                 }
                 .print-only { display: none; }
+                .custom-accordion {
+                    margin-top: 0 !important;
+                }
             `}</style>
         </>
     );

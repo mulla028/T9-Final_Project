@@ -1,9 +1,9 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { FacebookProvider } from 'react-facebook';
-import { Form, Button, Alert, Container } from 'react-bootstrap';
+import { Form, Button, Alert, Container, Row, Col } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useState, useEffect } from 'react';
-import { FaFacebook, FaGoogle, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaFacebook, FaGoogle, FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
 import { authenticateUser, authenticateAdmin } from "@/services";
 import { useRouter } from "next/router";
 import { useAuth } from '@/context/AuthContext';
@@ -68,8 +68,9 @@ export default function Login() {
       try {
         const response = await authenticateAdmin(data.email, data.password)
         console.log("response is: ", response);
-        
+
         if (response.role === "admin") {
+          login(response.accessToken);
           router.push(`/admin`);
         } else {
           setWarning(response.message || "You are not an admin");
@@ -102,90 +103,104 @@ export default function Login() {
   };
 
   return (
-    <Container fluid className={styles["login-container"]}>
-      <GoogleOAuthProvider clientId={clientId}>
-        <FacebookProvider appId={facebookAppId}>
-          <div className={styles["login-box"]}>
-            {/* Error Messages */}
-            {warning && <Alert variant="danger">{warning}</Alert>}
+    <>
+      {/* Back button to the home page */}
+      <Container fluid className="mt-3">
+        {/* Back Button Row */}
+        <Row>
+          <Col md={3} className="text-start">
+            <Button href="/" className="back-button" variant="link">
+              <FaArrowLeft /> Back
+            </Button>
+          </Col>
+        </Row>
+      </Container>
 
-            <h3 className={styles['quote-subtext']}>Sign in or create an account</h3>
-            <Form id="login-form" onSubmit={handleSubmit(onSubmit)}>
-              {/* Email Input */}
-              <Form.Group className="mb-3" controlId="formEmail">
-                <Form.Label className={styles['custom-label']}> Email Address</Form.Label>
-                <Form.Control className={styles["custom-input"]}
-                  type="email"
-                  placeholder="Enter your email address"
-                  {...register('email', { required: 'Email is required' })}
-                  isInvalid={touchedFields.email && errors.email}
-                />
-                {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
-              </Form.Group>
+      <Container fluid className={styles["login-container"]}>
+        <GoogleOAuthProvider clientId={clientId}>
+          <FacebookProvider appId={facebookAppId}>
+            <div className={styles["login-box"]}>
+              {/* Error Messages */}
+              {warning && <Alert variant="danger">{warning}</Alert>}
 
-              <Form.Group className="mb-3" controlId="formPassword" style={{ position: 'relative' }}>
-                <Form.Label className={styles['custom-label']}> Password</Form.Label>
-                <div className={styles["password-container"]}>
+              <h3 className={styles['quote-subtext']}>Sign in or create an account</h3>
+              <Form id="login-form" onSubmit={handleSubmit(onSubmit)}>
+                {/* Email Input */}
+                <Form.Group className="mb-3" controlId="formEmail">
+                  <Form.Label className={styles['custom-label']}> Email Address</Form.Label>
                   <Form.Control className={styles["custom-input"]}
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    {...register('password', { required: 'Password is required' })}
-                    isInvalid={touchedFields.password && errors.password}
+                    type="email"
+                    placeholder="Enter your email address"
+                    {...register('email', { required: 'Email is required' })}
+                    isInvalid={touchedFields.email && errors.email}
                   />
-                  {/* Eye Icon Button */}
-                  <span onClick={togglePasswordVisibility}>
-                    {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
-                  </span>
+                  {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formPassword" style={{ position: 'relative' }}>
+                  <Form.Label className={styles['custom-label']}> Password</Form.Label>
+                  <div className={styles["password-container"]}>
+                    <Form.Control className={styles["custom-input"]}
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Enter your password"
+                      {...register('password', { required: 'Password is required' })}
+                      isInvalid={touchedFields.password && errors.password}
+                    />
+                    {/* Eye Icon Button */}
+                    <span onClick={togglePasswordVisibility}>
+                      {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                    </span>
+                  </div>
+                  {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
+
+                  {/* Forgot Password Link */}
+                  <div className="text-end mt-1">
+                    <Button variant="link" className={styles['forgot-password']} onClick={handleShowForgotPassword}>Forgot password?</Button>
+                  </div>
+                </Form.Group>
+
+                <Button variant="success" className={styles["custom-submit-button"]} type="submit" onClick={() => trigger()}>Sign in</Button>
+              </Form>
+
+              <div className={styles['social-login-wrapper']}>
+                <div className={styles['or-signin-text']}>
+                  <span>Or sign in with</span>
                 </div>
-                {errors.password && <Form.Text className="text-danger">{errors.password.message}</Form.Text>}
 
-                {/* Forgot Password Link */}
-                <div className="text-end mt-1">
-                  <Button variant="link" className={styles['forgot-password']} onClick={handleShowForgotPassword}>Forgot password?</Button>
-                </div>
-              </Form.Group>
+                {/* Social login options container */}
+                <Container className={styles['social-login-buttons']}>
+                  <Button
+                    className={styles['custom-google-button']}
+                    disabled={loading.google}
+                    onClick={() => handleSocialLogin('google')}
+                  >
+                    {loading.google ? '...' : <FaGoogle size={24} />}
+                  </Button>
 
-              <Button variant="success" className={styles["custom-submit-button"]} type="submit" onClick={() => trigger()}>Sign in</Button>
-            </Form>
-
-            <div className={styles['social-login-wrapper']}>
-              <div className={styles['or-signin-text']}>
-                <span>Or sign in with</span>
+                  <Button
+                    className={styles['custom-facebook-button']}
+                    disabled={loading.facebook}
+                    onClick={() => handleSocialLogin('facebook')}
+                  >
+                    {loading.facebook ? '...' : <FaFacebook size={24} />}
+                  </Button>
+                </Container>
               </div>
 
-              {/* Social login options container */}
-              <Container className={styles['social-login-buttons']}>
-                <Button
-                  className={styles['custom-google-button']}
-                  disabled={loading.google}
-                  onClick={() => handleSocialLogin('google')}
-                >
-                  {loading.google ? '...' : <FaGoogle size={24} />}
-                </Button>
+              <div className="text-center mt-1">
+                <Button variant="link" className={styles['register-link']} onClick={handleShow}>Don't have an account? Register</Button>
+              </div>
 
-                <Button
-                  className={styles['custom-facebook-button']}
-                  disabled={loading.facebook}
-                  onClick={() => handleSocialLogin('facebook')}
-                >
-                  {loading.facebook ? '...' : <FaFacebook size={24} />}
-                </Button>
-              </Container>
+              {/* Terms and Privacy Policy */}
+              <div className="text-center mt-5">
+                <p><small>By signing in or creating an account, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a></small></p>
+              </div>
             </div>
-
-            <div className="text-center mt-1">
-              <Button variant="link" className={styles['register-link']} onClick={handleShow}>Don't have an account? Register</Button>
-            </div>
-
-            {/* Terms and Privacy Policy */}
-            <div className="text-center mt-5">
-              <p><small>By signing in or creating an account, you agree to our <a href="#/terms">Terms of Service</a> and <a href="#/privacy">Privacy Policy</a></small></p>
-            </div>
-          </div>
-          <RegisterModal show={showRegister} handleClose={handleClose} />
-          <ForgotPasswordModal show={showForgotPassword} handleClose={handleCloseForgotPassword} />
-        </FacebookProvider>
-      </GoogleOAuthProvider>
-    </Container >
+            <RegisterModal show={showRegister} handleClose={handleClose} />
+            <ForgotPasswordModal show={showForgotPassword} handleClose={handleCloseForgotPassword} />
+          </FacebookProvider>
+        </GoogleOAuthProvider>
+      </Container >
+    </>
   );
 }

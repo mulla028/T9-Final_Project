@@ -28,6 +28,7 @@ const WhySlowTravel = () => {
     }, []);
 
     return (
+        <section id="why-slow-travel">        
         <div
             id="why-slow-travel"
             ref={sectionRef}
@@ -116,6 +117,7 @@ const WhySlowTravel = () => {
                 </Row>
             </Container>
         </div>
+        </section>
     );
 };
 

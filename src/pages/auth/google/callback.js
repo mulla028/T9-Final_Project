@@ -11,13 +11,15 @@ const Callback = () => {
 
     useEffect(() => {
         // Extract the token from the URL
-        const token = new URLSearchParams(window.location.search).get('token');
-        if (token) {
-            // Store the token (e.g., in localStorage)
-            setToken(token);
+        const params = new URLSearchParams(window.location.search);
+        const accessToken = params.get('accessToken');
+        const refreshToken = params.get('refreshToken');
+
+        if (accessToken && refreshToken) {
+            setToken({ accessToken, refreshToken });
 
             // Set the authentication state
-            login(token);
+            login(accessToken);
 
             // Redirect to the home page or another route
             router.push('/');

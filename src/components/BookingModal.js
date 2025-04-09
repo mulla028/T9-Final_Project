@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, Button, Row, Col, Form } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { FaCalendarAlt, FaClock } from "react-icons/fa";
+import { addBooking } from "@/services";
 import { API_BASE_URL } from "@/utils/general";
 
 export default function BookingModal({
@@ -39,6 +40,7 @@ export default function BookingModal({
   useEffect(() => {
     setGuests(bookingData.guests || 1);
     setStartDate(formatDate(new Date(bookingData?.startDate)));
+    setVisitDate(formatDate(new Date(bookingData?.startDate)));
     setEndDate(formatDate(bookingData?.endDate) || "");
     setTime(bookingData?.time);
   }, [bookingData]);
@@ -56,7 +58,7 @@ export default function BookingModal({
   }, [bookingData.packageType]);
 
   const validateForm = () => {
-    let newErrors = { guests: "", startDate: "", endDate: "", visitDate: "" };
+    let newErrors = { guests: "", startDate: "", endDate: "", visitDate: "", time: "" };
 
     if (guests < 1 || guests > 5) {
       newErrors.guests = "Guests must be between 1 and 5.";
@@ -79,6 +81,25 @@ export default function BookingModal({
         newErrors.visitDate = "Visit date is required.";
       } else if (new Date(visitDate) < new Date(today)) {
         newErrors.visitDate = "Visit date cannot be before today.";
+      }
+
+      if (!time) {
+        newErrors.time = "Time cannot be empty.";
+      } else {
+        const selectedDate = new Date(visitDate);
+        const selectedTime = new Date(time);
+        if (
+          selectedDate.toDateString() === today &&
+          selectedTime.getHours() < new Date().getHours()
+        ) {
+          newErrors.time = "Selected time cannot be in the past.";
+        } else if (
+          selectedDate.toDateString() === today &&
+          selectedTime.getHours() === new Date().getHours() &&
+          selectedTime.getMinutes() < new Date().getMinutes()
+        ) {
+          newErrors.time = "Selected time cannot be in the past.";
+        }
       }
     }
 
@@ -117,42 +138,92 @@ export default function BookingModal({
   };
 
   const handleConfirmBooking = async () => {
-    const isValid = validate();
-    const isFormValid = validateForm();
+    let isValid = validate();
+    let isFormValid = validateForm();
 
     if (!isValid && !isFormValid) return;
-
+    
     const bookingPayload = {
       email: localStorage.getItem("email"),
     };
+
     if (
       bookingData.model === "isPackageMode&&hasPrice" ||
       bookingData.model === "hasPrice&&isEcoStay"
     ) {
-      bookingPayload.place_id = placeDetails.place_id;
-      bookingPayload.placeName = placeDetails.name;
-      bookingPayload.location = placeDetails.address;
-      bookingPayload.checkIn = startDate;
-      bookingPayload.checkOut = endDate;
-      bookingPayload.guests = guests;
-      bookingPayload.phone = placeDetails.phone;
-      bookingPayload.package = bookingData.packageType;
-      bookingPayload.preferences = bookingData.preferences;
-      bookingPayload.totalPrice = bookingData.price == 0 ? customPackagePrice *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        )
-        : bookingData.price *
-        Math.max(
-          (new Date(endDate).setHours(12) -
-            new Date(startDate).setHours(12)) /
-          (1000 * 60 * 60 * 24),
-          1,
-        )
-    } else {
+      let currentDate = new Date(startDate); 
+      const end = new Date(endDate);
+
+      bookingPayload.plans = [];
+
+      while (currentDate <= end) {
+        let booking = {};
+        booking.date = currentDate.toISOString(),
+        booking.place_id = placeDetails.place_id,
+        booking.placeName = placeDetails.name,
+        booking.location = placeDetails.address,
+        booking.checkIn = startDate,
+        booking.checkOut = endDate,
+        booking.guests = guests,
+        booking.phone = placeDetails.phone,
+        booking.package = bookingData.packageType,
+        booking.preferences = bookingData.preferences,
+        booking.totalPrice = bookingData.price == 0 ? customPackagePrice *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+            (1000 * 60 * 60 * 24),
+            1,
+          )
+          : bookingData.price *
+          Math.max(
+            (new Date(endDate).setHours(12) -
+              new Date(startDate).setHours(12)) /
+            (1000 * 60 * 60 * 24),
+            1,
+          );
+
+          bookingPayload.plans.push(booking);
+          currentDate.setDate(currentDate.getDate() + 1); 
+        }
+
+        try {
+          console.log("Sending request to:", `${API_BASE_URL}/bookings/addMultiple`);
+          console.log("Request payload:", bookingPayload);
+    
+          const response = await fetch(`${API_BASE_URL}/bookings/addMultiple`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-auth-token": localStorage.getItem("access_token"),
+            },
+            body: JSON.stringify(bookingPayload),
+          });
+    
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Error response:", errorData);
+            alert(errorData.message || "Failed to save booking.");
+            return;
+          }
+    
+          const data = await response.json();
+          localStorage.setItem("newStop", JSON.stringify({
+            name: bookingPayload.plans[0].placeName,
+            address: bookingPayload.plans[0].location
+          }));
+          alert("The reservations were successfully registered!");
+          window.location.href = `/overview?id=${data.id}`;
+        } catch (error) {
+          console.error("Error saving reservation:", error);
+          alert("Error saving reservation!");
+        }
+        handleClose();
+    }
+    else {
+      
+      bookingPayload.date = new Date(visitDate).toISOString();
+      console.log("Date of booking: " + bookingPayload.date);
       bookingPayload.experiences = [
         {
           id: placeDetails.place_id,
@@ -160,32 +231,17 @@ export default function BookingModal({
           location: placeDetails.address,
           time: time.toLocaleTimeString(),
           paid: bookingData.price > 0,
-          date: time.toLocaleDateString(),
+          date: new Date(visitDate).toLocaleDateString()
         },
       ];
-    }
 
     try {
       console.log("Sending request to:", `${API_BASE_URL}/bookings/add`);
       console.log("Request payload:", bookingPayload);
 
-      const response = await fetch(`${API_BASE_URL}/bookings/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": localStorage.getItem("access_token"),
-        },
-        body: JSON.stringify(bookingPayload),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error response:", errorData);
-        alert(errorData.message || "Failed to save booking.");
-        return;
-      }
-
+      const response = await addBooking(bookingPayload);
       const data = await response.json();
+
       localStorage.setItem("newStop", JSON.stringify({
         name: bookingPayload.placeName,
         address: bookingPayload.location
@@ -197,6 +253,7 @@ export default function BookingModal({
       alert("Error saving reservation!");
     }
     handleClose();
+    }
   };
 
   return (
@@ -262,13 +319,13 @@ export default function BookingModal({
 
                           <Form.Control
                             type="date"
-                            value={startDate}
+                            value={visitDate}
                             min={today}
-                            isInvalid={!!errors.startDate}
+                            isInvalid={!!errors.visitDate}
                             onChange={(e) => setVisitDate(e.target.value)}
                           />
                           <Form.Control.Feedback type="invalid">
-                            {errors.startDate}
+                            {errors.visitDate}
                           </Form.Control.Feedback>
                         </div>
 
@@ -383,10 +440,13 @@ export default function BookingModal({
 
                     <Form.Control
                       type="date"
-                      value={visitDate}
+                      value={visitDate ? new Date(visitDate).toISOString().split("T")[0] : ""}
                       min={today}
                       isInvalid={!!errors.visitDate}
-                      onChange={(e) => setVisitDate(e.target.value)}
+                      onChange={(e) => {
+                        console.log("visitDate changed:", e.target.value); // Debugging
+                        setVisitDate(e.target.value);
+                      }}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.visitDate}
@@ -431,4 +491,4 @@ export default function BookingModal({
       </Modal.Footer>
     </Modal>
   );
-}
+  }
