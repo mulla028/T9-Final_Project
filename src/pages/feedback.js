@@ -84,7 +84,6 @@ const FeedbackForm = () => {
     formData.append('rating', rating);
     formData.append('comment', comment);
     media.forEach((file) => formData.append('media', file));
-  
     try {
       await axios.post(`${API_BASE_URL}/feedback`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },

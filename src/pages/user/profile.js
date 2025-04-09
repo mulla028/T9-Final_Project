@@ -67,6 +67,7 @@ const UserProfile = () => {
                     <p>Manage your profile settings</p>
                 </div>
                 <div className={styles["profile-header"]}>
+
                     {user.profilePicture ? <img src={user.profilePicture} alt="Profile" className={styles["profile-pic"]} /> : <img src="/icon/default-icon.png" alt="default" className={styles["profile-pic"]} />}
                     <label htmlFor="profile-upload" className={styles["custom-file-upload"]}>Upload new picture</label>
                     <input id="profile-upload" type="file" accept="image/*" onChange={handleFileChange} hidden />

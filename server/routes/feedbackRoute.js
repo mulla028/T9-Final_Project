@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const router = express.Router();
 const Feedback = require('../models/Feedback');
+const User = require('../models/User'); // make sure this is imported to populate later
 
 // Multer setup
 const storage = multer.diskStorage({
