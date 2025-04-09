@@ -55,13 +55,13 @@ const ProfileDropdown = () => {
                     onClick={() => setShow(!show)}
                 >
                     {!user.profilePicture ? (
-                        <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', borderRadius: '50%', marginLeft:'-8px'}}/>
+                        <img src="/icon/default-icon.png" alt="default" style={{ width: '60px', height: '60px', borderRadius: '50%', marginLeft:'2px'}}/>
                     ) : (
                         <img
                             src={user.profilePicture}
                             alt="Profile"
                             className="rounded-circle"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                         />
                     )}
                 </Button>
