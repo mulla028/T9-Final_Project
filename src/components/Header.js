@@ -41,6 +41,10 @@ const Header = () => {
 
     return (
         <Navbar bg="light" expand="lg" fixed="top">
+            <Container fluid="md">
+                 <Navbar.Brand href="/">Driftway</Navbar.Brand>
+                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                 <Navbar.Collapse id="basic-navbar-nav">
                     {pathname === '/' && (
                         <Nav className="m-auto flex">
                             <Nav.Link href="/#why-slow-travel" className="no-bold-link">
