@@ -52,7 +52,7 @@ export async function authenticateAdmin(email, password) {
     const data = await res.json();
 
     if (res.status === 200) {
-        setToken(data.token);
+        setToken(data);
         return data;
     } else {
         throw new Error(data.message);

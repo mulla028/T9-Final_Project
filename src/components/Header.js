@@ -52,7 +52,7 @@ const Header = () => {
                                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                                     <FaBell size={24} />
                                 </div>
-                                <span className="me-2 fw-bold">{lastName}</span>
+                                {/* <span className="me-2 fw-bold">{lastName}</span> */}
                                 <ProfileDropdown />
                             </>
                         ) : (

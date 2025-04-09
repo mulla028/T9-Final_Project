@@ -59,7 +59,7 @@ const ProfileDropdown = () => {
                     onClick={() => setShow(!show)}
                 >
                     {!user.profilePicture ? (
-                        <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', borderRadius: '50%', marginLeft:'-8px'}}/>
+                        <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
                     ) : (
                         <img
                             src={user.profilePicture}
