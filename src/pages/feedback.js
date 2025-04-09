@@ -75,15 +75,16 @@ const FeedbackForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (rating === 0) return alert('Please select a rating.');
-    if (!user || !user._id) return alert('User not loaded.');
-
+    if (!user || !user._id || !user.userType) return alert('User not loaded.');
+  
     const formData = new FormData();
     formData.append('userId', user._id);
+    formData.append('userType', user.userType); // ✅ new field for backend
     formData.append('title', experienceTitle);
     formData.append('rating', rating);
     formData.append('comment', comment);
     media.forEach((file) => formData.append('media', file));
-
+  
     try {
       await axios.post(`${API_BASE_URL}/feedback`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
