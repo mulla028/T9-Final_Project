@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require("../models/User.js");
 const SocialUser = require("../models/SocialUser.js");
 const Notification = require("../models/Notification.js");
-const mongoose = require('mongoose');   
+const mongoose = require('mongoose');
 
 // Get user profile
 const getUserProfile = async (req, res) => {
@@ -21,7 +21,7 @@ const updateUserProfile = async (req, res) => {
         user.email = req.body.email || user.email;
         user.location = req.body.location || user.location;
         user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
-        if (req.body.profilePicture) user.profilePicture = req.body.profilePicture;
+        user.profilePicture = req.body.profilePicture ? req.body.profilePicture : '';
         const updatedUser = await user.save();
         res.json(updatedUser);
     } else {
