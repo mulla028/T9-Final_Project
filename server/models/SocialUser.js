@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const socialUserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    location: { type: String, default: '' },
+    phoneNumber: { type: String, default: '' },
+    profilePicture: { type: String, default: '' },
     provider: { type: String, required: true }, // e.g., 'google', 'facebook'
     providerId: { type: String, required: true }, // Social media ID
     createdAt: { type: Date, default: Date.now },
@@ -18,7 +21,7 @@ const socialUserSchema = new mongoose.Schema({
                 checkIn: { type: Date },
                 checkOut: { type: Date },
                 guests: { type: Number, min: 1 },
-                email:{ type: String },
+                email: { type: String },
                 totalPrice: { type: Number },
                 package: { type: String },
                 phone: { type: String },
