@@ -70,6 +70,7 @@ export default function Login() {
         console.log("response is: ", response);
 
         if (response.role === "admin") {
+          login(response.accessToken);
           router.push(`/admin`);
         } else {
           setWarning(response.message || "You are not an admin");

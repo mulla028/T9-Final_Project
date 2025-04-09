@@ -9,6 +9,7 @@ const Header = () => {
     const { authState } = useAuth();
     const { token } = authState;
     const [firstName, setFirstName] = useState('');
+
     const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
@@ -28,7 +29,6 @@ const Header = () => {
                     setFirstName(capitalized);
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
-
             // Fetch unread notifications
             fetchUnreadCount()
                 .then((count) => setUnreadCount(count))

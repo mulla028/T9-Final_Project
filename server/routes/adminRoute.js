@@ -5,7 +5,8 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin");
 const { verifyAdmin } = require("../middlewares/authMiddleware");
 const router = express.Router();
-const {createUser, updateUser, deleteUser } = require("../controllers/adminController.js");
+const { createUser, updateUser, deleteUser } = require("../controllers/adminController.js");
+const { generateToken } = require("../utils/jwtUtils");
 
 router.post("/login/admin", async (req, res) => {
   const { email, password } = req.body;
@@ -22,13 +23,14 @@ router.post("/login/admin", async (req, res) => {
       return res.status(401).json({ message: "Email or password is incorrect" });
     }
 
-    const token = jwt.sign(
+    const refreshToken = generateToken(admin);
+    const accessToken = jwt.sign(
       { id: admin._id, email: admin.email, role: "admin" },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
 
-    res.json({ message: "Login successful", role: "admin", token });
+    res.json({ message: "Login successful", role: "admin", accessToken, refreshToken });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }

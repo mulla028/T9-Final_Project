@@ -6,30 +6,37 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
     const [authState, setAuthState] = useState({
         token: null,
-        username: ''
+        username: '',
+        role: ''
     });
 
     useEffect(() => {
         const token = readToken();
-        if (token) {
-            const decoded = decodeToken(token);
-            setAuthState({
-                token: token,
-                username: decoded.username // Assuming the decoded token contains the username
-            });
-        } else {
+
+        if (!token) {
             setAuthState({
                 token: null,
-                username: ''
+                username: '',
+                role: '',
             });
+            return;
         }
+
+        const decoded = decodeToken(token);
+
+        setAuthState({
+            token,
+            username: decoded.username || '',
+            role: decoded.role || '',
+        });
     }, []);
 
     const login = (token) => {
         const decoded = decodeToken(token);
         setAuthState({
-            token: token,
-            username: decoded.username // Assuming the decoded token contains the username
+            token,
+            username: decoded.username || '', // Assuming the decoded token contains the username
+            role: decoded.role || '', // Assuming the decoded token contains the role
         });
     };
 
