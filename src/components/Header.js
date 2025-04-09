@@ -8,7 +8,8 @@ import { fetchProfile, fetchUnreadCount } from '@/services';
 const Header = () => {
     const { authState } = useAuth();
     const { token } = authState;
-    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+
     const [unreadCount, setUnreadCount] = useState(0);
 
     useEffect(() => {
@@ -16,12 +17,18 @@ const Header = () => {
             // Fetch profile info
             fetchProfile()
                 .then((user) => {
-                    const fullName = user?.name || user?.username || '';
-                    const last = fullName?.split(' ').slice(-1)[0];
-                    setLastName(last);
+                    let name = '';
+                    if (user.userType === 'social') {
+                        name = user.name;
+                    } else {
+                        name = user.username || '';
+                    }
+
+                    const first = name?.split(' ')[0];
+                    const capitalized = first.charAt(0).toUpperCase() + first.slice(1);
+                    setFirstName(capitalized);
                 })
                 .catch((err) => console.error("Failed to fetch profile:", err));
-
             // Fetch unread notifications
             fetchUnreadCount()
                 .then((count) => setUnreadCount(count))
@@ -52,7 +59,7 @@ const Header = () => {
                                     {unreadCount > 0 && <span className="notification-badge">{unreadCount}</span>}
                                     <FaBell size={24} />
                                 </div>
-                                {/* <span className="me-2 fw-bold">{lastName}</span> */}
+                                <span className="me-2 fw-bold">Hi, {firstName}</span>
                                 <ProfileDropdown />
                             </>
                         ) : (

@@ -46,7 +46,6 @@ const ProfileDropdown = () => {
 
     return (
         <div className="d-flex justify-content-end align-items-center" style={{ height: '60px' }}>
-            {lastName && <span className="me-2">Hi, {lastName}</span>}
             <Dropdown show={show} onToggle={toggleDropdown} align="end">
                 <Button
                     variant="light"
@@ -59,13 +58,13 @@ const ProfileDropdown = () => {
                     onClick={() => setShow(!show)}
                 >
                     {!user.profilePicture ? (
-                        <img src="/icon/default-icon.png" alt="default" style={{ width: '50px', height: '50px', objectFit: 'cover' }} />
+                        <img src="/icon/default-icon.png" alt="default" style={{ width: '60px', height: '60px', borderRadius: '50%', marginLeft:'0px'}}/>
                     ) : (
                         <img
                             src={user.profilePicture}
                             alt="Profile"
                             className="rounded-circle"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{ width: '60px', height: '60px', objectFit: 'cover' }}
                         />
                     )}
                 </Button>
