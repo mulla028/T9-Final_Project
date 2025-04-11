@@ -151,6 +151,7 @@ export default function Admin() {
         expand="lg"
         sticky="top"
         className="shadow-sm"
+        style={{ marginTop: "60px" }} 
       >
         <Container>
           <Navbar.Brand href="/">🌿 Admin Dashboard</Navbar.Brand>
@@ -163,7 +164,7 @@ export default function Admin() {
                 className="ms-3"
                 onClick={() => router.push("/")}
               >
-                <FaHome className="me-1" />
+                <FaHome className="me-3" />
                 Home
               </Button>
             </Nav>
