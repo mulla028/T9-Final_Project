@@ -33,6 +33,7 @@ import {
 import { API_BASE_URL } from "../../utils/general";
 import { isAuthenticated } from "@/services";
 import { FaSuitcaseRolling } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
 async function fetchVisitorCount() {
   const res = await fetch(`${API_BASE_URL}/visitors`);
   const data = await res.json();
@@ -45,6 +46,7 @@ export default function Admin() {
   const [showModal, setShowModal] = useState(false); // State for modal visibility
   const [selectedUserId, setSelectedUserId] = useState(null); // State to track selected user
   const router = useRouter();
+  const {logout} = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated()) {
@@ -91,6 +93,13 @@ export default function Admin() {
       console.error("Error fetching users:", error);
     }
   };
+
+  const handleLogout = () => {
+    logout();
+    setTimeout(() => {
+        router.push('/');
+    }, 2000);
+};
 
   const handleDelete = async () => {
     if (!selectedUserId) return;
@@ -162,10 +171,10 @@ export default function Admin() {
                 variant="outline-light"
                 size="sm"
                 className="ms-3"
-                onClick={() => router.push("/")}
+                onClick={handleLogout}
               >
                 <FaHome className="me-3" />
-                Home
+                Log out
               </Button>
             </Nav>
           </Navbar.Collapse>

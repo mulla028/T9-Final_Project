@@ -48,7 +48,7 @@ const Header = () => {
 
     return (
         <>
-            {!pathname.startsWith('/signup') && !pathname.startsWith('/user') && (
+            {!pathname.startsWith('/signup') && !pathname.startsWith('/user') && !pathname.startsWith('/admin') && (
 
                 <Navbar bg="light" expand="lg" fixed="top">
                 <Container fluid="md">
