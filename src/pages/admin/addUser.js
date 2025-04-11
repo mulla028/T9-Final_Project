@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Form, Button, Container, Alert, Card } from "react-bootstrap";
 import { API_BASE_URL } from "../../utils/general";
@@ -37,9 +36,24 @@ export default function AddUser() {
         }
     };
 
+    const handleBack = () => {
+        window.history.back();
+    };
+
     return (
         <Container className="d-flex flex-column align-items-center justify-content-center vh-100" style={{ backgroundColor: "#f8f9fa" }}>
-            <Card className="shadow-lg p-4 border-0 rounded-4" style={{ maxWidth: "400px", width: "100%" }}>
+            <Card className="shadow-lg p-4 border-0 rounded-4 position-relative" style={{ maxWidth: "400px", width: "100%" , marginTop: "70px"}}>
+                {/* Close Button */}
+                <Button
+                    variant="light"
+                    onClick={handleBack}
+                    className="position-absolute top-0 start-0 m-2 fw-bold fs-4 rounded-circle border-0"
+                    style={{ width: "36px", height: "36px", lineHeight: "0.75" }}
+                    aria-label="Go back"
+                >
+                    ×
+                </Button>
+
                 <Card.Body>
                     <h2 className="text-center text-success mb-4">Add User</h2>
                     {error && <Alert variant="danger">{error}</Alert>}

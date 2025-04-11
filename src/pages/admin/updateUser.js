@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import {
   Form,
@@ -84,7 +83,20 @@ export default function UpdateUser() {
       className="d-flex flex-column align-items-center justify-content-center vh-100"
       style={{ backgroundColor: "#f8f9fa" }}
     >
-      <Card className="shadow-lg p-4 border-0 rounded-4" style={{ maxWidth: "400px", width: "100%" }}>
+      <Card
+        className="shadow-lg p-4 border-0 rounded-4 position-relative"
+        style={{ maxWidth: "400px", width: "100%", marginTop: "70px" }}
+      >
+        {/* X Button */}
+        <Button
+          variant="light"
+          className="position-absolute top-0 start-0 m-2 px-3 py-1 rounded-circle border"
+          onClick={() => window.history.back()}
+          style={{ fontSize: "1.2rem", lineHeight: "1rem" }}
+        >
+          ×
+        </Button>
+
         <Card.Body>
           <h2 className="text-center text-success mb-4">Update User</h2>
           {error && <Alert variant="danger">{error}</Alert>}
