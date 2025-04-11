@@ -48,7 +48,7 @@ const Header = () => {
 
     return (
         <>
-            {!pathname.startsWith('/signup') && (
+            {!pathname.startsWith('/signup') && !pathname.startsWith('/user') && (
 
                 <Navbar bg="light" expand="lg" fixed="top">
                 <Container fluid="md">
@@ -72,7 +72,7 @@ const Header = () => {
                                 </Nav>
                             )}
                             <Nav className="d-flex align-items-center gap-4 ms-auto">
-                                {token ? !pathname.startsWith('/user') && (
+                                {token ? (
                                     <>
                                         <div className="icon-button position-relative" onClick={handleClick}>
                                             {unreadCount > 0 && (
