@@ -1,4 +1,5 @@
 
+
 ## System Architecture
 
 - `Frontend`: **Next.JS**
@@ -100,3 +101,13 @@ Now your backend should be running!
     npm run dev
     ```
 **Now web application is accessible at [http://localhost:3000]()**
+
+## Public Server Instructions
+
+* Backend: **Hosted on Railway**, _auto-deployed from main branch_
+* Frontend: **Hosted on Vercel**, _auto-deployed from main branch_
+
+## Test Account Credentials
+
+* Username: king@gmail.com
+* Password: 12345678
