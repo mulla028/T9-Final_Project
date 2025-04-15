@@ -2,14 +2,13 @@
 
 ## Sprint 4 (Sp-4)
 
+### Fixes
+- **Minor Fixes**( In Small PRs)
+
 ### Added Features
 
 - **User pages (profile and password)** ([#114](https://github.com/mulla028/T9-Final_Project/pull/114))
-
-  - Implemented error handling for profile updates to notify users of success or failure.
-  - Improved state management when updating user details.
-  - Users can now upload a custom profile picture
-  - Moved password update functionality to a separate page (user/password.js) for better separation of concerns.
+- **Custom Feedback Page** ([#101](https://github.com/mulla028/T9-Final_Project/issues/101))
 
 ## Sprint 3 (Sp-3)
 
